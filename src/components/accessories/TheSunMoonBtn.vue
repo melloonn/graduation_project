@@ -1,112 +1,68 @@
 <template>
-  <div class="container">
-    <div class="sun">
-      <div
-        class="vector"
-        v-for="(vector, index) in vectors"
-        :key="index"
-        :style="vector.style"
-      ></div>
-    </div>
+  <div class="wrap-check-64">
+    <label class="switch" for="checkbox">
+      <input type="checkbox" id="checkbox" />
+      <div class="slider round"></div>
+    </label>
   </div>
 </template>
 
 <script>
 export default {
   data() {
-    return {
-      vectors: [
-        {
-          style: {
-            left: "34.87%",
-            right: "23.46%",
-            top: "31.46%",
-            bottom: "26.88%",
-          },
-        },
-        {
-          style: {
-            left: "57.68%",
-            right: "42.32%",
-            top: "8.25%",
-            bottom: "83.42%",
-          },
-        },
-        {
-          style: {
-            left: "50.86%",
-            right: "49.14%",
-            top: "91.3%",
-            bottom: "0.36%",
-          },
-        },
-        {
-          style: {
-            left: "24.28%",
-            right: "69.81%",
-            top: "18.96%",
-            bottom: "75.12%",
-          },
-        },
-        {
-          style: {
-            left: "78.17%",
-            right: "15.91%",
-            top: "82.51%",
-            bottom: "11.57%",
-          },
-        },
-        {
-          style: {
-            left: "8.25%",
-            right: "83.42%",
-            top: "50.17%",
-            bottom: "49.83%",
-          },
-        },
-        { style: { left: "91.3%", right: "0.36%", top: "57%", bottom: "43%" } },
-        {
-          style: {
-            left: "19.45%",
-            right: "74.63%",
-            top: "77.68%",
-            bottom: "16.4%",
-          },
-        },
-        {
-          style: {
-            left: "82.99%",
-            right: "11.09%",
-            top: "23.79%",
-            bottom: "70.29%",
-          },
-        },
-      ],
-    };
+    return {};
   },
 };
 </script>
 
 <style scoped>
-.container {
+.wrap-check-64 .switch {
+  display: inline-block;
+  height: 34px;
   position: relative;
-  width: 100%;
-  height: 100%;
+  width: 60px;
 }
 
-.sun {
-  position: relative;
-  width: 18px;
-  height: 18px;
-  left: 38.23px;
-  top: 16.69px;
-  transform: rotate(4.7deg);
+.wrap-check-64 .switch input {
+  display: none;
 }
 
-.vector {
+.wrap-check-64 .slider {
+  background-color: #ccc;
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
   position: absolute;
-  border: 2px solid #000000;
-  transform: rotate(4.7deg);
-  border-radius: 1.39px;
+  right: 0;
+  top: 0;
+  transition: 0.4s;
+  transform: rotate(135deg);
+}
+
+.wrap-check-64 .slider:before {
+  background-color: #fff;
+  bottom: 4px;
+  content: "";
+  height: 26px;
+  left: 4px;
+  position: absolute;
+  transition: 0.4s;
+  width: 26px;
+}
+
+.wrap-check-64 input:checked + .slider {
+  background-color: #66bb6a;
+}
+
+.wrap-check-64 input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.wrap-check-64 .slider.round {
+  border-radius: 34px;
+}
+
+.wrap-check-64 .slider.round:before {
+  border-radius: 50%;
 }
 </style>

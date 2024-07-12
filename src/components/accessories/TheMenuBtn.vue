@@ -18,8 +18,12 @@ export default {
 <style scoped>
 /* align-justify */
 .align-justify {
-  width: 2.6875rem; /* 43px */
-  height: 2.6875rem; /* 43px */
+  width: clamp(3rem, 5vw, 5rem); /* 最小值3rem，理想值5vw，最大值5rem */
+  height: clamp(
+    1.6rem,
+    2.6vw,
+    2.6rem
+  ); /* 最小值1.6rem，理想值2.6vw，最大值2.6rem */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -27,12 +31,20 @@ export default {
 
 /* menu-button */
 .menu-button {
-  width: 2.015625rem; /* 32.25px */
-  height: 1.34375rem; /* 21.5px */
+  width: clamp(
+    1.5rem,
+    2.2vw,
+    2.2rem
+  ); /* 最小值1.5rem，理想值2.2vw，最大值2.2rem */
+  height: clamp(
+    1rem,
+    1.5vw,
+    1.5rem
+  ); /* 最小值1rem，理想值1.5vw，最大值1.5rem */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.3s ease; /* 添加過渡效果 */
+  transition: transform 0.3s ease;
 }
 
 .menu-button:hover {

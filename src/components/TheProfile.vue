@@ -1,39 +1,43 @@
 <template>
-  <div class="container-fluid min-vh-100 d-flex flex-column">
-    <!-- Header 部分 -->
-    <header class="d-flex justify-content-end p-3 position-relative">
-      <div class="ml-auto d-flex">
-        <the-menu-btn class="mr-2"></the-menu-btn>
-        <the-sun-moon-btn></the-sun-moon-btn>
-      </div>
-    </header>
-
-    <!-- 中间内容部分 -->
-    <div class="flex-grow-1 d-flex align-items-center justify-content-center">
-      <div class="text-center">
-        <h1 class="display-4">Welcome to My Homepage</h1>
-        <p class="lead">This is a sample content</p>
-        <!-- 其他内容 -->
-      </div>
-    </div>
-  </div>
+  <svg
+    class="img-fluid"
+    viewBox="0 0 1280 300"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <rect y="100" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="98.4614" width="98.4615" height="100" fill="black" />
+    <rect x="98.4614" y="200" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="196.923" y="100" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="295.385" y="100" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="590.769" y="200" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="689.231" y="100" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="886.154" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="1083.08" y="200" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="1083.08" width="98.4615" height="100" fill="#A7A9AC" />
+    <rect x="196.923" y="200" width="98.4615" height="100" fill="black" />
+    <rect x="295.385" y="200" width="98.4615" height="100" fill="black" />
+    <rect x="393.846" y="100" width="98.4615" height="100" fill="black" />
+    <rect x="590.769" width="98.4615" height="100" fill="black" />
+    <rect x="787.692" y="100" width="98.4615" height="100" fill="black" />
+    <rect x="984.615" y="100" width="98.4615" height="100" fill="black" />
+    <rect x="1181.54" y="100" width="98.4615" height="100" fill="black" />
+    <rect x="787.692" y="200" width="98.4615" height="100" fill="black" />
+    <rect x="393.846" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="492.308" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="492.308" y="100" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="689.231" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="689.231" y="200" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="984.615" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="1181.54" y="200" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="886.154" y="200" width="98.4615" height="100" fill="#75FB9F" />
+    <rect x="393.846" y="200" width="98.4615" height="100" fill="#75FB9F" />
+  </svg>
 </template>
 
 <script>
-import TheMenuBtn from "./accessories/TheMenuBtn.vue";
-import TheSunMoonBtn from "./accessories/TheSunMoonBtn.vue";
-
+import TheNewEra from "./accessories/TheNewEra.vue";
 export default {
-  components: {
-    TheMenuBtn,
-    TheSunMoonBtn,
-  },
+  components: { TheNewEra },
 };
 </script>
-
-<style scoped>
-/* 可根据需要添加自定义样式 */
-header {
-  width: 100%;
-}
-</style>
