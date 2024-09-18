@@ -1,0 +1,54 @@
+[
+    {
+        "model": "finance_visualizer.financialindicator",
+        "pk": 1,
+        "fields": {
+            "company_id": 12345,
+            "name": "測試公司",
+            "year_month": "2023-07",
+            "roa_after_tax_before_interest_a": 10.5,
+            "roa_comprehensive": 15.3,
+            "roe_after_tax_a": 7.2,
+            "roe_continual_profit_b": 6.5,
+            "roe_comprehensive": 12.0,
+            "continual_profit_rate_after_tax_a": 5.0,
+            "net_profit_rate_after_tax_a": 8.4,
+            "continual_eps": 1.75,
+            "revenue_growth_rate_a": 2.5,
+            "net_profit_growth_rate": 3.1,
+            "operating_net_profit_growth_rate": 4.0,
+            "continual_net_profit_growth_rate": 2.8,
+            "total_assets_growth_rate": 6.7,
+            "net_worth_growth_rate": 5.6,
+            "total_liabilities_to_net_worth": 0.8,
+            "liabilities_rate": 0.6,
+            "net_worth_to_assets": 0.55
+        }
+    },
+    {
+        "model": "finance_visualizer.financialindicator",
+        "pk": 2,
+        "fields": {
+            "company_id": 12346,
+            "name": "測試公司B",
+            "year_month": "2023-03",
+            "roa_after_tax_before_interest_a": 11.5,
+            "roa_comprehensive": 14.8,
+            "roe_after_tax_a": 7.9,
+            "roe_continual_profit_b": 5.8,
+            "roe_comprehensive": 11.7,
+            "continual_profit_rate_after_tax_a": 4.9,
+            "net_profit_rate_after_tax_a": 7.9,
+            "continual_eps": 1.65,
+            "revenue_growth_rate_a": 2.1,
+            "net_profit_growth_rate": 3.2,
+            "operating_net_profit_growth_rate": 3.5,
+            "continual_net_profit_growth_rate": 2.7,
+            "total_assets_growth_rate": 6.4,
+            "net_worth_growth_rate": 5.2,
+            "total_liabilities_to_net_worth": 0.7,
+            "liabilities_rate": 0.5,
+            "net_worth_to_assets": 0.50
+        }
+    }
+]
