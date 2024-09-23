@@ -11,6 +11,8 @@ from django.contrib.auth.hashers import make_password
 from .models import User
 from .serializers import UserSerializer
 
+from django.http import QueryDict
+
 class LoginView(APIView):
     def post(self, request, *args, **kwargs):
         username = request.data.get('username')
@@ -40,7 +42,7 @@ class RegisterView(generics.CreateAPIView):
     serializer_class = UserSerializer
 
     def post(self, request, *args, **kwargs):
-        data = request.data
+        data = request.data.copy()  # 將不可變的 QueryDict 複製為一個可變字典
         data['password'] = make_password(data['password'])  # 將密碼哈希化
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
@@ -48,5 +50,3 @@ class RegisterView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
-# Create your views here.

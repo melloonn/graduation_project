@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+import pymysql
+pymysql.install_as_MySQLdb()
 
 from pathlib import Path
 
@@ -92,11 +94,14 @@ DATABASES = {
     },
     'financial_data': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sys_config',  # 替換為你的 MySQL 資料庫名稱
-        'USER': 'root',  # 替換為你的 MySQL 用戶名
-        'PASSWORD': 'Melloonn920709!',  # 替換為你的 MySQL 密碼
+        'NAME': 'sys',  # 使用你的 MySQL 資料庫名稱
+        'USER': 'root',
+        'PASSWORD': 'Melloonn920709!',
         'HOST': 'localhost',
         'PORT': '3306',
+        'TEST': {
+            'MIRROR': 'financial_data',  # 讓測試直接使用現有數據庫
+        }
     }
 }
 
