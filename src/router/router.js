@@ -2,25 +2,25 @@
 
 import { createRouter, createWebHistory } from "vue-router";
 
-import TheLogin from "../components/TheLogin.vue";
-import TheRegister from "../components/TheRegister.vue";
+// import TheLogin from "../components/TheLogin.vue";
+// import TheRegister from "../components/TheRegister.vue";
 import TheHome from "../components/TheHome.vue";
 import TheProfile from "@/components/TheProfile.vue";
 const routes = [
   {
-    path: "/", // 路径
-    name: "Home",
-    redirect: "/login", // 重定向
+    // path: "/", // 路径
+    // name: "Home",
+    // redirect: "/login", // 重定向
   },
   {
-    path: "/login", // 路径
-    name: "Login",
-    component: TheLogin, // 跳转到的组件
+    // path: "/login", // 路径
+    // name: "Login",
+    // component: TheLogin, // 跳转到的组件
   },
   {
-    path: "/register", // 路径
-    name: "Register",
-    component: TheRegister, // 跳转到的组件
+    // path: "/register", // 路径
+    // name: "Register",
+    // component: TheRegister, // 跳转到的组件
   },
   {
     path: "/home",

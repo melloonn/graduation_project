@@ -1,7 +1,12 @@
 <template>
   <div class="wrap-check-64">
     <label class="switch" for="checkbox">
-      <input type="checkbox" id="checkbox" />
+      <input
+        type="checkbox"
+        id="checkbox"
+        v-model="darkMode"
+        @change="toggleDarkMode"
+      />
       <div class="slider round"></div>
       <svg
         class="moon"
@@ -122,23 +127,41 @@
 <script>
 export default {
   data() {
-    return {};
+    return {
+      darkMode: false, // 初始狀態為非 dark mode
+    };
+  },
+  watch: {
+    darkMode(newVal) {
+      // 監聽 darkMode 的變化
+      // 可以在這裡觸發 dark mode 的相關設置或應用到整個應用程式中
+      console.log("Dark Mode:", newVal);
+      // 在這裡觸發 dark mode 的相關設置或應用到整個應用程式中
+    },
+  },
+  methods: {
+    toggleDarkMode() {
+      // 觸發自定義事件，將 darkMode 狀態傳遞給父組件
+      this.$emit("toggle-dark-mode", this.darkMode);
+      this.$isDarkMode = !this.$isDarkMode;
+      localStorage.setItem("isDarkMode", this.$isDarkMode);
+    },
   },
 };
 </script>
 
 <style scoped>
 .moon {
-  cursor: pointer;
   position: relative;
   top: 9px;
   left: 7px;
+  pointer-events: none;
 }
 .sun {
-  cursor: pointer;
   top: -7.5px;
   left: 26.5px;
   position: absolute;
+  pointer-events: none;
 }
 .wrap-check-64 .switch {
   display: inline-block;

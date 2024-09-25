@@ -1,12 +1,37 @@
 <template>
   <div class="newEra-size">
     <div class="d-flex newEra-button">
-      <h1 class="newEra-word">NEW ERA</h1>
+      <h1
+        :class="{
+          'dark-mode': isDarkMode,
+          'light-mode': !isDarkMode,
+        }"
+        class="newEra-word"
+      >
+        NEW ERA
+      </h1>
     </div>
   </div>
 </template>
 
+<script>
+export default {
+  props: {
+    isDarkMode: {
+      type: Boolean,
+      required: true,
+    },
+  },
+};
+</script>
+
 <style scoped>
+.dark-mode {
+  color: #000000;
+}
+.light-mode {
+  color: white;
+}
 .newEra-button {
   width: 100%;
   height: 100%;
@@ -15,11 +40,12 @@
   justify-content: center;
   align-items: center;
   box-shadow: 11px 11px 0 rgba(0, 0, 0, 1);
+  pointer-events: none;
+  cursor: pointer;
 }
 
 .newEra-word {
   width: 100%;
-  color: var(--white, #fff);
   font-family: "MinecraftFont", sans-serif;
   font-size: 10rem;
   font-style: normal;
@@ -29,12 +55,14 @@
   margin-top: 0.75rem;
   margin-left: 0.35rem;
   user-select: none;
+  pointer-events: none;
 }
 
 .newEra-size {
   width: 34vw;
   height: 9vw;
   transform: translateX(-50%);
+  cursor: pointer;
 }
 
 @media (max-width: 1950px) {
@@ -47,12 +75,12 @@
 }
 @media (max-width: 1750px) {
   .newEra-word {
-    font-size: 6rem;
+    font-size: 5.3rem;
   }
 }
-@media (max-width: 1070px) {
+@media (max-width: 1120px) {
   .newEra-word {
-    font-size: 3.5rem;
+    font-size: 4.5rem;
   }
   .newEra-button {
     box-shadow: 5px 5px 0 rgba(0, 0, 0, 1);
