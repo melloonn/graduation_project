@@ -1,3 +1,5 @@
+# finance_visualizer/views.py
+
 from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -7,6 +9,7 @@ from .serializers import IndicatorSerializer, BalanceSheetSerializer, IncomeStat
 import matplotlib.pyplot as plt
 import io
 import base64
+from .langchain_utils import analyze_financial_data  
 
 class FinancialDataAPIView(APIView):
     def get(self, request, format=None):
@@ -59,3 +62,16 @@ class FinancialDataAPIView(APIView):
 
         graphic = base64.b64encode(image_png).decode('utf-8')
         return graphic
+
+class FinancialIndicatorSummaryAPIView(APIView):
+    def post(self, request, format=None):
+        data = request.data.get('data')
+        if not data:
+            return Response({"error": "缺少必要的數據"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            analysis_result = analyze_financial_data(data)
+        except Exception as e:
+            return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response({"analysis": analysis_result})
