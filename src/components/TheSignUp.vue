@@ -178,59 +178,61 @@ export default {
     },
     submitForm(formName) {
       console.log(this.ruleForm.uname);
-      // 验证表单中的账号密码是否有效，因为在上面rules中定义为了必填 required: true
+
       this.$refs[formName].validate((valid) => {
-        // 点击登录后，让登录按钮开始转圈圈（展示加载动画）
-        // this.loading = true;
-        // 如果经过校验，账号密码都不为空，则发送请求到后端登录接口
         if (valid) {
           let _this = this;
-          // 使用 axios 将登录信息发送到后端
+
+          // 這裡的請求 URL 要確保正確
           this.$axios({
-            url: "/api/user/login", // 请求地址
-            method: "post", // 请求方法
+            url: "http://127.0.0.1:8000/login/api/login/", // 修改為正確的 URL
+            method: "post",
             headers: {
-              // 请求头
               "Content-Type": "application/json",
             },
-            params: {
-              // 请求参数
-              uname: _this.ruleForm.uname,
-              password: _this.ruleForm.password,
+            // 將 username 和 password 包裝到請求的 body 中
+            data: {
+              username: _this.ruleForm.uname,
+              password: _this.ruleForm.password, // 確保這裡有傳入密碼
             },
-          }).then((res) => {
-            // 当收到后端的响应时执行该括号内的代码，res 为响应信息，也就是后端返回的信息
-            if (res.data.code === "0") {
-              // 当响应的编码为 0 时，说明登录成功
-              // 将用户信息存储到sessionStorage中
-              sessionStorage.setItem("userInfo", JSON.stringify(res.data.data));
-              // 跳转页面到首页
-              this.$router.push("/profile");
-              // 显示后端响应的成功信息
+          })
+            .then((res) => {
+              if (res.data.code === "0") {
+                sessionStorage.setItem(
+                  "userInfo",
+                  JSON.stringify(res.data.data)
+                );
+
+                this.$router.push("/profile");
+
+                this.$message({
+                  message: res.data.msg,
+                  type: "success",
+                });
+              } else {
+                this.$message({
+                  message: res.data.msg,
+                  type: "warning",
+                });
+              }
+
+              console.log(res);
+            })
+            .catch((error) => {
+              // 處理錯誤
+              console.error(error);
               this.$message({
-                message: res.data.msg,
-                type: "success",
+                message: "登錄失敗，請檢查您的用戶名和密碼。",
+                type: "error",
               });
-            } else {
-              // 当响应的编码不为 0 时，说明登录失败
-              // 显示后端响应的失败信息
-              this.$message({
-                message: res.data.msg,
-                type: "warning",
-              });
-            }
-            // 不管响应成功还是失败，收到后端响应的消息后就不再让登录按钮显示加载动画了
-            // _this.loading = false;
-            console.log(res);
-          });
+            });
         } else {
-          // 如果账号或密码有一个没填，就直接提示必填，不向后端请求
           console.log("error submit!!");
-          // this.loading = false;
           return false;
         }
       });
     },
+
     login() {
       if (this.checked) {
         Cookies.set("user", this.ruleForm.uname, { expires: 100 });
