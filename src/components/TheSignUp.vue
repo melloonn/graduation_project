@@ -278,7 +278,7 @@ export default {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem; /* 控制表单项之间的间距 */
+  gap: 1rem;
 }
 
 /* .form div {
@@ -287,7 +287,7 @@ export default {
 } */
 
 label {
-  margin-bottom: 8px; /* 标签与输入框之间的距离 */
+  margin-bottom: 8px;
   font-size: 1.25rem;
   margin: 0;
   display: inline-block;
@@ -314,29 +314,28 @@ label {
   background: #ffffff;
   border: 1px solid #000000;
   cursor: pointer;
-  /* 移除 absolute 定位，这样 checkbox 会根据 flexbox 排列 */
 }
 
 .custom-el-input >>> .el-input__inner {
   box-sizing: border-box;
-  width: 575px;
-  height: 73px;
-  padding: 10px; /* 调整内边距 */
-  font-size: 1.5rem; /* 调整文字大小 */
+  width: 35.94rem;
+  height: 4.56rem;
+  padding: 10px;
+  font-size: 1.5rem;
   background: #ffffff;
   border: 1px solid #000000;
   cursor: pointer;
 }
 form div {
   display: block;
-  margin-bottom: 1rem; /* 添加一些间距使其更易读 */
+  margin-bottom: 1rem;
 }
 
 form label,
 form .input {
   display: block;
-  width: 100%; /* 使输入框占满容器宽度 */
-  margin-top: 0.5rem; /* 添加一些顶部间距 */
+  width: 100%;
+  margin-top: 0.5rem;
 }
 .input-sys {
   flex-direction: column;
@@ -358,12 +357,13 @@ form .input {
   cursor: pointer;
 }
 .login-box {
-  flex-grow: 1; /* 登陆功能占用剩余空间 */
+  /* width: 50%; */
+  height: auto;
   display: flex;
-  flex-direction: column; /* 设置子项垂直排列 */
+  flex-direction: column;
   padding: 2rem;
   align-items: center;
-  justify-content: flex-start; /* 子项在上方开始 */
+  justify-content: flex-start;
   position: relative;
 }
 @font-face {
@@ -410,7 +410,6 @@ h1 {
   background-color: white;
 }
 
-/* 样式设置 */
 .custom-checkbox {
   box-sizing: border-box;
   width: 30px;
@@ -430,14 +429,14 @@ h1 {
 
 /* 选中状态 */
 :deep(.custom-checkbox .el-checkbox__input.is-checked .el-checkbox__inner) {
-  background: #42e45d; /* 选中的背景颜色 */
+  background: #42e45d;
   border: 1px solid #000000;
 }
 
 :deep(
     .custom-checkbox .el-checkbox__input.is-checked .el-checkbox__inner::after
   ) {
-  width: 6px; /* 自定义勾选图标宽度 */
+  width: 6px;
   height: 13px;
   border: 3px solid rgb(255, 255, 255);
   border-left: 0;
@@ -453,7 +452,7 @@ h1 {
 
 /* 悬停状态 */
 .custom-checkbox .el-checkbox__inner:hover {
-  border: 1px solid #00bfff; /* 悬停状态的边框颜色 */
+  border: 1px solid #00bfff;
 }
 </style>
 
@@ -474,4 +473,22 @@ h1 {
 .el-button {
   all: unset;
 }
+
+/* @media (max-width: 1600px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 1300px) {
+  html {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 1000px) {
+  html {
+    font-size: 10px;
+  }
+} */
 </style>

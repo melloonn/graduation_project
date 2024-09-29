@@ -9,6 +9,7 @@
       ></the-menu>
     </Transition>
   </div>
+  <div class="overlay" v-show="isMenuOpen"></div>
   <!-- SignUp -->
   <div>
     <Transition name="fade-slide">
@@ -26,7 +27,29 @@
     <div
       class="header d-flex justify-content-between align-items-center position-relative"
     >
-      <div class="logo"><h3>LOGO</h3></div>
+      <div class="logo">
+        <svg
+          width="146"
+          height="112"
+          viewBox="0 0 146 112"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            width="146"
+            height="112"
+            :fill="isDarkMode ? '#75FB9F' : '#1B2023'"
+          />
+          <path
+            d="M24 55.1048V75.0911C29.9699 75.3507 38.1566 75.2183 44.2459 73.2742C50.6156 71.2392 57.7432 67.0447 61.3771 62.8917V75.0911C68.1257 75.0911 73.5765 75.6102 83.1803 72.7551C89.2645 70.9459 95.1202 66.7851 99.2732 62.8917V75.0911H119V37.9736C112.251 38.2332 111.185 37.8932 104.984 39.0119C89.1503 41.3479 87.881 50.3418 81.623 51.4709V38.2332C81.623 38.2332 66.5683 37.4545 58.2623 41.8671C47.8772 47.3854 42.6885 56.9217 24 55.1048Z"
+            :fill="isDarkMode ? '#1B2023' : '#75FB9F'"
+          />
+          <path
+            d="M40 45C34.6667 46.472 33.472 47.6667 32 53C30.528 47.6667 29.3333 46.472 24 45C29.3333 43.528 30.528 42.3333 32 37C33.472 42.3333 34.6667 43.528 40 45Z"
+            :fill="isDarkMode ? '#1B2023' : '#75FB9F'"
+          />
+        </svg>
+      </div>
       <div class="d-flex btnGroup align-items-center">
         <div class="mr-3 menu-btn">
           <the-menu-btn
@@ -45,7 +68,7 @@
     </div>
     <!-- main-container -->
     <div class="position-relative mid-container">
-      <!-- 背景 -->
+      <!-- main content & start button -->
       <div class="svg-container">
         <svg
           width="100%"
@@ -212,11 +235,7 @@ export default {
 </script>
 
 <style scoped>
-.svg-container {
-  width: 100vw;
-  height: 70vh;
-}
-
+/* anime */
 .fade-slide-enter-active,
 .fade-slide-leave-active {
   transition: opacity 0.5s ease, transform 0.7s ease;
@@ -231,30 +250,6 @@ export default {
   transition: opacity 1s ease-out, transform 0.5s ease;
 }
 
-.start {
-  cursor: pointer;
-}
-.gradient-stop {
-  transition: stop-color 0.5s ease, stop-opacity 0.5s ease;
-}
-.LogIn-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  z-index: 5;
-}
-.menu-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: auto;
-  z-index: 5;
-}
-
-/* 過渡效果 */
 .slide-enter-active,
 .slide-leave-active {
   transition: all 0.75s ease;
@@ -272,18 +267,20 @@ export default {
   /* opacity: 0; */
 }
 
-.logo {
-  width: 18.5rem;
-  height: 100%;
-  background-color: #75fb9f;
-  align-items: center;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.4s ease;
 }
-.mr-3 {
-  margin-right: 1rem;
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
 }
+.gradient-stop {
+  transition: stop-color 0.5s ease, stop-opacity 0.5s ease;
+}
+
+/* hompage */
 
 .full {
   height: 100vh; /* 讓整個視窗高度填充 */
@@ -291,18 +288,25 @@ export default {
   flex-direction: column;
   background-color: #75fb9f;
 }
-.mid-container {
-  height: 87vh;
+/* header */
+.header {
+  height: 13vh;
   width: 100%;
+}
+.logo {
+  width: 18.5rem;
+  height: 100%;
+  /* background-color: #75fb9f; */
+  /* align-items: center; */
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
+  /* justify-content: center; */
 }
 .btnGroup {
   height: 100%;
   /* padding-right: 30px; */
 }
+
 .menu-btn {
   height: 100%;
   width: 4rem;
@@ -312,12 +316,83 @@ export default {
   justify-content: center;
   align-items: center;
 }
+
 .menu {
   margin-top: 1.5rem;
 }
 .sun-moon {
   margin-top: 1.5rem;
 }
+
+/* main container  */
+.mid-container {
+  height: 87vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.svg-container {
+  width: 100vw;
+  height: 70vh;
+}
+
+.start {
+  cursor: pointer;
+}
+
+.startImage {
+  pointer-events: none;
+  user-select: none;
+}
+
+.start-button {
+  position: absolute; /* 使用絕對定位 */
+  top: 40%; /* 將按鈕的頂部放在容器的中間 */
+  left: 50%; /* 將按鈕的左側放在容器的中間 */
+  transform: translate(-50%, -50%);
+}
+
+/* login page  */
+.LogIn-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+/* menu page  */
+.menu-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: auto;
+  z-index: 5;
+}
+
+/* 遮罩 */
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  z-index: 1;
+  /* opacity: 0; */
+  transition: opacity 0.5s ease;
+}
+
+.mr-3 {
+  margin-right: 1rem;
+}
+
+/* font setting  */
 @font-face {
   font-family: "MinecraftFont";
   src: url("../assets/fonts/Minecraft.ttf") format("truetype");
@@ -343,33 +418,6 @@ p {
   font-weight: 500;
   font-size: 2rem;
   user-select: none;
-}
-.startImage {
-  pointer-events: none;
-  user-select: none;
-}
-
-/* 可根据需要添加自定义样式 */
-.header {
-  height: 13vh; /* 让 header 高度占满整个视窗 */
-  width: 100%;
-}
-
-.start-button {
-  position: absolute; /* 使用絕對定位 */
-  top: 40%; /* 將按鈕的頂部放在容器的中間 */
-  left: 50%; /* 將按鈕的左側放在容器的中間 */
-  transform: translate(-50%, -50%);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.4s ease;
-}
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
 }
 
 .img-fluid {
