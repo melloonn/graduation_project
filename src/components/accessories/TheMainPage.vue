@@ -663,6 +663,7 @@
         class="svg-button"
         role="button"
         tabindex="0"
+        @click="toggleMoneyJamDiv"
         :fill="isDarkMode ? 'white' : 'black'"
       >
         <rect x="0" y="0" width="160" height="60" fill="transparent" />
@@ -793,8 +794,31 @@
           <p>ut</p>
         </div>
       </div>
+      <div class="try-div">
+        <button class="try-button" @click="navigateTo('/enterprise_selection')">
+          <p>Try</p>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5.83329 15.8337V15.0003H6.66663V14.167H7.49996V13.3337H8.33329V12.5003H9.16663V11.667H9.99996V10.8337H10.8333V10.0003H11.6666V9.16699H12.5V8.33366H13.3333V7.50033H14.1666V12.5003H15.8333V4.16699H7.49996V5.83366H12.5V6.66699H11.6666V7.50033H10.8333V8.33366H9.99996V9.16699H9.16663V10.0003H8.33329V10.8337H7.49996V11.667H6.66663V12.5003H5.83329V13.3337H4.99996V14.167H4.16663V15.8337H5.83329Z"
+              fill="black"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
-    <div v-if="showPlayDiv" class="play-focus play-div div-hover" tabindex="0">
+    <div
+      v-if="showPlayDiv"
+      class="play-focus play-div div-hover"
+      tabindex="0"
+      :style="{ zIndex: activeIndex === 1 ? 3 : 2 }"
+      @click="bringToFront(1)"
+    >
       <div class="close-btn">
         <svg
           width="20"
@@ -824,13 +848,31 @@
           <p>vestibulum parturient.</p>
         </div>
       </div>
+      <div class="try-div">
+        <button class="try-button">
+          <p>Try</p>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5.83329 15.8337V15.0003H6.66663V14.167H7.49996V13.3337H8.33329V12.5003H9.16663V11.667H9.99996V10.8337H10.8333V10.0003H11.6666V9.16699H12.5V8.33366H13.3333V7.50033H14.1666V12.5003H15.8333V4.16699H7.49996V5.83366H12.5V6.66699H11.6666V7.50033H10.8333V8.33366H9.99996V9.16699H9.16663V10.0003H8.33329V10.8337H7.49996V11.667H6.66663V12.5003H5.83329V13.3337H4.99996V14.167H4.16663V15.8337H5.83329Z"
+              fill="black"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
 
     <div
       v-if="showIdeasDiv"
       class="ideas-focus ideas-div div-hover"
       tabindex="0"
-      :style="{ zIndex: ideasZIndex }"
+      :style="{ zIndex: activeIndex === 2 ? 3 : 2 }"
+      @click="bringToFront(2)"
     >
       <div class="close-btn">
         <svg
@@ -859,6 +901,23 @@
           <p>nibh.</p>
         </div>
       </div>
+      <div class="try-div">
+        <button class="try-button">
+          <p>Try</p>
+          <svg
+            width="20"
+            height="20"
+            viewBox="0 0 20 20"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M5.83329 15.8337V15.0003H6.66663V14.167H7.49996V13.3337H8.33329V12.5003H9.16663V11.667H9.99996V10.8337H10.8333V10.0003H11.6666V9.16699H12.5V8.33366H13.3333V7.50033H14.1666V12.5003H15.8333V4.16699H7.49996V5.83366H12.5V6.66699H11.6666V7.50033H10.8333V8.33366H9.99996V9.16699H9.16663V10.0003H8.33329V10.8337H7.49996V11.667H6.66663V12.5003H5.83329V13.3337H4.99996V14.167H4.16663V15.8337H5.83329Z"
+              fill="black"
+            />
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </template>
@@ -876,9 +935,7 @@ export default {
       showIdeasDiv: false,
       showPlayDiv: false,
       showEnterDiv: false,
-      ideasZIndex: 2,
-      PlayZIndex: 2,
-      EnterZIndex: 2,
+      activeIndex: null,
     };
   },
   methods: {
@@ -891,7 +948,18 @@ export default {
     toggleEnterpriseDiv() {
       this.showEnterDiv = !this.showEnterDiv; // 切換顯示狀態
     },
-    CurrentDiv() {},
+    toggleMoneyJamDiv() {
+      this.showEnterDiv = false;
+      this.showIdeasDiv = false;
+      this.showPlayDiv = false;
+    },
+    navigateTo(path) {
+      // 使用傳遞的路徑導航
+      this.$router.push(path);
+    },
+    bringToFront(index) {
+      this.activeIndex = index; // 更新當前活躍的 div 索引
+    },
   },
 };
 </script>
@@ -924,14 +992,16 @@ export default {
 
 /* button div box  */
 .enterprise-div {
+  display: flex;
+  flex-direction: column;
   width: 444px;
-  height: 291px;
+  height: 300px;
   background-color: #21862b;
   color: white;
   /* z-index: 2; */
   position: absolute;
-  line-height: 1.6;
-  top: 285px;
+  line-height: 1.45;
+  top: 276px;
   left: 23px;
 }
 .enterprise-text {
@@ -945,6 +1015,8 @@ export default {
 }
 
 .play-div {
+  display: flex;
+  flex-direction: column;
   width: 441px;
   height: 481px;
   background-color: #ff6600;
@@ -968,6 +1040,8 @@ export default {
   z-index: 3;
 }
 .ideas-div {
+  display: flex;
+  flex-direction: column;
   width: 368px;
   height: 427px;
   background-color: #2b2660;
@@ -999,10 +1073,59 @@ export default {
   padding: 0.75rem;
   justify-content: flex-end;
 }
+/* try-button  */
+.try-div {
+  flex: 1;
+  display: flex;
+  padding-right: 1.5rem;
+  padding-bottom: 0.75rem;
+  justify-content: flex-end;
+  align-items: flex-end;
+}
+.try-button {
+  width: 160px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
+  border: 3px solid black;
+  border-radius: 100px;
+  padding: 10px 15px;
+  margin-top: 2px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.try-button p {
+  margin: 0; /* 消除段落的默認邊距 */
+  color: black; /* 文字顏色 */
+  font-weight: normal; /* 字體加粗 */
+  margin: 0;
+  font-family: "MinecraftFont", sans-serif;
+  font-size: 20px;
+  user-select: none;
+  letter-spacing: 3px;
+}
+
+.try-button svg {
+  /* margin-left: 8px;  */
+  user-select: none;
+}
+
+.try-button:hover {
+  background-color: #5bbe9f; /* 滑鼠懸停時的背景顏色 */
+}
+
+.try-button:focus {
+  outline: none; /* 去除按鈕的焦點輪廓 */
+  box-shadow: 0 0 0 3px rgba(117, 251, 159, 0.5); /* 添加焦點效果 */
+}
 
 .svg-dark-mode circle {
   fill: white; /* 暗黑模式下的顏色 */
 }
+
 /* font setting  */
 
 @font-face {

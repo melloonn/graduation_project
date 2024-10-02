@@ -203,7 +203,7 @@ export default {
                   JSON.stringify(res.data.data)
                 );
 
-                this.$router.push("/profile");
+                this.$router.push("/main");
 
                 this.$message({
                   message: res.data.msg,
