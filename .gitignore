@@ -2,3 +2,7 @@ __pycache__/
 *.pyc
 myenv/
 db.sqlite3
+
+# Ignore .env files
+.env
+
