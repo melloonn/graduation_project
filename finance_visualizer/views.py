@@ -4,9 +4,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from .models import FinancialIndicator, BalanceSheet, IncomeStatement, CashFlowStatement
 from .serializers import IndicatorSerializer, BalanceSheetSerializer, IncomeStatementSerializer, CashFlowStatementSerializer
-import matplotlib.pyplot as plt
 import io
-import base64
 import re
 from django.db.models import F
 from rest_framework import serializers
@@ -24,7 +22,7 @@ from rest_framework import serializers
 #             existing = set(self.fields)
 #             for field_name in existing - allowed:
 #                 self.fields.pop(field_name)
-#改順序function(年月)
+# 改順序function(年月)
 def get_sorted_data(data, db_field_name):
     # 自定義月份順序
     month_order = ['Mar', 'Jun', 'Sep', 'Dec']
@@ -41,126 +39,72 @@ def get_sorted_data(data, db_field_name):
     # 按年份和自定義月份順序排序
     return sorted(data, key=sort_key)
 
-# 在視圖中使用這個序列化器
 class FinancialDataAPIView(APIView):
     def get(self, request, format=None):
-        # 從請求中獲取參數
-        company_id = request.GET.get('company_id')
-        report_type = request.GET.get('report_type')
-        data_field = request.GET.get('data_field')
+        company_ids = request.GET.getlist('company_id')
+        report_types = request.GET.getlist('report_type')
+        data_fields = request.GET.getlist('data_field')
 
-        # 檢查必要參數
-        if not company_id or not report_type or not data_field:
+        if not company_ids or not report_types or not data_fields:
             return Response({
                 "error": "缺少必要的參數", 
-                "company_id": company_id, 
-                "report_type": report_type, 
-                "data_field": data_field
+                "company_ids": company_ids, 
+                "report_types": report_types, 
+                "data_fields": data_fields
             }, status=status.HTTP_400_BAD_REQUEST)
 
-        model_classes = {
-            'indicator': (FinancialIndicator, IndicatorSerializer),
-            'balance_sheet': (BalanceSheet, BalanceSheetSerializer),
-            'income_statement': (IncomeStatement, IncomeStatementSerializer),
-            'cash_flow': (CashFlowStatement, CashFlowStatementSerializer)
-        }
+        response_data = {}
 
-        if report_type not in model_classes:
-            return Response({"error": f"未知的報告類型 '{report_type}'"}, status=status.HTTP_400_BAD_REQUEST)
+        for company_id in company_ids:
+            response_data[company_id] = {}
 
-        model_class, serializer_class = model_classes.get(report_type)
+            for report_type in report_types:
+                model_classes = {
+                    'indicator': (FinancialIndicator, IndicatorSerializer),
+                    'balance_sheet': (BalanceSheet, BalanceSheetSerializer),
+                    'income_statement': (IncomeStatement, IncomeStatementSerializer),
+                    'cash_flow': (CashFlowStatement, CashFlowStatementSerializer)
+                }
 
-        # 動態查找 Python 字段名
-        db_field_name = self.get_python_field_name(model_class, data_field)
-        if not db_field_name:
-            return Response({"error": f"未知的 data_field: '{data_field}'"}, status=status.HTTP_400_BAD_REQUEST)
+                if report_type not in model_classes:
+                    return Response({"error": f"未知的報告類型 '{report_type}'"}, status=status.HTTP_400_BAD_REQUEST)
 
-        try:
-            # 查詢符合條件的資料，只取所需欄位
-            
-            data = model_class.objects.filter(company_id=company_id).order_by('year_month').values('company_id', 'year_month', db_field_name)
+                model_class, serializer_class = model_classes.get(report_type)
 
-            if not data.exists():
-                return Response({"error": "未找到數據"}, status=status.HTTP_404_NOT_FOUND)
-            #看data回傳格式
-            # 自定義排序
-            sorted_data = get_sorted_data(data, db_field_name)
+                for data_field in data_fields:
+                    db_field_name = self.get_python_field_name(model_class, data_field)
+                    if not db_field_name:
+                        return Response({"error": f"未知的 data_field: '{data_field}'"}, status=status.HTTP_400_BAD_REQUEST)
 
-            return Response({"data": list(sorted_data)})
-            # 動態序列化僅需要的字段
-            # serializer = DynamicFieldsModelSerializer(data, fields=['company_id', 'year_month', db_field_name], many=True)
-            # serialized_data = serializer.data
+                    try:
+                        data = model_class.objects.filter(company_id=company_id).order_by('year_month').values('year_month', db_field_name)
 
-        except Exception as e:
-            return Response({"error": f"資料查詢或序列化出錯: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                        if not data.exists():
+                            return Response({"error": f"未找到 {company_id} 的數據"}, status=status.HTTP_404_NOT_FOUND)
 
-        try:
-            # 生成圖表
-            # chart = self.generate_chart(serialized_data, db_field_name)
-            chart = self.generate_chart(list(sorted_data), db_field_name)
-            if not chart:
-                print("圖表生成失敗")
-                return Response({"error": "圖表生成失敗"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+                        sorted_data = get_sorted_data(data, db_field_name)
 
+                        # 構建符合 JSON 格式的回應，使用 year_month
+                        if report_type not in response_data[company_id]:
+                            response_data[company_id][report_type] = []
 
-        except Exception as e:
-            print(f"生成圖表出錯: {str(e)}")
-            return Response({"error": f"生成圖表出錯: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-            
-        print("圖表成功生成並包含在返回中")
-        return Response({"chart": chart, "data": list(sorted_data)})
+                        response_data[company_id][report_type].append([
+                            {
+                                "year_month": item['year_month'],
+                                data_field: item[db_field_name]
+                            } for item in sorted_data
+                        ])
+
+                    except Exception as e:
+                        return Response({"error": f"資料查詢或序列化出錯: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+        return Response(response_data, status=status.HTTP_200_OK)
 
     def get_python_field_name(self, model_class, db_column_name):
         """
         根據數據庫欄位名稱，動態查找對應的 Python 字段名
         """
-        # 添加打印以查看 db_column_name 是否正確
-        print(f"正在查找對應的 Python 字段名，目標 db_column: {db_column_name}")
-        
         for field in model_class._meta.fields:
-            # 添加打印以查看每個字段的 db_column 名稱
-            print(f"檢查字段: {field.name}, db_column: {field.db_column}")
-            
             if field.db_column == db_column_name:
-                print(f"找到匹配的字段名: {field.name}")
                 return field.name
-        print(f"未找到匹配的 db_column: {db_column_name}")
         return None
-
-
-    def generate_chart(self, data, data_field):
-        try:
-            # 檢查數據的結構
-            print(f"數據傳入 generate_chart: {data}")
-            print(f"字段名稱: {data_field}")
-
-            # 使用 'year_month' 作為 x 軸，'data_field' 的值作為 y 軸
-            year_months = [item['year_month'] for item in data]
-            values = [item[data_field] for item in data]
-
-            print(f"x 軸數據: {year_months}")
-            print(f"y 軸數據: {values}")
-
-            plt.figure(figsize=(10, 6))
-            plt.plot(year_months, values, marker='o')
-            plt.title(f'{data_field} over Time')
-            plt.xlabel('Year/Month')
-            plt.ylabel(data_field)
-            plt.xticks(rotation=45)
-            plt.grid(True)
-
-            # 保存圖表到內存
-            buffer = BytesIO()
-            plt.savefig(buffer, format='png')
-            buffer.seek(0)
-            image_png = buffer.getvalue()
-            buffer.close()
-
-            # 將圖表轉換為 base64
-            graphic = base64.b64encode(image_png).decode('utf-8')
-            return graphic
-
-        except Exception as e:
-            # 如果生成圖表失敗，打印錯誤訊息
-            print(f"圖表生成出錯: {str(e)}")
-            return None  # 如果生成失敗，返回 None
