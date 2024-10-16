@@ -2,9 +2,10 @@ from django.db import models
 
 # Create your models here.
 class FinancialIndicator(models.Model):
+    
     company_id = models.BigIntegerField(db_column='代號')  # 公司代號
     name = models.CharField(max_length=50, db_column='名稱')  # 公司名稱
-    year_month = models.CharField(max_length=20, db_column='年月')  # 年月
+    year_month = models.CharField(max_length=20, db_column='年－月')  # 年月
     roa_after_tax_before_interest_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROA(A)稅後息前%')
     roa_comprehensive = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROA－綜合損益')
     roe_after_tax_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROE(A)－稅後')
@@ -24,8 +25,9 @@ class FinancialIndicator(models.Model):
     net_worth_to_assets = models.DecimalField(max_digits=10, decimal_places=5, db_column='淨值/資產')
 
     class Meta:
-        db_table = 'financial_indicators'  # 單一的表格來存放所有公司的指標數據
+        db_table = '金控指標'  # 單一的表格來存放所有公司的指標數據
         managed = True  # Django 自動管理這個表格
+        app_label = 'finance_visualizer'
 
     def __str__(self):
         return f"{self.name} ({self.year_month})"
@@ -48,13 +50,14 @@ class IncomeStatement(models.Model):
     continuous_net_profit_after_tax = models.DecimalField(max_digits=20, decimal_places=5, db_column='常續性稅後淨利')  # 常續性稅後淨利
 
     class Meta:
-        db_table = 'income_statement'
+        db_table = '金控損益表'
         managed = True  # 如果你想手動管理資料庫表結構，設為 False；如果想由 Django 自動管理，設為 True
+        app_label = 'finance_visualizer'
 
 class CashFlowStatement(models.Model):
     code = models.CharField(max_length=10, verbose_name="代號")  # 例如 '2880', '2881' 等金融機構代號
     name = models.CharField(max_length=50, verbose_name="名稱")  # 公司名稱
-    period = models.CharField(max_length=10, verbose_name="年－月")  # 期間，格式如 '23-Dec'
+    year_month = models.CharField(max_length=10, verbose_name="年－月")  # 期間，格式如 '23-Dec'
     profit_before_tax_cfo = models.BigIntegerField(verbose_name="稅前淨利－CFO")  # 稅前淨利
     depreciation_cfo = models.BigIntegerField(verbose_name="折舊－CFO")  # 折舊
     amortization_cfo = models.BigIntegerField(verbose_name="攤提－CFO")  # 攤提
@@ -73,16 +76,17 @@ class CashFlowStatement(models.Model):
     cash_ending = models.BigIntegerField(verbose_name="期末現金及約當現金")  # 期末現金
 
     class Meta:
-        verbose_name = "金控現金流量表"
-        verbose_name_plural = "金控現金流量表"
+        db_table = '金控現金流量表'
+        managed = True
+        app_label = 'finance_visualizer'
 
     def __str__(self):
-        return f"{self.name} ({self.period})"
+        return f"{self.name} ({self.year_month})"
 
 class BalanceSheet(models.Model):
     code = models.CharField(max_length=10, verbose_name="代號")
     name = models.CharField(max_length=50, verbose_name="名稱")
-    period = models.CharField(max_length=10, verbose_name="年－月")
+    year_month = models.CharField(max_length=10, verbose_name="年－月")
     cash_and_cash_equivalents = models.BigIntegerField(verbose_name="現金及約當現金")
     accounts_receivable = models.BigIntegerField(verbose_name="應收帳款及票據")
     other_receivables = models.BigIntegerField(verbose_name="其他應收款")
@@ -112,8 +116,9 @@ class BalanceSheet(models.Model):
     total_liabilities_and_equity = models.BigIntegerField(verbose_name="負債及股東權益總額")
 
     class Meta:
-        verbose_name = "金控資產負債表"
-        verbose_name_plural = "金控資產負債表"
+        db_table = '金控資產負債表'
+        managed = True
+        app_label = 'finance_visualizer'
 
     def __str__(self):
-        return f"{self.name} ({self.period})"
+        return f"{self.name} ({self.year_month})"
