@@ -28,7 +28,7 @@
       >
         <p>// INDICATORS</p>
       </div>
-      <div class="category-div" tabindex="0">
+      <div class="category-div" tabindex="0" @click="navigateTo('/category')">
         <p>// CATEGORY</p>
       </div>
     </div>
