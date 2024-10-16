@@ -10,6 +10,7 @@ import TheProfile from "@/components/TheProfile.vue";
 import TheEnterpriseSelection from "../components/TheEnterpriseSelection.vue";
 import TheIndicators from "../components/TheIndicators.vue";
 import TheIdeas from "../components/TheIdeas.vue";
+import TheCategory from "../components/TheCategory.vue";
 
 const routes = [
   {
@@ -53,6 +54,11 @@ const routes = [
     component: TheIndicators,
   },
   {
+    path: "/category",
+    name: "Category",
+    component: TheCategory,
+  },
+  {
     path: "/ideas",
     name: "Ideas",
     component: TheIdeas,
@@ -75,7 +81,6 @@ const router = createRouter({
   routes,
 });
 
-// 导航守卫，前置处理
 // router.beforeEach((to, from, next) => {
 //   let isAuthenticated = !!sessionStorage.getItem("userInfo");
 //   // 如果路由要跳转到除了登录和注册的界面的话就判断是否已经登录，如果没有登录就强制跳到登录界面

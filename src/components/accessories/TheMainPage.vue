@@ -767,6 +767,8 @@
       v-if="showEnterDiv"
       class="enterprise-div enterprise-focus div-hover"
       tabindex="0"
+      :style="{ zIndex: activeIndex === 0 ? 3 : 2 }"
+      @click="bringToFront(0)"
     >
       <div class="close-btn">
         <svg
@@ -940,13 +942,17 @@ export default {
   },
   methods: {
     toggleIdeasDiv() {
-      this.showIdeasDiv = !this.showIdeasDiv; // 切換顯示狀態
+      this.showIdeasDiv = !this.showIdeasDiv;
+      this.bringToFront(2); // 切換顯示狀態
     },
     togglePlayDiv() {
-      this.showPlayDiv = !this.showPlayDiv; // 切換顯示狀態
+      this.showPlayDiv = !this.showPlayDiv;
+      this.bringToFront(1);
+      // 切換顯示狀態
     },
     toggleEnterpriseDiv() {
-      this.showEnterDiv = !this.showEnterDiv; // 切換顯示狀態
+      this.showEnterDiv = !this.showEnterDiv;
+      // 切換顯示狀態
     },
     toggleMoneyJamDiv() {
       this.showEnterDiv = false;

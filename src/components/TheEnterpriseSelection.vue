@@ -109,6 +109,7 @@ export default {
   align-items: flex-end;
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
+  cursor: pointer;
 }
 
 .indicators-div::before {
@@ -133,6 +134,7 @@ export default {
   align-items: flex-end;
   padding-bottom: 0.25rem;
   padding-left: 0.5rem;
+  cursor: pointer;
 }
 
 .category-div::before {

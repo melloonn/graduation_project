@@ -1,143 +1,167 @@
 <template>
-  <div
-    :class="{
-      'dark-mode': isDarkMode,
-    }"
-    class="menu-container"
-  >
-    <svg
-      width="185"
-      height="832"
-      viewBox="0 0 185 832"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
+  <div>
+    <!-- Sign in -->
+    <div
+      :class="{
+        'dark-mode': isDarkMode,
+      }"
+      class="menu-container"
+      v-show="!isSignupOpen"
     >
-      <rect width="92" height="92" fill="white" />
-      <rect x="92" y="92" width="93" height="93" fill="#A7A9AC" />
-      <rect x="92" y="277" width="93" height="93" fill="black" />
-      <rect y="185" width="92" height="92" fill="#A7A9AC" />
-      <rect y="277" width="92" height="93" fill="#A7A9AC" />
-      <rect x="92" y="370" width="93" height="92" fill="#A7A9AC" />
-      <rect y="462" width="92" height="93" fill="black" />
-      <rect x="92" y="647" width="93" height="93" fill="#A7A9AC" />
-      <rect y="740" width="92" height="92" fill="#A7A9AC" />
-      <rect y="555" width="92" height="92" fill="black" />
-      <rect x="92" y="92" width="19" height="19" fill="white" />
-      <rect x="92" y="129" width="19" height="19" fill="white" />
-      <rect x="92" y="166" width="19" height="19" fill="white" />
-      <rect x="129" y="92" width="19" height="19" fill="white" />
-      <rect x="129" y="129" width="19" height="19" fill="white" />
-      <rect x="129" y="166" width="19" height="19" fill="white" />
-      <rect x="111" y="111" width="18" height="18" fill="white" />
-      <rect x="111" y="148" width="18" height="18" fill="white" />
-      <rect x="166" y="92" width="19" height="19" fill="white" />
-      <rect x="166" y="129" width="19" height="19" fill="white" />
-      <rect x="166" y="166" width="19" height="19" fill="white" />
-      <rect x="148" y="111" width="18" height="18" fill="white" />
-      <rect x="148" y="148" width="18" height="18" fill="white" />
-    </svg>
-    <div class="login-box">
-      <div class="back" @click="closeLogIn">
-        <svg
-          class="back-btn"
-          width="40"
-          height="40"
-          viewBox="0 0 40 40"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            d="M26.6667 3.3335V5.00016H23.3333V8.3335H20V11.6668H16.6667V15.0002H13.3333V16.6668H11.6667V18.3335H10V21.6668H11.6667V23.3335H13.3333V25.0002H16.6667V28.3335H20V31.6668H21.6667H23.3333V33.3335V35.0002H26.6667V36.6668H30V31.6668H26.6667V28.3335H23.3333V25.0002H20V21.6668H16.6667V18.3335H20V15.0002H23.3333V11.6668H26.6667V8.3335H30V3.3335H26.6667Z"
-            fill="black"
-          />
-        </svg>
-      </div>
-      <div class="input-sys">
-        <div class="title">
-          <h1>Welcome!</h1>
+      <svg
+        width="185"
+        height="832"
+        viewBox="0 0 185 832"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect width="92" height="92" fill="white" />
+        <rect x="92" y="92" width="93" height="93" fill="#A7A9AC" />
+        <rect x="92" y="277" width="93" height="93" fill="black" />
+        <rect y="185" width="92" height="92" fill="#A7A9AC" />
+        <rect y="277" width="92" height="93" fill="#A7A9AC" />
+        <rect x="92" y="370" width="93" height="92" fill="#A7A9AC" />
+        <rect y="462" width="92" height="93" fill="black" />
+        <rect x="92" y="647" width="93" height="93" fill="#A7A9AC" />
+        <rect y="740" width="92" height="92" fill="#A7A9AC" />
+        <rect y="555" width="92" height="92" fill="black" />
+        <rect x="92" y="92" width="19" height="19" fill="white" />
+        <rect x="92" y="129" width="19" height="19" fill="white" />
+        <rect x="92" y="166" width="19" height="19" fill="white" />
+        <rect x="129" y="92" width="19" height="19" fill="white" />
+        <rect x="129" y="129" width="19" height="19" fill="white" />
+        <rect x="129" y="166" width="19" height="19" fill="white" />
+        <rect x="111" y="111" width="18" height="18" fill="white" />
+        <rect x="111" y="148" width="18" height="18" fill="white" />
+        <rect x="166" y="92" width="19" height="19" fill="white" />
+        <rect x="166" y="129" width="19" height="19" fill="white" />
+        <rect x="166" y="166" width="19" height="19" fill="white" />
+        <rect x="148" y="111" width="18" height="18" fill="white" />
+        <rect x="148" y="148" width="18" height="18" fill="white" />
+      </svg>
+      <div class="login-box">
+        <div class="back" @click="closeLogIn">
+          <svg
+            class="back-btn"
+            width="40"
+            height="40"
+            viewBox="0 0 40 40"
+            fill="none"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path
+              d="M26.6667 3.3335V5.00016H23.3333V8.3335H20V11.6668H16.6667V15.0002H13.3333V16.6668H11.6667V18.3335H10V21.6668H11.6667V23.3335H13.3333V25.0002H16.6667V28.3335H20V31.6668H21.6667H23.3333V33.3335V35.0002H26.6667V36.6668H30V31.6668H26.6667V28.3335H23.3333V25.0002H20V21.6668H16.6667V18.3335H20V15.0002H23.3333V11.6668H26.6667V8.3335H30V3.3335H26.6667Z"
+              fill="black"
+            />
+          </svg>
         </div>
-        <el-form class="form" :model="ruleForm" :rules="rules" ref="ruleForm">
-          <div>
-            <label for="email">Email</label>
-            <el-input
-              class="custom-el-input input"
-              type="text"
-              id="email"
-              v-model="ruleForm.uname"
-            />
+        <div class="input-sys">
+          <div class="title">
+            <h1>Welcome!</h1>
           </div>
-          <div>
-            <label for="password">Password</label>
-            <el-input
-              class="custom-el-input input"
-              type="password"
-              id="password"
-              v-model="ruleForm.password"
-              autocomplete="off"
-            />
-          </div>
-          <div class="remember-me">
-            <el-checkbox class="custom-checkbox" v-model="checked">
-            </el-checkbox>
-            <label> Remember Me</label>
-          </div>
-          <div class="button-container">
-            <el-button
-              class="sign-in"
-              type="primary"
-              @click="submitForm('ruleForm')"
-              >Sign in</el-button
-            >
-          </div>
-        </el-form>
+          <el-form class="form" :model="ruleForm" :rules="rules" ref="ruleForm">
+            <div class="email-div">
+              <label for="email">Email</label>
+              <el-input
+                class="custom-el-input input"
+                type="text"
+                id="email"
+                v-model="ruleForm.uname"
+              />
+            </div>
+            <div class="password-div">
+              <label for="password">Password</label>
+              <el-input
+                class="custom-el-input input"
+                type="password"
+                id="password"
+                v-model="ruleForm.password"
+                autocomplete="off"
+              />
+            </div>
+            <div class="remember-me">
+              <div class="remember-div">
+                <el-checkbox class="custom-checkbox" v-model="checked">
+                </el-checkbox>
+                <label class="remember"> Remember Me</label>
+              </div>
+              <a href="#" class="forgot-link">forget password?</a>
+            </div>
+            <div class="button-container">
+              <el-button
+                class="sign-in"
+                type="primary"
+                @click="submitForm('ruleForm')"
+                >Sign in</el-button
+              >
+            </div>
+            <div class="signup-div">
+              <label> New User?</label>
+              <a href="#" class="signup-link" @click="toggleSignup()"
+                >Sign up</a
+              >
+            </div>
+          </el-form>
+        </div>
       </div>
+      <svg
+        width="185"
+        height="832"
+        viewBox="0 0 185 832"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <rect x="93" width="92" height="92" fill="#A7A9AC" />
+        <rect x="93" y="92" width="92" height="93" fill="black" />
+        <rect y="185" width="93" height="92" fill="#A7A9AC" />
+        <rect x="93" y="277" width="92" height="93" fill="white" />
+        <rect y="370" width="93" height="92" fill="#A7A9AC" />
+        <rect y="462" width="93" height="93" fill="black" />
+        <rect x="93" y="462" width="92" height="93" fill="black" />
+        <rect x="93" y="555" width="92" height="92" fill="#A7A9AC" />
+        <rect y="647" width="93" height="93" fill="black" />
+        <rect x="93" y="740" width="92" height="92" fill="#A7A9AC" />
+        <rect y="462" width="19" height="19" fill="white" />
+        <rect y="499" width="19" height="19" fill="white" />
+        <rect y="536" width="19" height="19" fill="white" />
+        <rect x="19" y="481" width="18" height="18" fill="white" />
+        <rect x="19" y="518" width="18" height="18" fill="white" />
+        <rect x="56" y="481" width="18" height="18" fill="white" />
+        <rect x="56" y="518" width="18" height="18" fill="white" />
+        <rect x="93" y="481" width="18" height="18" fill="white" />
+        <rect x="93" y="518" width="18" height="18" fill="white" />
+        <rect x="130" y="481" width="18" height="18" fill="white" />
+        <rect x="130" y="518" width="18" height="18" fill="white" />
+        <rect x="167" y="481" width="18" height="18" fill="white" />
+        <rect x="167" y="518" width="18" height="18" fill="white" />
+        <rect x="37" y="462" width="19" height="19" fill="white" />
+        <rect x="37" y="499" width="19" height="19" fill="white" />
+        <rect x="37" y="536" width="19" height="19" fill="white" />
+        <rect x="74" y="462" width="19" height="19" fill="white" />
+        <rect x="74" y="499" width="19" height="19" fill="white" />
+        <rect x="74" y="536" width="19" height="19" fill="white" />
+        <rect x="111" y="462" width="19" height="19" fill="white" />
+        <rect x="111" y="499" width="19" height="19" fill="white" />
+        <rect x="111" y="536" width="19" height="19" fill="white" />
+        <rect x="148" y="462" width="19" height="19" fill="white" />
+        <rect x="148" y="499" width="19" height="19" fill="white" />
+        <rect x="148" y="536" width="19" height="19" fill="white" />
+      </svg>
     </div>
-    <svg
-      width="185"
-      height="832"
-      viewBox="0 0 185 832"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-    >
-      <rect x="93" width="92" height="92" fill="#A7A9AC" />
-      <rect x="93" y="92" width="92" height="93" fill="black" />
-      <rect y="185" width="93" height="92" fill="#A7A9AC" />
-      <rect x="93" y="277" width="92" height="93" fill="white" />
-      <rect y="370" width="93" height="92" fill="#A7A9AC" />
-      <rect y="462" width="93" height="93" fill="black" />
-      <rect x="93" y="462" width="92" height="93" fill="black" />
-      <rect x="93" y="555" width="92" height="92" fill="#A7A9AC" />
-      <rect y="647" width="93" height="93" fill="black" />
-      <rect x="93" y="740" width="92" height="92" fill="#A7A9AC" />
-      <rect y="462" width="19" height="19" fill="white" />
-      <rect y="499" width="19" height="19" fill="white" />
-      <rect y="536" width="19" height="19" fill="white" />
-      <rect x="19" y="481" width="18" height="18" fill="white" />
-      <rect x="19" y="518" width="18" height="18" fill="white" />
-      <rect x="56" y="481" width="18" height="18" fill="white" />
-      <rect x="56" y="518" width="18" height="18" fill="white" />
-      <rect x="93" y="481" width="18" height="18" fill="white" />
-      <rect x="93" y="518" width="18" height="18" fill="white" />
-      <rect x="130" y="481" width="18" height="18" fill="white" />
-      <rect x="130" y="518" width="18" height="18" fill="white" />
-      <rect x="167" y="481" width="18" height="18" fill="white" />
-      <rect x="167" y="518" width="18" height="18" fill="white" />
-      <rect x="37" y="462" width="19" height="19" fill="white" />
-      <rect x="37" y="499" width="19" height="19" fill="white" />
-      <rect x="37" y="536" width="19" height="19" fill="white" />
-      <rect x="74" y="462" width="19" height="19" fill="white" />
-      <rect x="74" y="499" width="19" height="19" fill="white" />
-      <rect x="74" y="536" width="19" height="19" fill="white" />
-      <rect x="111" y="462" width="19" height="19" fill="white" />
-      <rect x="111" y="499" width="19" height="19" fill="white" />
-      <rect x="111" y="536" width="19" height="19" fill="white" />
-      <rect x="148" y="462" width="19" height="19" fill="white" />
-      <rect x="148" y="499" width="19" height="19" fill="white" />
-      <rect x="148" y="536" width="19" height="19" fill="white" />
-    </svg>
+    <!-- Sign up -->
+    <div class="sign-up-page">
+      <Transition>
+        <the-register
+          v-show="isSignupOpen"
+          :is-dark-mode="isDarkMode"
+          @close-signup="toggleSignup"
+        ></the-register>
+      </Transition>
+    </div>
   </div>
 </template>
 <script>
+import TheRegister from "./TheRegister.vue";
 import Cookies from "js-cookie";
 import { ref } from "vue";
 export default {
@@ -147,8 +171,12 @@ export default {
       this.ruleForm.uname = rememberUser;
     }
   },
+  components: {
+    TheRegister,
+  },
   data() {
     return {
+      isSignupOpen: false,
       ruleForm: {
         uname: "",
         password: "",
@@ -173,6 +201,9 @@ export default {
     };
   },
   methods: {
+    toggleSignup() {
+      this.isSignupOpen = !this.isSignupOpen;
+    },
     closeLogIn() {
       this.$emit("close-logIn");
     },
@@ -248,6 +279,21 @@ export default {
 };
 </script>
 <style scoped>
+/* .fade-slide-enter-active,
+.fade-slide-leave-active {
+  transition: opacity 0.5s ease, transform 0.7s ease;
+}
+
+.fade-slide-enter,
+.fade-slide-leave-to {
+  opacity: 0;
+  transition: opacity 1s ease-out, transform 0.5s ease;
+}
+.fade-slide-enter-from {
+  opacity: 0;
+  transition: opacity 1s ease-out, transform 0.5s ease;
+} */
+
 .button-container {
   display: flex;
   align-items: center;
@@ -270,41 +316,67 @@ export default {
   font-weight: 400;
   line-height: 1.25rem;
   color: #000000;
+  margin-bottom: 0.7rem;
 }
 .title {
-  padding: 3.5rem;
+  padding: 1.75rem;
 }
 .form {
   padding: 1rem;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.75rem;
 }
-
-/* .form div {
+.email-div {
+  margin-bottom: 3rem;
+}
+.password-div {
+  margin-bottom: 1rem;
+}
+.signup-div {
   display: flex;
-  flex-direction: column;
-} */
-
+  gap: 1rem;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
 label {
   margin-bottom: 8px;
-  font-size: 1.25rem;
+  font-size: 16px;
   margin: 0;
   display: inline-block;
   white-space: nowrap;
   font-family: "PressStar2PFont", sans-serif;
   font-style: normal;
   font-weight: 400;
-  line-height: 1.25rem;
+  font-size: 16px;
+  user-select: none;
+  color: #a7a9ac;
+}
+a {
+  margin-bottom: 8px;
+  font-size: 16px;
+  margin: 0;
+  display: inline-block;
+  white-space: nowrap;
+  font-family: "PressStar2PFont", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 16px;
   user-select: none;
   color: #000000;
+  text-decoration: none;
 }
 .remember-me {
+  margin-bottom: 1.5rem;
   display: flex;
+  justify-content: space-between;
   align-items: flex-end;
-  gap: 0.8rem;
-  position: relative;
-  flex-direction: row;
+}
+.remember {
+  /* margin-bottom: 8px; */
+  margin-left: 1rem;
 }
 
 .checkbox {
@@ -328,13 +400,10 @@ label {
 }
 form div {
   display: block;
-  margin-bottom: 1rem;
 }
 
 form label,
 form .input {
-  display: block;
-  width: 100%;
   margin-top: 0.5rem;
 }
 .input-sys {
@@ -357,7 +426,7 @@ form .input {
   cursor: pointer;
 }
 .login-box {
-  /* width: 50%; */
+  flex: 1;
   height: auto;
   display: flex;
   flex-direction: column;
@@ -409,6 +478,9 @@ h1 {
 .dark-mode .sign-in {
   background-color: white;
 }
+.dark-mode a {
+  color: #13c9a8;
+}
 
 .custom-checkbox {
   box-sizing: border-box;
@@ -450,7 +522,6 @@ h1 {
   font-weight: 500;
 }
 
-/* 悬停状态 */
 .custom-checkbox .el-checkbox__inner:hover {
   border: 1px solid #00bfff;
 }

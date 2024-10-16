@@ -20,23 +20,70 @@
         </svg>
       </div>
     </div>
-    <div class="chatbox">
+
+    <div class="chatbox" :style="{ height: isAnimating ? '100vh' : '365px' }">
       <svg
-        width="1231"
-        height="346"
-        viewBox="0 0 1231 346"
+        :width="svgWidth"
+        :height="svgHeight"
+        :viewBox="viewBox"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
       >
         <path
-          d="M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z"
+          :d="pathData"
           :fill="isDarkMode ? '#1C1F1C' : 'white'"
           :stroke="isDarkMode ? '#A7A9AC' : '#1463F3'"
           stroke-width="5"
         />
+        <foreignObject x="0" y="0" width="100%" height="100%">
+          <div class="enlarge-btn" @click="startAnimation">
+            <svg
+              width="25"
+              height="25"
+              viewBox="0 0 25 25"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M15.625 3.125H21.875V9.375"
+                :stroke="isDarkMode ? '#A7A9AC' : 'black'"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M9.375 21.875H3.125V15.625"
+                :stroke="isDarkMode ? '#A7A9AC' : 'black'"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M21.8752 3.125L14.5835 10.4167"
+                :stroke="isDarkMode ? '#A7A9AC' : 'black'"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M3.125 21.8747L10.4167 14.583"
+                :stroke="isDarkMode ? '#A7A9AC' : 'black'"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+          <div xmlns="http://www.w3.org/1999/xhtml" class="text-block">
+            <h3 :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }">
+              Your summary text here
+            </h3>
+          </div>
+        </foreignObject>
       </svg>
     </div>
-    <div class="main-content">
+
+    <div class="main-content" v-show="!isAnimating">
       <div>
         <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">ENTERPRISE</p>
       </div>
@@ -52,10 +99,17 @@
   </div>
 </template>
 <script>
+import anime from "animejs/lib/anime.es.js";
 export default {
   data() {
     return {
+      isAnimating: false,
       isDarkMode: false,
+      svgWidth: 1231,
+      svgHeight: 346,
+      viewBox: "0 0 1231 346",
+      pathData:
+        "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z",
     };
   },
   components: {},
@@ -72,7 +126,40 @@ export default {
       this.isDarkMode = true;
     }
   },
-  methods: {},
+  methods: {
+    startAnimation() {
+      this.isAnimating = !this.isAnimating;
+      if (this.isAnimating) {
+        anime({
+          targets: this,
+          // svgWidth: 1231,
+          svgHeight: 727,
+          viewBox: [
+            { value: "0 0 1231 346" }, // 開始 viewBox
+            { value: "0 0 1231 727" }, // 結束 viewBox
+          ],
+          pathData: [
+            {
+              value:
+                "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z",
+            }, // 開始 path
+            {
+              value:
+                "M3 103.92L77.4696 3H1196.01L1227 564.964H1101.05L1156.53 719L1061.57 640.389L35.9865 679.694L3 103.92Z",
+            }, // 結束 path
+          ],
+          easing: "easeInOutQuad",
+          duration: 750,
+        });
+      }
+      if (!this.isAnimating) {
+        this.pathData =
+          "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z";
+        this.viewBox = "0 0 1231 346";
+        this.svgHeight = "346";
+      }
+    },
+  },
 };
 </script>
 <style scoped>
@@ -104,14 +191,48 @@ export default {
 }
 
 .chatbox {
+  position: relative;
   padding: 1rem 0.5rem 0.5rem 0.5rem;
   justify-content: center;
   align-items: center;
-  height: auto;
   width: 100%;
   display: flex;
   border: 1px solid black;
+  transition: height 0.75s ease;
 }
+
+.output-box {
+  width: 100%;
+  height: auto;
+  position: relative;
+}
+
+.svg-container {
+  transform-origin: top; /* 缩放原点 */
+}
+
+.zoom-in {
+  transform: scaleY(2); /* 垂直缩放 */
+}
+
+.enlarge-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin-top: 1rem;
+  margin-right: 3rem;
+  cursor: pointer;
+}
+
+.text-block {
+  display: flex;
+  padding: 2rem 6rem 6rem 6rem;
+  height: 100%;
+  width: 100%;
+  color: black;
+  border-radius: 10px;
+}
+
 .main-content {
   width: 100%;
   flex: 1;
@@ -125,6 +246,7 @@ export default {
   align-content: center;
   border: 1px solid black;
 }
+
 /* Dark-Mode */
 .dark-mode {
   background-color: #1b2023;
@@ -143,10 +265,50 @@ p {
   user-select: none;
 }
 
+h3 {
+  margin: 0;
+  font-family: "PressStar2PFont", sans-serif;
+  font-style: normal;
+  font-size: 20px;
+  user-select: none;
+}
+
 @font-face {
   font-family: "Micro5";
   src: url("../assets/fonts/Micro5-Regular.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
+}
+
+@font-face {
+  font-family: "PressStar2PFont";
+  src: url("../assets/fonts/PressStart2P-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* anime  */
+.slide2-enter-active,
+.slide2-leave-active {
+  transition: all 0.75s ease;
+}
+
+.slide2-enter {
+  transform: translateY(100%); /* 從下方進入 */
+  opacity: 0; /* 透明開始 */
+}
+
+.slide2-enter-to {
+  transform: translateY(0); /* 最終位置 */
+  /* opacity: 1; 最終完全不透明 */
+}
+.slide2-leave {
+  transform: translateY(0); /* 從當前位置開始 */
+  /* opacity: 1;  */
+}
+
+.slide2-leave-to {
+  transform: translateY(100%); /* 向下移動到下方 */
+  /* opacity: 0; */
 }
 </style>
