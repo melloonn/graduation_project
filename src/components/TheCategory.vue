@@ -24,6 +24,8 @@
           viewBox="0 0 60 25"
           fill="none"
           xmlns="http://www.w3.org/2000/svg"
+          @click="navigateTo('/main')"
+          style="cursor: pointer"
         >
           <path
             d="M0 11.4349V24.0579C3.77049 24.2218 8.94098 24.1382 12.7869 22.9103C16.8098 21.6251 21.3115 18.9759 23.6066 16.3529V24.0579C27.8689 24.0579 31.3115 24.3857 37.377 22.5824C41.2197 21.4398 44.918 18.812 47.541 16.3529V24.0579H60V0.615234C55.7377 0.779169 55.0639 0.564415 51.1475 1.27097C41.1475 2.74638 40.3459 8.42671 36.3934 9.13982V0.779169C36.3934 0.779169 26.8852 0.287366 21.6393 3.07425C15.0803 6.5595 11.8033 12.5824 0 11.4349Z"
@@ -53,6 +55,7 @@
                   xmlns="http://www.w3.org/2000/svg"
                   @click="toggleExpand"
                   v-if="!isExpend"
+                  style="cursor: pointer"
                 >
                   <path
                     d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
@@ -86,11 +89,30 @@
           <Transition name="slide1">
             <div v-if="isExpend" class="animateDiv1">
               <div class="select-div"><h2>// SELECT</h2></div>
-              <div class="types-div">
+              <div class="types-div" tabindex="0">
                 <p>Types</p>
               </div>
-              <div class="names-div">
+              <div
+                class="names-div"
+                :class="{ 'name-pressed': isNamesPress }"
+                @click="toggleNames"
+                tabindex="0"
+              >
                 <p>Names</p>
+                <div :class="['namesArrow', { 'rotate-arrow': isNamesPress }]">
+                  <svg
+                    width="40"
+                    height="39"
+                    viewBox="0 0 40 39"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.33325 11.375H9.99992V13H11.6666V14.625H13.3333V16.25H14.9999V17.875H16.6666V19.5H18.3333V21.125H19.9999V22.75H21.6666V24.375H23.3333V26H24.9999V27.625H14.9999V30.875H31.6666V14.625H28.3333V24.375H26.6666V22.75H24.9999V21.125H23.3333V19.5H21.6666V17.875H19.9999V16.25H18.3333V14.625H16.6666V13H14.9999V11.375H13.3333V9.75H11.6666V8.125H8.33325V11.375Z"
+                      :fill="isNamesPress ? '#75fb9f' : 'white'"
+                    />
+                  </svg>
+                </div>
               </div>
             </div>
           </Transition>
@@ -108,6 +130,22 @@
 
           <Transition name="slide2">
             <div v-if="isExpend" class="animateDiv2"></div>
+          </Transition>
+          <!-- enterprise-list  -->
+          <Transition name="slideList">
+            <div class="button-list" v-if="isNamesPress">
+              <div class="scrollable-list">
+                <div
+                  v-for="item in financialItems"
+                  :key="item.name"
+                  @click="handleClick(item)"
+                  class="financial-button list-div"
+                  tabindex="0"
+                >
+                  {{ item.name }}
+                </div>
+              </div>
+            </div>
           </Transition>
         </div>
         <!-- box3  -->
@@ -133,25 +171,28 @@
           </div>
         </Transition>
       </div>
+
       <!-- generator-div  -->
-      <div v-show="isExpend" class="generator-div">
-        <div>
-          <svg
-            width="616"
-            height="706"
-            viewBox="0 0 616 706"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <rect x="438" width="178" height="129" rx="30" fill="#1C1F1C" />
-            <path
-              d="M0.5 70.1739C0.5 53.8815 13.7076 40.6738 30 40.6738H615.5V675.913C615.5 692.205 602.292 705.413 586 705.413H30C13.7076 705.413 0.5 692.205 0.5 675.913V70.1739Z"
-              fill="#75FB9F"
-              stroke="black"
-            />
-          </svg>
+      <Transition name="slideGenerator">
+        <div v-show="isExpend" class="generator-div">
+          <div>
+            <svg
+              width="616"
+              height="706"
+              viewBox="0 0 616 706"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <rect x="438" width="178" height="129" rx="30" fill="#1C1F1C" />
+              <path
+                d="M0.5 70.1739C0.5 53.8815 13.7076 40.6738 30 40.6738H615.5V675.913C615.5 692.205 602.292 705.413 586 705.413H30C13.7076 705.413 0.5 692.205 0.5 675.913V70.1739Z"
+                fill="#75FB9F"
+                stroke="black"
+              />
+            </svg>
+          </div>
         </div>
-      </div>
+      </Transition>
     </div>
   </div>
 </template>
@@ -162,6 +203,24 @@ export default {
     return {
       isDarkMode: false,
       isExpend: false,
+      isNamesPress: false,
+      financialItems: [
+        { name: "華南金HNFHC" },
+        { name: "富邦金FUBFH" },
+        { name: "國泰金CFH" },
+        { name: "開發金KGI" },
+        { name: "玉山金ESFHC" },
+        { name: "元大金YFH" },
+        { name: "兆豐金MFG" },
+        { name: "台新金TSFHC" },
+        { name: "新光金SKFH" },
+        { name: "國票金CBFHC" },
+        { name: "永豐金SPH" },
+        { name: "中信金CTBC" },
+        { name: "第一金FFHC" },
+        { name: "日盛金JSFHC" },
+        { name: "合庫金TCFHC" },
+      ],
     };
   },
   components: {},
@@ -179,12 +238,27 @@ export default {
     }
   },
   methods: {
+    handleClick(item) {
+      console.log(`Clicked on: ${item.name}`);
+      // Your custom function can be triggered here
+    },
     toggleExpand() {
       this.isExpend = !this.isExpend; // 切換 expand 狀態
+      this.isNamesPress = false;
+    },
+    toggleNames() {
+      this.isNamesPress = !this.isNamesPress;
+    },
+    navigateTo(path) {
+      // 使用傳遞的路徑導航
+      this.$router.push(path);
     },
     toggleExpandBack() {
       if (this.isExpend) {
         this.isExpend = false;
+        this.isNamesPress = false;
+      } else {
+        this.navigateTo("/enterprise_selection");
       }
     },
   },
@@ -296,13 +370,28 @@ export default {
   display: flex;
   align-items: center;
   padding-left: 2.25rem;
+  color: white;
 }
 .names-div {
+  position: relative;
   flex: 1;
   border-bottom: 1px solid white;
   display: flex;
   align-items: center;
   padding-left: 2.25rem;
+  color: white;
+}
+.name-pressed {
+  color: #75fb9f;
+}
+.namesArrow {
+  position: absolute;
+  right: 20px;
+  margin-bottom: 2.5px;
+  transition: transform 0.5s ease;
+}
+.rotate-arrow {
+  transform: rotate(-90deg); /* 當 isNamePress 為 true 時旋轉 270 度 */
 }
 
 .animateDiv2 {
@@ -384,6 +473,34 @@ export default {
   left: -7.5rem;
 }
 
+/* enterprise-list  */
+.button-list {
+  position: absolute;
+  width: 250px;
+  height: 500px;
+  overflow-y: auto;
+  padding: 10px;
+  box-sizing: border-box;
+  top: 5px;
+  left: 30px;
+  z-index: 10;
+}
+.button-list::-webkit-scrollbar {
+  display: none;
+}
+.scrollable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.financial-button {
+}
+
+.financial-button:hover {
+  color: #75fb9f;
+}
+
 /* font  */
 @font-face {
   font-family: "Micro5";
@@ -395,6 +512,12 @@ export default {
 @font-face {
   font-family: "MinecraftFont";
   src: url("../assets/fonts/Minecraft.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/Inter.ttf") format("truetype");
   font-weight: normal;
   font-style: normal;
 }
@@ -421,6 +544,16 @@ p {
   font-style: normal;
   font-size: 32px;
   user-select: none;
+  /* color: white; */
+}
+.list-div {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 20px;
+  line-height: 200%;
+  user-select: none;
+  letter-spacing: 0.5em;
   color: white;
 }
 /* Dark-Mode */
@@ -508,21 +641,42 @@ p {
   /* opacity: 0; */
 }
 
-.fade-enter-active {
-  transition: opacity 0.5s ease 1s; /* 延遲 2 秒進入 */
+.slideList-enter-active {
+  transition: transform 0.75s ease;
 }
-
-.fade-leave-active {
-  transition: opacity 0.25s ease 0.25s; /* 延遲 1 秒離開 */
+.slideList-leave-active {
+  transition: transform 0.75s ease;
 }
-
-.fade-enter,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-leave-from,
-.fade-enter-to {
+.slideList-enter {
+  transform: translateX(-100%);
   opacity: 1;
+}
+.slideList-leave-to {
+  transform: translateX(-100%);
+  /* opacity: 0; */
+}
+.slideList-enter-from {
+  transform: translateX(-100%);
+  /* opacity: 0; */
+}
+
+.slideGenerator-enter-active {
+  transition: transform 0.75s ease;
+  transition-delay: 1.5s;
+}
+.slideGenerator-leave-active {
+  transition: transform 0.75s ease;
+}
+.slideGenerator-enter {
+  transform: translateX(100%);
+  opacity: 1;
+}
+.slideGenerator-leave-to {
+  transform: translateX(100%);
+  /* opacity: 0; */
+}
+.slideGenerator-enter-from {
+  transform: translateX(100%);
+  /* opacity: 0; */
 }
 </style>

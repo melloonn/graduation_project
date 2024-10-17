@@ -768,10 +768,10 @@
       class="enterprise-div enterprise-focus div-hover"
       tabindex="0"
       :style="{ zIndex: activeIndex === 0 ? 3 : 2 }"
-      @click="bringToFront(0)"
     >
       <div class="close-btn">
         <svg
+          @click="toggleEnterpriseDiv"
           width="20"
           height="20"
           viewBox="0 0 20 20"
@@ -823,6 +823,7 @@
     >
       <div class="close-btn">
         <svg
+          @click="togglePlayDiv"
           width="20"
           height="20"
           viewBox="0 0 20 20"
@@ -851,7 +852,7 @@
         </div>
       </div>
       <div class="try-div">
-        <button class="try-button">
+        <button class="try-button" @click="toggleGamePage1">
           <p>Try</p>
           <svg
             width="20"
@@ -868,7 +869,15 @@
         </button>
       </div>
     </div>
-
+    <TheGamePage1
+      v-if="showGame1Div"
+      @toggle-game-page2="toggleGamePage2"
+      @toggle-game-page1="toggleGamePage1"
+    ></TheGamePage1>
+    <TheGamePage2
+      v-if="showGame2Div"
+      @toggle-game-page2="toggleGamePage2"
+    ></TheGamePage2>
     <div
       v-if="showIdeasDiv"
       class="ideas-focus ideas-div div-hover"
@@ -878,6 +887,7 @@
     >
       <div class="close-btn">
         <svg
+          @click="toggleIdeasDiv"
           width="20"
           height="20"
           viewBox="0 0 20 20"
@@ -925,6 +935,9 @@
 </template>
 
 <script>
+import TheGamePage1 from "./TheGamePage1.vue";
+import TheGamePage2 from "./TheGamePage2.vue";
+
 export default {
   props: {
     isDarkMode: {
@@ -932,11 +945,17 @@ export default {
       required: true,
     },
   },
+  components: {
+    TheGamePage1,
+    TheGamePage2,
+  },
   data() {
     return {
       showIdeasDiv: false,
       showPlayDiv: false,
       showEnterDiv: false,
+      showGame1Div: false,
+      showGame2Div: false,
       activeIndex: null,
     };
   },
@@ -959,12 +978,18 @@ export default {
       this.showIdeasDiv = false;
       this.showPlayDiv = false;
     },
+    toggleGamePage1() {
+      this.showGame1Div = !this.showGame1Div;
+    },
     navigateTo(path) {
       // 使用傳遞的路徑導航
       this.$router.push(path);
     },
     bringToFront(index) {
       this.activeIndex = index; // 更新當前活躍的 div 索引
+    },
+    toggleGamePage2() {
+      this.showGame2Div = !this.showGame2Div;
     },
   },
 };
@@ -1045,6 +1070,7 @@ export default {
 .play-focus:focus {
   z-index: 3;
 }
+
 .ideas-div {
   display: flex;
   flex-direction: column;

@@ -368,11 +368,16 @@ a {
   color: #000000;
   text-decoration: none;
 }
+.remember-div {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 .remember-me {
   margin-bottom: 1.5rem;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
+  align-items: center;
 }
 .remember {
   /* margin-bottom: 8px; */
