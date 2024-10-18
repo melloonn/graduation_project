@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'login',
     'finance_visualizer',
     'rest_framework',
+    'rest_framework_simplejwt',
     'drf_yasg',
 ]
 
@@ -159,3 +160,21 @@ REST_FRAMEWORK = {
     ),
 }
 AUTH_USER_MODEL = 'login.User'
+
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'huangzhengyong5@gmail.com'
+EMAIL_HOST_PASSWORD = 'vtqn irzx ztpq esmk'  # 使用應用程式專用密碼
+DEFAULT_FROM_EMAIL = 'huangzhengyong5@gmail.com'
+FRONTEND_URL = 'https://your-frontend-url.com'
+
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.google.GoogleOAuth2',
+    'django.contrib.auth.backends.ModelBackend',
+)
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<Your-Google-Client-ID>'
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<Your-Google-Client-Secret>'

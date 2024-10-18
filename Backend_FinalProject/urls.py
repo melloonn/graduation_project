@@ -19,6 +19,7 @@ from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+from login.views import google_login
 
 # Login 系統的 Swagger 設置
 login_schema_view = get_schema_view(
@@ -71,6 +72,7 @@ finance_schema_view = get_schema_view(
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/', include('login.urls')),
+    path('auth/', include('social_django.urls', namespace='social')),
     path('swagger/login/', login_schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui-login'),
     # path('swagger/general/', general_schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui-general'),
     path('', include('finance_visualizer.urls')),

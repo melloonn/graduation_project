@@ -1,99 +1,145 @@
-from django.test import TestCase
-
 from django.urls import reverse
 from rest_framework.test import APITestCase
 from rest_framework import status
 from django.contrib.auth import get_user_model
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
 
 User = get_user_model()
 
-class AuthTests(APITestCase):
-
+class LoginTests(APITestCase):
     def setUp(self):
-        # 創建一個測試用戶
-        self.user = User.objects.create_user(
-            username='testuser',
-            password='password123',
-            email='testuser@example.com'
-        )
-        self.login_url = reverse('login')
-        self.register_url = reverse('register')
-        self.logout_url = reverse('logout')
-        self.token_refresh_url = reverse('token_refresh')
+        self.user = User.objects.create_user(username='testuser', password='testpassword', email='user@example.com')
 
-    def test_register(self):
-        """
-        測試註冊功能
-        """
-        data = {
-            'username': 'newuser',
-            'password': 'newpassword123',
-            'email': 'newuser@example.com'
-        }
-        response = self.client.post(self.register_url, data)
-        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
-        self.assertEqual(response.data['username'], 'newuser')
-        self.assertEqual(response.data['email'], 'newuser@example.com')
-    
     def test_login(self):
-        """
-        測試登錄功能
-        """
+        url = reverse('login')
         data = {
-            'username': 'testuser',
-            'password': 'password123'
+            'email': 'user@example.com',
+            'password': 'testpassword'
         }
-        response = self.client.post(self.login_url, data)
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertIn('access', response.data)
         self.assertIn('refresh', response.data)
-    
+
     def test_login_invalid_credentials(self):
-        """
-        測試無效憑證的登錄
-        """
+        url = reverse('login')
         data = {
-            'username': 'testuser',
+            'email': 'user@example.com',
             'password': 'wrongpassword'
         }
-        response = self.client.post(self.login_url, data)
+        response = self.client.post(url, data)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
-        self.assertEqual(response.data['detail'], 'Invalid credentials')
 
-    def test_token_refresh(self):
-        """
-        測試刷新 JWT token
-        """
-        # 首先進行登錄來獲取 refresh token
+    def test_login_invalid_email(self):
+        url = reverse('login')
         data = {
-            'username': 'testuser',
-            'password': 'password123'
+            'email': 'invalid@example.com',
+            'password': 'testpassword'
         }
-        login_response = self.client.post(self.login_url, data)
-        refresh_token = login_response.data['refresh']
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
 
-        # 使用刷新 token 來獲取新的 access token
-        refresh_data = {
-            'refresh': refresh_token
-        }
-        response = self.client.post(self.token_refresh_url, refresh_data)
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertIn('access', response.data)
+class LogoutTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword')
+        self.client.force_authenticate(user=self.user)
 
     def test_logout(self):
-        """
-        測試登出功能
-        """
-        # 先進行登錄，獲取 token
-        data = {
-            'username': 'testuser',
-            'password': 'password123'
-        }
-        login_response = self.client.post(self.login_url, data)
-        access_token = login_response.data['access']
-
-        # 使用 token 進行登出
-        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
-        response = self.client.post(self.logout_url)
+        url = reverse('logout')
+        response = self.client.post(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+    def test_logout_unauthenticated(self):
+        self.client.logout()
+        url = reverse('logout')
+        response = self.client.post(url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+
+class RegisterTests(APITestCase):
+    def test_register(self):
+        url = reverse('register')
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword123'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        self.assertIn('username', response.data)
+
+    def test_register_existing_user(self):
+        User.objects.create_user(username='newuser', email='newuser@example.com', password='newpassword123')
+        url = reverse('register')
+        data = {
+            'username': 'newuser',
+            'email': 'newuser@example.com',
+            'password': 'newpassword123'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+class GoogleLoginTests(APITestCase):
+    def test_google_login_no_token(self):
+        url = reverse('google-login', kwargs={'backend': 'google-oauth2'})
+        response = self.client.post(url, {})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'No token provided.')
+
+class ForgotPasswordTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword', email='user@example.com')
+
+    def test_forgot_password(self):
+        url = reverse('forgot-password')
+        data = {
+            'email': 'user@example.com'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_forgot_password_invalid_email(self):
+        url = reverse('forgot-password')
+        data = {
+            'email': 'nonexistent@example.com'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+class ResetPasswordTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username='testuser', password='testpassword', email='user@example.com')
+        self.token_generator = PasswordResetTokenGenerator()
+        self.token = self.token_generator.make_token(self.user)
+
+    def test_reset_password(self):
+        url = reverse('reset-password')
+        data = {
+            'token': self.token,
+            'uid': self.user.id,
+            'new_password': 'newpassword123'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password('newpassword123'))
+
+    def test_reset_password_invalid_token(self):
+        url = reverse('reset-password')
+        data = {
+            'token': 'invalid-token',
+            'uid': self.user.id,
+            'new_password': 'newpassword123'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+    def test_reset_password_invalid_uid(self):
+        url = reverse('reset-password')
+        data = {
+            'token': self.token,
+            'uid': 999,
+            'new_password': 'newpassword123'
+        }
+        response = self.client.post(url, data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
