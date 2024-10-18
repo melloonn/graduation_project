@@ -279,21 +279,6 @@ export default {
 };
 </script>
 <style scoped>
-/* .fade-slide-enter-active,
-.fade-slide-leave-active {
-  transition: opacity 0.5s ease, transform 0.7s ease;
-}
-
-.fade-slide-enter,
-.fade-slide-leave-to {
-  opacity: 0;
-  transition: opacity 1s ease-out, transform 0.5s ease;
-}
-.fade-slide-enter-from {
-  opacity: 0;
-  transition: opacity 1s ease-out, transform 0.5s ease;
-} */
-
 .button-container {
   display: flex;
   align-items: center;

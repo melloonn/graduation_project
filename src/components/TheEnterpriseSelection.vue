@@ -22,6 +22,21 @@
           />
         </svg>
       </div>
+      <div class="back-btn">
+        <svg
+          width="40"
+          height="40"
+          viewBox="0 0 40 40"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          @click="navigateTo('/main')"
+        >
+          <path
+            d="M28.3333 18.333V16.6663H26.6667V14.9997H23.3333V11.6663H20V8.33301H16.6667V4.99967H13.3333V3.33301H10V8.33301H13.3333V11.6663H16.6667V14.9997H20V18.333H23.3333V21.6663H20V24.9997H16.6667V28.333H13.3333V31.6663H10V36.6663H13.3333V34.9997H16.6667V31.6663H20V29.9997V28.333H23.3333V26.6663V24.9997H26.6667V23.333H28.3333V21.6663H30V19.9997V18.333H28.3333Z"
+            :fill="isDarkMode ? 'white' : 'black'"
+          />
+        </svg>
+      </div>
     </div>
     <div class="main-content">
       <div
@@ -77,6 +92,7 @@ export default {
 
 /* header */
 .header {
+  position: relative;
   justify-content: center;
   align-items: center;
   height: 16vh;
@@ -94,6 +110,14 @@ export default {
   border-radius: 50%;
   cursor: pointer;
 }
+.back-btn {
+  right: 65px;
+  top: 50%;
+  transform: translateY(-50%);
+  position: absolute;
+  cursor: pointer;
+}
+
 .dark-mode-logo {
   color: #75fb9f; /* 暗模式顏色 */
 }

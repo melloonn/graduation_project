@@ -72,7 +72,7 @@
               class="custom-el-input input"
               type="text"
               id="email"
-              v-model="ruleForm.uname"
+              v-model="ruleForm.email"
             />
           </div>
           <div class="password-div">
@@ -158,7 +158,8 @@ export default {
   data() {
     return {
       ruleForm: {
-        uname: "",
+        name: "",
+        email: "",
         password: "",
       },
       rules: {
@@ -166,6 +167,13 @@ export default {
           {
             required: true,
             message: "Username can't be empty！",
+            trigger: "blur",
+          },
+        ],
+        email: [
+          {
+            required: true,
+            message: "Email can't be empty！",
             trigger: "blur",
           },
         ],
@@ -185,7 +193,7 @@ export default {
       this.$emit("close-signup");
     },
     submitForm(formName) {
-      console.log(this.ruleForm.uname);
+      console.log(this.ruleForm.email);
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -200,7 +208,8 @@ export default {
             },
             // 將 username 和 password 包裝到請求的 body 中
             data: {
-              username: _this.ruleForm.uname,
+              username: _this.ruleForm.name,
+              email: _this.ruleForm.email,
               password: _this.ruleForm.password, // 確保這裡有傳入密碼
             },
           })
@@ -211,7 +220,7 @@ export default {
                   JSON.stringify(res.data.data)
                 );
 
-                this.$router.push("/main");
+                this.closeSignup();
 
                 this.$message({
                   message: res.data.msg,

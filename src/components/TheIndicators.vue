@@ -103,7 +103,9 @@
 
     <div class="main-content" v-show="!isAnimating">
       <!-- enterprise  -->
+
       <div class="main-div">
+        <!-- original  -->
         <div class="main-div-org" v-if="showMainDiv">
           <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">ENTERPRISE</p>
           <div class="select-button">
@@ -140,92 +142,106 @@
             </svg>
           </div>
         </div>
-        <div class="button-list main-div-expand" v-if="isEmterprisePressed">
-          <div class="scrollable-list">
-            <div
-              v-for="item in financialItems"
-              :key="item.name"
-              @click="handleClick(item)"
-              class="financial-button list-div"
-              tabindex="0"
-            >
-              {{ item.name }}
+
+        <!-- expand  -->
+        <Transition name="slide1">
+          <div class="button-list main-div-expand" v-if="isEmterprisePressed">
+            <div class="scrollable-list">
+              <div
+                v-for="item in financialItems"
+                :key="item.name"
+                @click="handleClick(item)"
+                class="financial-button list-div"
+                tabindex="0"
+              >
+                {{ item.name }}
+              </div>
             </div>
+          </div>
+        </Transition>
+      </div>
+
+      <!-- finacial sheet  -->
+
+      <div class="main-div">
+        <!-- original  -->
+        <div class="main-div-org" v-if="showMainDiv">
+          <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">
+            FINANCIAL SHEET
+          </p>
+          <div class="select-button">
+            <svg
+              style="cursor: pointer"
+              width="60"
+              height="60"
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M30 40L40 30L30 20"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20 30H40"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
           </div>
         </div>
       </div>
-      <!-- finacial sheet  -->
-      <div class="main-div" v-if="showMainDiv">
-        <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">
-          FINANCIAL SHEET
-        </p>
-        <div class="select-button">
-          <svg
-            style="cursor: pointer"
-            width="60"
-            height="60"
-            viewBox="0 0 60 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
-              stroke="black"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M30 40L40 30L30 20"
-              stroke="black"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M20 30H40"
-              stroke="black"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
-        </div>
-      </div>
+
       <!-- indicator  -->
-      <div class="main-div" v-if="showMainDiv">
-        <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">INDICATORS</p>
-        <div class="select-button">
-          <svg
-            style="cursor: pointer"
-            width="60"
-            height="60"
-            viewBox="0 0 60 60"
-            fill="none"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
-              stroke="black"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M30 40L40 30L30 20"
-              stroke="black"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-            <path
-              d="M20 30H40"
-              stroke="black"
-              stroke-width="3"
-              stroke-linecap="round"
-              stroke-linejoin="round"
-            />
-          </svg>
+
+      <div class="main-div">
+        <!-- original  -->
+        <div class="main-div-org" v-if="showMainDiv">
+          <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">INDICATORS</p>
+          <div class="select-button">
+            <svg
+              style="cursor: pointer"
+              width="60"
+              height="60"
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M30 40L40 30L30 20"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20 30H40"
+                stroke="black"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
         </div>
       </div>
     </div>
@@ -435,7 +451,7 @@ export default {
   text-align: center;
   justify-content: center;
   position: relative;
-  align-items: center;
+  align-items: flex-start;
   flex-direction: row;
 }
 .select-button {
@@ -462,10 +478,11 @@ export default {
 }
 
 .financial-button {
+  cursor: pointer;
 }
 
 .financial-button:hover {
-  color: #75fb9f;
+  /* color: #75fb9f; */
 }
 
 /* Dark-Mode */
@@ -546,6 +563,41 @@ h3 {
 
 .slide2-leave-to {
   transform: translateY(100%); /* 向下移動到下方 */
+  /* opacity: 0; */
+}
+
+.slide1-enter-active,
+.slide1-leave-active {
+  transition: all 1s ease;
+}
+.slide1-enter {
+  transform: translateY(100%);
+  opacity: 1;
+}
+.slide1-leave-to {
+  transform: translateY(100%);
+}
+.slide1-enter-from {
+  opacity: 0;
+  transform: translateY(100%);
+}
+
+.slideMainDiv-enter-active {
+  transition: transform 0.75s ease;
+}
+.slideMainDiv-leave-active {
+  transition: transform 0.75s ease;
+}
+.slideMainDiv-enter {
+  transform: translateX(100%);
+  opacity: 1;
+}
+.slideMainDiv-leave-to {
+  transform: translateX(100%);
+  /* opacity: 0; */
+}
+.slideMainDiv-enter-from {
+  transform: translateX(100%);
   /* opacity: 0; */
 }
 </style>

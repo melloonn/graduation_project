@@ -271,6 +271,7 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
+
 .gradient-stop {
   transition: stop-color 0.5s ease, stop-opacity 0.5s ease;
 }

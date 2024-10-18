@@ -45,7 +45,7 @@
         <!-- box1  -->
         <div class="box1">
           <Transition name="slideOrigin">
-            <div v-if="!isExpend" class="originDiv1">
+            <div v-if="!isExpend" class="originDiv">
               <div class="blackbox1">
                 <svg
                   width="60"
@@ -59,21 +59,21 @@
                 >
                   <path
                     d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
-                    stroke="#75FB9F"
+                    :stroke="isDarkMode ? '#1b2023' : '#75FB9F'"
                     stroke-width="4"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                   <path
                     d="M30 20V40"
-                    stroke="#75FB9F"
+                    :stroke="isDarkMode ? '#1b2023' : '#75FB9F'"
                     stroke-width="4"
                     stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                   <path
                     d="M20 30H40"
-                    stroke="#75FB9F"
+                    :stroke="isDarkMode ? '#1b2023' : '#75FB9F'"
                     stroke-width="4"
                     stroke-linecap="round"
                     stroke-linejoin="round"
@@ -87,7 +87,7 @@
           </Transition>
 
           <Transition name="slide1">
-            <div v-if="isExpend" class="animateDiv1">
+            <div v-if="isExpend" class="animateDiv">
               <div class="select-div"><h2>// SELECT</h2></div>
               <div class="types-div" tabindex="0">
                 <p>Types</p>
@@ -120,7 +120,7 @@
         <!-- box2  -->
         <div class="box2">
           <Transition name="slideOrigin">
-            <div v-if="!isExpend" class="originDiv2">
+            <div v-if="!isExpend" class="originDiv">
               <div class="blackbox2"></div>
               <div class="linearBox"></div>
               <div class="linearBox"></div>
@@ -129,7 +129,7 @@
           </Transition>
 
           <Transition name="slide2">
-            <div v-if="isExpend" class="animateDiv2"></div>
+            <div v-if="isExpend" class="animateDiv"></div>
           </Transition>
           <!-- enterprise-list  -->
           <Transition name="slideList">
@@ -151,7 +151,7 @@
         <!-- box3  -->
         <div class="box3">
           <Transition name="slideOrigin">
-            <div v-if="!isExpend" class="originDiv3">
+            <div v-if="!isExpend" class="originDiv">
               <div class="blackbox3"></div>
               <div class="linearBox"></div>
               <div class="linearBox"></div>
@@ -160,7 +160,7 @@
           </Transition>
 
           <Transition name="slide3">
-            <div v-if="isExpend" class="animateDiv3"></div>
+            <div v-if="isExpend" class="animateDiv"></div>
           </Transition>
         </div>
 
@@ -189,6 +189,40 @@
                 fill="#75FB9F"
                 stroke="black"
               />
+              <path
+                d="M476.25 30H474.75H473.25H471.75H470.25V28.5H468.75V27V25.5V24V22.5V21V19.5V18H470.25V16.5H471.75H473.25H474.75H476.25H477.75V18H479.25V19.5V21H477.75H476.25V19.5H474.75H473.25H471.75V21V22.5V24V25.5V27H473.25H474.75H476.25V25.5H474.75H473.25V24V22.5H474.75H476.25H477.75H479.25V24V25.5V27V28.5H477.75V30H476.25ZM489.75 30H488.25H486.75H485.25H483.75H482.25H480.75V28.5V27V25.5V24V22.5V21V19.5V18V16.5H482.25H483.75H485.25H486.75H488.25H489.75H491.25V18V19.5H489.75H488.25H486.75H485.25H483.75V21H485.25H486.75H488.25H489.75V22.5V24H488.25H486.75H485.25H483.75V25.5V27H485.25H486.75H488.25H489.75H491.25V28.5V30H489.75ZM501.75 30V28.5H500.25V27H498.75V25.5H497.25V24H495.75V25.5V27V28.5V30H494.25H492.75V28.5V27V25.5V24V22.5V21V19.5V18V16.5H494.25V18H495.75V19.5H497.25V21H498.75V22.5H500.25V21V19.5V18V16.5H501.75H503.25V18V19.5V21V22.5V24V25.5V27V28.5V30H501.75ZM513.75 30H512.25H510.75H509.25H507.75H506.25H504.75V28.5V27V25.5V24V22.5V21V19.5V18V16.5H506.25H507.75H509.25H510.75H512.25H513.75H515.25V18V19.5H513.75H512.25H510.75H509.25H507.75V21H509.25H510.75H512.25H513.75V22.5V24H512.25H510.75H509.25H507.75V25.5V27H509.25H510.75H512.25H513.75H515.25V28.5V30H513.75ZM525.75 30H524.25V28.5H522.75V27H521.25V25.5H519.75V27V28.5V30H518.25H516.75V28.5V27V25.5V24V22.5V21V19.5V18V16.5H518.25H519.75H521.25H522.75H524.25H525.75V18H527.25V19.5V21V22.5V24H525.75V25.5V27H527.25V28.5V30H525.75ZM522.75 22.5H524.25V21V19.5H522.75H521.25H519.75V21V22.5H521.25H522.75ZM537.75 30H536.25V28.5V27V25.5H534.75H533.25H531.75V27V28.5V30H530.25H528.75V28.5V27V25.5V24V22.5V21V19.5H530.25V18H531.75V16.5H533.25H534.75H536.25V18H537.75V19.5H539.25V21V22.5V24V25.5V27V28.5V30H537.75ZM534.75 22.5H536.25V21H534.75V19.5H533.25V21H531.75V22.5H533.25H534.75ZM545.25 30H543.75V28.5V27V25.5V24V22.5V21V19.5H542.25H540.75V18V16.5H542.25H543.75H545.25H546.75H548.25H549.75V18V19.5H548.25H546.75V21V22.5V24V25.5V27V28.5V30H545.25ZM558.75 30H557.25H555.75H554.25H552.75V28.5H551.25V27V25.5V24V22.5V21V19.5V18H552.75V16.5H554.25H555.75H557.25H558.75H560.25V18H561.75V19.5V21V22.5V24V25.5V27V28.5H560.25V30H558.75ZM557.25 27H558.75V25.5V24V22.5V21V19.5H557.25H555.75H554.25V21V22.5V24V25.5V27H555.75H557.25ZM572.25 30H570.75V28.5H569.25V27H567.75V25.5H566.25V27V28.5V30H564.75H563.25V28.5V27V25.5V24V22.5V21V19.5V18V16.5H564.75H566.25H567.75H569.25H570.75H572.25V18H573.75V19.5V21V22.5V24H572.25V25.5V27H573.75V28.5V30H572.25ZM569.25 22.5H570.75V21V19.5H569.25H567.75H566.25V21V22.5H567.75H569.25Z"
+                fill="#75FB9F"
+              />
+              <foreignObject x="0" y="0" width="100%" height="100%">
+                <div xmlns="http://www.w3.org/1999/xhtml" class="text-block">
+                  <p :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }">
+                    Lorem ipsum dolor sit amet consectetur. Sagittis non
+                    habitasse amet egestas semper. Viverra euismod risus sapien
+                    morbi. Etiam amet vitae maecenas vitae purus. Neque ultrices
+                    amet elit lobortis turpis ultricies viverra. Id auctor ac
+                    semper leo malesuada aliquam arcu. Eget velit maecenas
+                    euismod mi tellus. Nisl congue risus nibh magna facilisis.
+                    Dui mauris phasellus aliquam nulla eget quam potenti
+                    fermentum malesuada. Tristique viverra lobortis enim
+                    consequat placerat tempor dui. Nunc commodo habitasse mollis
+                    aliquet feugiat tincidunt urna dictum eu. Odio aliquam
+                    sagittis pharetra ipsum massa. Bibendum pharetra turpis
+                    laoreet erat adipiscing blandit faucibus vestibulum.
+                    Tincidunt dignissim sagittis sapien accumsan convallis.
+                    Adipiscing mattis faucibus enim quis sed erat at odio
+                    tortor. Venenatis eu quis a donec est mattis. A nibh nulla
+                    orci habitasse semper et massa. Erat pellentesque in leo
+                    consequat. Proin viverra sit velit sodales viverra pharetra.
+                    Habitant iaculis quisque non ac eget. Arcu amet eget quam
+                    sit consectetur vel sit amet risus. Massa vel augue
+                    scelerisque non eu nulla. Vel gravida tincidunt ut nec. Ut
+                    fusce libero elit ornare viverra diam a ornare sollicitudin.
+                    Risus id euismod justo elementum lacus at sed purus. Sed
+                    vulputate diam aliquam adipiscing ipsum pulvinar. Porttitor
+                    curs
+                  </p>
+                </div>
+              </foreignObject>
             </svg>
           </div>
         </div>
@@ -315,6 +349,7 @@ export default {
   flex-direction: column;
   width: 45vw;
 }
+/* generator-div  */
 .generator-div {
   position: relative;
   display: flex;
@@ -323,6 +358,24 @@ export default {
   align-items: center;
   margin-bottom: 0.75rem;
   flex: 1;
+}
+.text-block {
+  display: flex;
+  padding: 5.75rem 1.75rem 6rem 2.75rem;
+  height: 100%;
+  width: 100%;
+  color: black;
+  align-content: center;
+  justify-content: center;
+  align-items: flex-start;
+}
+.text-block p {
+  font-family: "MinecraftFont", sans-serif;
+  user-select: none;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 200%;
 }
 
 .box1 {
@@ -346,7 +399,7 @@ export default {
   width: 35vw;
 }
 
-.animateDiv1 {
+.animateDiv {
   position: absolute;
   top: 0;
   left: 0;
@@ -356,6 +409,7 @@ export default {
   width: 100%;
   height: 100%;
 }
+
 .select-div {
   height: 55%;
   width: 100%;
@@ -416,7 +470,7 @@ export default {
 }
 
 /* div1  */
-.originDiv1 {
+.originDiv {
   display: flex;
   flex-direction: row;
   width: 100%;
@@ -495,6 +549,7 @@ export default {
 }
 
 .financial-button {
+  cursor: pointer;
 }
 
 .financial-button:hover {
@@ -508,7 +563,12 @@ export default {
   font-weight: normal;
   font-style: normal;
 }
-
+@font-face {
+  font-family: "Superstar";
+  src: url("../assets/fonts/Superstar.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
 @font-face {
   font-family: "MinecraftFont";
   src: url("../assets/fonts/Minecraft.ttf") format("truetype");
@@ -546,6 +606,17 @@ p {
   user-select: none;
   /* color: white; */
 }
+svg text {
+  font-family: "Micro5";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 24px;
+  line-height: 200%;
+  /* identical to box height, or 48px */
+  text-align: center;
+
+  color: #75fb9f;
+}
 .list-div {
   font-family: "Inter";
   font-style: normal;
@@ -563,6 +634,26 @@ p {
 }
 .dark-mode border {
   border: 2px solid #75fb9f;
+}
+.dark-mode .animateDiv,
+.dark-mode .blackbox1,
+.dark-mode .blackbox2,
+.dark-mode .blackbox3 {
+  background-color: #75fb9f;
+}
+.dark-mode .box1,
+.dark-mode .box2,
+.dark-mode .box3 {
+  background-color: #1b2023;
+}
+.dark-mode h1,
+.dark-mode h2,
+.dark-mode p,
+.dark-mode .list-div {
+  color: #1b2023;
+}
+.dark-mode .linearBox {
+  background: linear-gradient(to right, #75fb9f, #1b2023);
 }
 
 /* animate  */
