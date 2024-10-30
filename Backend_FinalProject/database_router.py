@@ -1,34 +1,33 @@
 class FinancialDataRouter:
     """
-    一個負責財報數據的數據庫路由器。
-
-    - db_for_read: 決定從哪個數據庫讀取數據。
-    - db_for_write: 決定數據寫入哪個數據庫（雖然此專案不會寫入）。
-    - allow_relation: 決定哪些模型之間允許關聯。
-    - allow_migrate: 決定哪些模型應該被遷移到哪個數據庫。
+    財報數據的數據庫路由器：
+    
+    - db_for_read: 指定讀取數據的資料庫。
+    - db_for_write: 指定寫入數據的資料庫。
+    - allow_relation: 允許哪些模型之間的關聯。
+    - allow_migrate: 決定哪些模型可以被遷移到哪個資料庫。
     """
 
     def db_for_read(self, model, **hints):
         """
-        如果模型屬於 'finance_visualizer' 應用，從 'financial_data' 資料庫讀取數據。
+        指定讀取數據的資料庫，若模型屬於 'finance_visualizer' 應用，則使用 'financial_data' 資料庫。
         """
         if model._meta.app_label == 'finance_visualizer':
             return 'financial_data'
-        return None
+        return 'default'
 
     def db_for_write(self, model, **hints):
         """
-        如果模型屬於 'finance_visualizer' 應用，則不允許寫入。
-        （因為本專案不涉及寫入操作）
+        指定寫入數據的資料庫。
+        若模型屬於 'finance_visualizer' 應用，則使用 'financial_data' 資料庫。
         """
         if model._meta.app_label == 'finance_visualizer':
-            # return None
             return 'financial_data'
-        return None 
+        return 'default'
 
     def allow_relation(self, obj1, obj2, **hints):
         """
-        允許與 'finance_visualizer' 應用相關的模型之間的關聯。
+        允許 'finance_visualizer' 應用的模型與其他模型之間的關聯。
         """
         if (
             obj1._meta.app_label == 'finance_visualizer' or
@@ -43,4 +42,4 @@ class FinancialDataRouter:
         """
         if app_label == 'finance_visualizer':
             return db == 'financial_data'
-        return None
+        return db == 'default'

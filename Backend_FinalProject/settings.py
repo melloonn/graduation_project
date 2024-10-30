@@ -13,6 +13,8 @@ import pymysql
 pymysql.install_as_MySQLdb()
 
 from pathlib import Path
+#JWT
+from datetime import timedelta
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -85,26 +87,23 @@ WSGI_APPLICATION = 'Backend_FinalProject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.2/ref/settings/#databases
 
-DATABASE_ROUTERS = ['Backend_FinalProject.database_router.FinancialDataRouter']
+
 # 要更新資料庫的話（需指定），原本default是SQLite（ python manage.py migrate）
 # (python manage.py migrate --database=financial_data)
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',  # 用來儲存登入相關資料的 SQLite 資料庫
     },
     'financial_data': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'sys',  # 使用你的 MySQL 資料庫名稱
-        'USER': 'root',
-        'PASSWORD': 'Melloonn920709!',
-        'HOST': 'localhost',
-        'PORT': '3306',
-        'TEST': {
-            'MIRROR': 'financial_data',  # 讓測試直接使用現有數據庫
-        }
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'financial_data_db.sqlite3',  # 用來儲存財報資料的 SQLite 資料庫
     }
 }
+
+# Database Routers 指定資料庫路由器，決定不同應用的資料庫讀寫策略
+DATABASE_ROUTERS = ['Backend_FinalProject.database_router.FinancialDataRouter']
+
 
 
 
@@ -169,7 +168,7 @@ EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'huangzhengyong5@gmail.com'
 EMAIL_HOST_PASSWORD = 'vtqn irzx ztpq esmk'  # 使用應用程式專用密碼
 DEFAULT_FROM_EMAIL = 'huangzhengyong5@gmail.com'
-FRONTEND_URL = 'https://your-frontend-url.com'
+FRONTEND_URL = 'http://localhost:8080'
 
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.google.GoogleOAuth2',
@@ -178,3 +177,11 @@ AUTHENTICATION_BACKENDS = (
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = '<Your-Google-Client-ID>'
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<Your-Google-Client-Secret>'
+
+#JWT 
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Access Token 過期時間（默認 5 分鐘）
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    # Refresh Token 過期時間（默認 7 天）
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}
