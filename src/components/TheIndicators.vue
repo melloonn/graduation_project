@@ -13,7 +13,7 @@
         >
           <path
             d="M26.6667 3.3335V5.00016H23.3333V8.3335H20V11.6668H16.6667V15.0002H13.3333V16.6668H11.6667V18.3335H10V21.6668H11.6667V23.3335H13.3333V25.0002H16.6667V28.3335H20V31.6668H21.6667H23.3333V33.3335V35.0002H26.6667V36.6668H30V31.6668H26.6667V28.3335H23.3333V25.0002H20V21.6668H16.6667V18.3335H20V15.0002H23.3333V11.6668H26.6667V8.3335H30V3.3335H26.6667Z"
-            fill="black"
+            :fill="isDarkMode ? '#75FB9F' : 'black'"
           />
         </svg>
       </div>
@@ -29,11 +29,11 @@
         >
           <path
             d="M0 11.4349V24.0579C3.77049 24.2218 8.94098 24.1382 12.7869 22.9103C16.8098 21.6251 21.3115 18.9759 23.6066 16.3529V24.0579C27.8689 24.0579 31.3115 24.3857 37.377 22.5824C41.2197 21.4398 44.918 18.812 47.541 16.3529V24.0579H60V0.615234C55.7377 0.779169 55.0639 0.564415 51.1475 1.27097C41.1475 2.74638 40.3459 8.42671 36.3934 9.13982V0.779169C36.3934 0.779169 26.8852 0.287366 21.6393 3.07425C15.0803 6.5595 11.8033 12.5824 0 11.4349Z"
-            :fill="isDarkMode ? 'black' : 'black'"
+            :fill="isDarkMode ? '#75FB9F' : 'black'"
           />
           <path
             d="M10.1053 5.05263C6.73684 5.98232 5.98232 6.73684 5.05263 10.1053C4.12295 6.73684 3.36842 5.98232 0 5.05263C3.36842 4.12295 4.12295 3.36842 5.05263 0C5.98232 3.36842 6.73684 4.12295 10.1053 5.05263Z"
-            :fill="isDarkMode ? 'black' : 'black'"
+            :fill="isDarkMode ? '#75FB9F' : 'black'"
           />
         </svg>
       </div>
@@ -54,7 +54,7 @@
           stroke-width="5"
         />
         <foreignObject x="0" y="0" width="100%" height="100%">
-          <div class="enlarge-btn" @click="startAnimation">
+          <div class="enlarge-btn" @click="startAnimation" tabindex="0">
             <svg
               width="25"
               height="25"
@@ -92,10 +92,44 @@
               />
             </svg>
           </div>
-          <div xmlns="http://www.w3.org/1999/xhtml" class="text-block">
-            <h3 :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }">
-              Your summary text here
-            </h3>
+          <div class="chart-div" v-if="isChartVisible">
+            <TheChart
+              :company-id="company_id"
+              :report-type="report_type"
+              :data-field="data_field"
+              :chart-data="chartData"
+            />
+          </div>
+          <div xmlns="http://www.w3.org/1999/xhtml" class="text-div">
+            <div class="text-block">
+              <h3 :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }">
+                {{ summary }}
+              </h3>
+            </div>
+          </div>
+          <div
+            class="chatbox-design"
+            :class="isAnimating ? 'enlarge-mode' : 'normal-mode'"
+            tabindex="0"
+          >
+            <svg
+              @click="submitRequest"
+              style="cursor: pointer"
+              width="138"
+              height="97"
+              viewBox="0 0 138 97"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30.0119 96.088L16 9.45703L137.967 92.9638L30.0119 96.088Z"
+                fill="#A7A9AC"
+              />
+              <path
+                d="M14.0119 90.088L0 3.45703L121.967 86.9638L14.0119 90.088Z"
+                fill="#75FB9F"
+              />
+            </svg>
           </div>
         </foreignObject>
       </svg>
@@ -104,10 +138,15 @@
     <div class="main-content" v-show="!isAnimating">
       <!-- enterprise  -->
 
-      <div class="main-div">
+      <div
+        class="main-div"
+        v-show="!(isEnterprisePressed === false && showMainDiv === false)"
+      >
         <!-- original  -->
         <div class="main-div-org" v-if="showMainDiv">
-          <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">ENTERPRISE</p>
+          <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">
+            {{ enterpriseText }}
+          </p>
           <div class="select-button">
             <svg
               @click="toggleEnterprise"
@@ -120,21 +159,21 @@
             >
               <path
                 d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
-                stroke="black"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M30 40L40 30L30 20"
-                stroke="black"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M20 30H40"
-                stroke="black"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -145,12 +184,82 @@
 
         <!-- expand  -->
         <Transition name="slide1">
-          <div class="button-list main-div-expand" v-if="isEmterprisePressed">
-            <div class="scrollable-list">
+          <div
+            class="enterprise-button-list main-div-expand"
+            v-if="isEnterprisePressed"
+          >
+            <div class="enterprise-scrollable-list">
+              <div
+                v-for="item in enterpriseItems"
+                :key="item.name"
+                @click="handleClick(item, 'enterprise')"
+                class="enterprise-button list-div"
+                tabindex="0"
+              >
+                {{ item.value }}
+              </div>
+            </div>
+          </div>
+        </Transition>
+      </div>
+
+      <!-- finacial sheet  -->
+
+      <div
+        class="main-div"
+        v-show="!(isFinacialPressed === false && showMainDiv === false)"
+      >
+        <!-- original  -->
+        <div class="main-div-org" v-if="showMainDiv">
+          <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">
+            {{ financialText }}
+          </p>
+          <div class="select-button">
+            <svg
+              @click="toggleFinancial"
+              style="cursor: pointer"
+              width="60"
+              height="60"
+              viewBox="0 0 60 60"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M30 40L40 30L30 20"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+              <path
+                d="M20 30H40"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
+                stroke-width="3"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </div>
+        </div>
+
+        <!-- expand  -->
+        <Transition name="slide1">
+          <div
+            class="financial-button-list financial-main-div-expand"
+            v-if="isFinacialPressed"
+          >
+            <div class="financial-scrollable-list">
               <div
                 v-for="item in financialItems"
                 :key="item.name"
-                @click="handleClick(item)"
+                @click="handleClick(item, 'financial')"
                 class="financial-button list-div"
                 tabindex="0"
               >
@@ -161,16 +270,20 @@
         </Transition>
       </div>
 
-      <!-- finacial sheet  -->
+      <!-- indicator  -->
 
-      <div class="main-div">
+      <div
+        class="main-div"
+        v-show="!(isIndicatorPressed === false && showMainDiv === false)"
+      >
         <!-- original  -->
         <div class="main-div-org" v-if="showMainDiv">
           <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">
-            FINANCIAL SHEET
+            {{ indicatorText }}
           </p>
           <div class="select-button">
             <svg
+              @click="toggleIndicator"
               style="cursor: pointer"
               width="60"
               height="60"
@@ -180,21 +293,21 @@
             >
               <path
                 d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
-                stroke="black"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M30 40L40 30L30 20"
-                stroke="black"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
               />
               <path
                 d="M20 30H40"
-                stroke="black"
+                :stroke="isDarkMode ? '#75FB9F' : 'black'"
                 stroke-width="3"
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -202,59 +315,40 @@
             </svg>
           </div>
         </div>
-      </div>
 
-      <!-- indicator  -->
-
-      <div class="main-div">
-        <!-- original  -->
-        <div class="main-div-org" v-if="showMainDiv">
-          <p :style="{ color: isDarkMode ? '#75FB9F' : 'black' }">INDICATORS</p>
-          <div class="select-button">
-            <svg
-              style="cursor: pointer"
-              width="60"
-              height="60"
-              viewBox="0 0 60 60"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M30 55C43.8071 55 55 43.8071 55 30C55 16.1929 43.8071 5 30 5C16.1929 5 5 16.1929 5 30C5 43.8071 16.1929 55 30 55Z"
-                stroke="black"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M30 40L40 30L30 20"
-                stroke="black"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-              <path
-                d="M20 30H40"
-                stroke="black"
-                stroke-width="3"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-              />
-            </svg>
+        <!-- expand  -->
+        <Transition name="slide1">
+          <div
+            class="indicator-button-list indicator-main-div-expand"
+            v-if="isIndicatorPressed"
+          >
+            <div class="indicator-scrollable-list">
+              <div
+                v-for="item in selectedIndicators"
+                :key="item.name"
+                @click="handleClick(item, 'indicators')"
+                class="indicator-button list-div"
+                tabindex="0"
+              >
+                {{ item.name }}
+              </div>
+            </div>
           </div>
-        </div>
+        </Transition>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import TheChart from "./TheChart.vue";
 import anime from "animejs/lib/anime.es.js";
 export default {
   data() {
     return {
+      isChartVisible: false,
       showMainDiv: true,
-      isEmterprisePressed: false,
+      isEnterprisePressed: false,
       isFinacialPressed: false,
       isIndicatorPressed: false,
       isAnimating: false,
@@ -264,34 +358,95 @@ export default {
       viewBox: "0 0 1231 346",
       pathData:
         "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z",
-      financialItems: [
-        { name: "華南金HNFHC" },
-        { name: "富邦金FUBFH" },
-        { name: "國泰金CFH" },
-        { name: "開發金KGI" },
-        { name: "玉山金ESFHC" },
-        { name: "元大金YFH" },
-        { name: "兆豐金MFG" },
-        { name: "台新金TSFHC" },
-        { name: "新光金SKFH" },
-        { name: "國票金CBFHC" },
-        { name: "永豐金SPH" },
-        { name: "中信金CTBC" },
-        { name: "第一金FFHC" },
-        { name: "日盛金JSFHC" },
-        { name: "合庫金TCFHC" },
+
+      company_id: "",
+      report_type: "",
+      data_field: "",
+      chartData: [],
+      summary: "",
+      enterpriseText: "ENTERPRISE",
+      enterpriseItems: [
+        { value: "華南金HNFHC", name: "HNFHC", id: "2880" },
+        { value: "富邦金FUBFH", name: "FUBFH", id: "2881" },
+        { value: "國泰金CFH", name: "CFH", id: "2882" },
+        { value: "開發金KGI", name: "KGI", id: "2883" },
+        { value: "玉山金ESFHC", name: "ESFHC", id: "2884" },
+        { value: "元大金YFH", name: "YFH", id: "2885" },
+        { value: "兆豐金MFG", name: "MFG", id: "2886" },
+        { value: "台新金TSFHC", name: "TSFHC", id: "2887" },
+        { value: "新光金SKFH", name: "SKFH", id: "2888" },
+        { value: "國票金CBFHC", name: "CBFHC", id: "2889" },
+        { value: "永豐金SPH", name: "SPH", id: "2890" },
+        { value: "中信金CTBC", name: "CTBC", id: "2891" },
+        { value: "第一金FFHC", name: "FFHC", id: "2892" },
+        { value: "日盛金JSFHC", name: "JSFHC", id: "5820" },
+        { value: "合庫金TCFHC", name: "TCFHC", id: "5880" },
       ],
+      financialText: "FINANCIAL SHEET",
+      financialItems: [
+        {
+          name: "FINANCIAL INDICATOR",
+          id: "financialIndicators",
+          value: "indicator",
+        },
+        {
+          name: "INCOME STATEMENT",
+          id: "incomeStatement",
+          value: "income_statement",
+        },
+        {
+          name: "CASH FLOW STATEMENT",
+          id: "cashFlowStatement",
+          value: "cash_flow",
+        },
+        { name: "BALANCE SHEET", id: "balanceSheet", value: "balance_sheet" },
+      ],
+      indicatorText: "INDICATORS",
+      indicatorItems: {
+        financialIndicators: [
+          // {value:"", name: "#"},
+          { value: "ROA(A)稅後息前", name: "ROA(A) After Tax" },
+          { value: "ROA－綜合損益", name: "ROA Income" },
+          { value: "ROE(A)－稅後", name: "ROE(A) After Tax" },
+          { value: "ROE(B)－常續利益", name: "ROE(B) Continuing" },
+          { value: "ROE－綜合損益", name: "ROE Income" },
+        ],
+        incomeStatement: [
+          { value: "營業收入淨額", name: "Net Sales" },
+          { value: "營業費用", name: "Op. Expenses" },
+          { value: "利息收入", name: "Interest Inc." },
+          { value: "稅前淨利", name: "Pre-Tax Profit" },
+          { value: "所得稅費用", name: "Tax Expense" },
+        ],
+        cashFlowStatement: [
+          { value: "稅前淨利－CFO", name: "Pre-Tax CFO" },
+          { value: "折舊－CFO", name: "Depreciation" },
+          { value: "攤提－CFO", name: "Amortization" },
+          { value: "來自營運之現金流量", name: "Cash Flow Ops" },
+          { value: "新增投資－CFI", name: "New Inv. CFI" },
+        ],
+        balanceSheet: [
+          { value: "現金及約當現金", name: "Cash & Equiv." },
+          { value: "應收帳款及票據", name: "Accounts Rec." },
+          { value: "其他應收款", name: "Other Receiv." },
+          { value: "不動產廠房及設備", name: "Prop. & Equip." },
+          { value: "商譽及無形資產合計", name: "Goodwill & Int." },
+        ],
+      },
+      selectedIndicators: [], // 儲存選擇的指標
     };
   },
-  components: {},
+  components: {
+    TheChart,
+  },
   mounted() {
-    const storedDarkMode = localStorage.getItem("isDarkMode");
+    const storedDarkMode = sessionStorage.getItem("isDarkMode");
     if (storedDarkMode !== null) {
       this.$isDarkMode = JSON.parse(storedDarkMode);
       this.$nextTick(() => {
-        console.log(this.$isDarkMode);
+        // console.log(this.$isDarkMode);
       });
-      console.log(this.$isDarkMode);
+      // console.log(this.$isDarkMode);
     }
     if (this.$isDarkMode == true) {
       this.isDarkMode = true;
@@ -335,8 +490,55 @@ export default {
       this.$router.push(path);
     },
     toggleEnterprise() {
-      this.isEmterprisePressed = !this.isEmterprisePressed;
+      this.isEnterprisePressed = !this.isEnterprisePressed;
       this.showMainDiv = false;
+    },
+    toggleFinancial() {
+      this.isFinacialPressed = !this.isFinacialPressed;
+      this.showMainDiv = false;
+    },
+    toggleIndicator() {
+      this.isIndicatorPressed = !this.isIndicatorPressed;
+      this.showMainDiv = false;
+    },
+    handleClick(item, type) {
+      if (type === "enterprise") {
+        this.enterpriseText = item.name;
+        this.company_id = item.id;
+        this.isEnterprisePressed = !this.isEnterprisePressed;
+      } else if (type === "financial") {
+        this.financialText = item.name;
+        this.report_type = item.value;
+        this.selectedIndicators = this.indicatorItems[item.id] || []; // 根據所選的財務表更新指標
+        this.isFinacialPressed = !this.isFinacialPressed;
+      } else if (type === "indicators") {
+        this.indicatorText = item.name;
+        this.data_field = item.value;
+        this.isIndicatorPressed = !this.isIndicatorPressed;
+      }
+      this.showMainDiv = true;
+    },
+    async submitRequest() {
+      try {
+        const params = {
+          company_id: this.company_id,
+          report_type: this.report_type,
+          data_field: this.data_field,
+        };
+
+        console.log("Submitting request with parameters:", params);
+        const response = await this.$axios.get(
+          "http://127.0.0.1:8000/api/financial_data/",
+          { params }
+        );
+        this.chartData = response.data[this.company_id][this.report_type][0];
+        this.isChartVisible = true;
+        //
+        console.log("Response from server:", this.chartData[0]);
+        // Handle response data as needed
+      } catch (error) {
+        console.error("Error during request:", error);
+      }
     },
   },
 };
@@ -377,6 +579,7 @@ export default {
   justify-content: center;
   border-radius: 50%;
 }
+
 .chatbox {
   position: relative;
   padding: 1rem 0.5rem 0.5rem 0.5rem;
@@ -410,12 +613,41 @@ export default {
   margin-right: 3rem;
   cursor: pointer;
 }
+.chart-div {
+  height: 50%;
+  width: 100%;
+  margin-top: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.chatbox-design {
+  display: inline-block;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  transition: margin 0.3s ease;
+}
+.enlarge-mode {
+  margin-bottom: 3.5rem;
+  margin-left: 2.5rem;
+}
+.normal-mode {
+  margin-bottom: 2.2rem;
+  margin-left: 2.2rem;
+}
+
+.text-div {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
 
 .text-block {
   display: flex;
-  padding: 2rem 6rem 6rem 6rem;
   height: 100%;
-  width: 100%;
+  width: 550px;
   color: black;
   border-radius: 10px;
 }
@@ -436,6 +668,11 @@ export default {
   align-items: center;
   flex-direction: row;
 }
+
+/* .dark-mode .main-div {
+  border-color: #75fb9f;
+} */
+
 .main-div-org {
   display: flex;
   flex: 1;
@@ -454,13 +691,14 @@ export default {
   align-items: flex-start;
   flex-direction: row;
 }
+
 .select-button {
   position: absolute;
   right: 80px;
 }
 
 /* enterprise-list  */
-.button-list {
+.enterprise-button-list {
   width: 250px;
   height: 390px;
   overflow-y: auto;
@@ -468,21 +706,89 @@ export default {
   box-sizing: border-box;
   z-index: 10;
 }
-.button-list::-webkit-scrollbar {
+.enterprise-button-list::-webkit-scrollbar {
   display: none;
 }
-.scrollable-list {
+.enterprise-scrollable-list {
   display: flex;
   flex-direction: column;
   gap: 5px;
 }
 
-.financial-button {
+.enterprise-button {
   cursor: pointer;
 }
 
-.financial-button:hover {
+.enterprise-button:hover {
   /* color: #75fb9f; */
+}
+
+/* financial-list  */
+.financial-main-div-expand {
+  display: flex;
+  flex: 1;
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+}
+.financial-button-list {
+  width: 250px;
+  height: 390px;
+  overflow-y: auto;
+  margin: 15px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+.financial-button-list::-webkit-scrollbar {
+  display: none;
+}
+.financial-scrollable-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.financial-button {
+  cursor: pointer;
+}
+/* indicator */
+.indicator-main-div-expand {
+  display: flex;
+  /* flex: 1; */
+  text-align: center;
+  justify-content: center;
+  position: relative;
+  align-items: center;
+  flex-direction: row;
+}
+.indicator-button-list {
+  width: 720px;
+  height: 390px;
+  overflow-y: auto;
+  margin: 15px;
+  box-sizing: border-box;
+  z-index: 10;
+}
+.indicator-button-list::-webkit-scrollbar {
+  display: none;
+}
+.indicator-scrollable-list {
+  display: flex;
+  flex-wrap: wrap; /* 允許按鈕換行 */
+  max-width: 100%; /* 限制寬度以符合容器 */
+}
+.indicator-button {
+  border-radius: 90px;
+  height: 70px; /* 固定高度 */
+  width: auto; /* 根據內容長度調整寬度 */
+  border: 1px solid #000;
+  padding: 5px 10px; /* 增加內邊距以確保內容與邊界有距離 */
+  display: inline-block; /* 根據內容大小調整寬度 */
+  margin-bottom: 5px; /* 每個按鈕之間的間距 */
+  white-space: nowrap; /* 防止文字換行 */
+  cursor: pointer;
 }
 
 /* Dark-Mode */
@@ -504,13 +810,16 @@ p {
 }
 
 h3 {
-  margin: 0;
-  font-family: "PressStar2PFont", sans-serif;
+  font-family: "Inter", sans-serif;
+  font-weight: 300;
   font-style: normal;
-  font-size: 20px;
+  font-size: 16px;
   user-select: none;
 }
 .list-div {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-family: "Inter";
   font-style: normal;
   font-weight: 600;
@@ -519,6 +828,10 @@ h3 {
   user-select: none;
   letter-spacing: 0.5em;
   /* color: white; */
+}
+
+.dark-mode .list-div {
+  color: #75fb9f;
 }
 
 @font-face {
@@ -566,16 +879,17 @@ h3 {
   /* opacity: 0; */
 }
 
-.slide1-enter-active,
-.slide1-leave-active {
+.slide1-enter-active {
   transition: all 1s ease;
+}
+.slide1-leave-active {
 }
 .slide1-enter {
   transform: translateY(100%);
   opacity: 1;
 }
 .slide1-leave-to {
-  transform: translateY(100%);
+  /* transform: translateY(100%); */
 }
 .slide1-enter-from {
   opacity: 0;

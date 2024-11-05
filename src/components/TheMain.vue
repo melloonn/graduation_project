@@ -19,8 +19,32 @@
           />
         </svg>
       </div>
-      <div class="stock" :class="{ 'stock-dark-mode': isDarkMode }">股價</div>
-      <div class="time">Time</div>
+      <div class="stock" :class="{ 'stock-dark-mode': isDarkMode }">
+        <div class="marquee-container">
+          <div class="marquee-text">
+            AAPL: 275.33 META: 500.12 GOOG: 754.56 TSLA: 1548.21 MFJ: null
+          </div>
+        </div>
+      </div>
+      <div class="time" @click="navigateTo('/profile')" tabindex="0">
+        <svg
+          class="user-div"
+          width="46"
+          height="46"
+          viewBox="0 0 46 46"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M15.3334 23H17.25V24.9167H28.75V23H30.6667V21.0833H32.5834V9.58333H30.6667V7.66667H28.75V5.75H17.25V7.66667H15.3334V9.58333H13.4167V21.0833H15.3334V23ZM17.25 13.4167H19.1667V11.5H21.0834V9.58333H24.9167V11.5H26.8334V13.4167H28.75V17.25H26.8334V19.1667H24.9167V21.0833H21.0834V19.1667H19.1667V17.25H17.25V13.4167Z"
+            fill="black"
+          />
+          <path
+            d="M36.4167 30.6663V28.7497H34.5V26.833H11.5V28.7497H9.58335V30.6663H7.66669V40.2497H11.5V34.4997H13.4167V32.583H15.3334V30.6663H30.6667V32.583H32.5834V34.4997H34.5V40.2497H38.3334V30.6663H36.4167Z"
+            fill="black"
+          />
+        </svg>
+      </div>
     </div>
     <div class="main-content">
       <!-- <div class="svg-container"></div> -->
@@ -40,7 +64,7 @@ export default {
     TheMainPage,
   },
   mounted() {
-    const storedDarkMode = localStorage.getItem("isDarkMode");
+    const storedDarkMode = sessionStorage.getItem("isDarkMode");
     if (storedDarkMode !== null) {
       this.$isDarkMode = JSON.parse(storedDarkMode);
       this.$nextTick(() => {
@@ -52,7 +76,12 @@ export default {
       this.isDarkMode = true;
     }
   },
-  methods: {},
+  methods: {
+    navigateTo(path) {
+      // 使用傳遞的路徑導航
+      this.$router.push(path);
+    },
+  },
 };
 </script>
 <style scoped>
@@ -75,6 +104,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
+  border-radius: 50%;
 }
 .stock {
   border-radius: 10px;
@@ -91,15 +121,39 @@ export default {
   background-color: #75fb9f;
   color: #1b2023;
 }
+.marquee-container {
+  overflow: hidden;
+  white-space: nowrap;
+  width: 100%;
+}
+
+.marquee-text {
+  display: inline-block;
+  padding-left: 100%;
+  animation: marquee 60s linear infinite;
+}
+
+@keyframes marquee {
+  from {
+    transform: translateX(0%);
+  }
+  to {
+    transform: translateX(-100%);
+  }
+}
 
 .time {
-  border-radius: 10px;
+  border-radius: 100px;
   background-color: #75fb9f;
   width: 18vw;
-  height: 8.15vh;
+  height: 8vh;
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  padding-right: 1.5rem;
+}
+.user-div {
+  display: flex;
 }
 
 .svg-container {
@@ -123,12 +177,27 @@ export default {
   font-style: normal;
 }
 
+@font-face {
+  font-family: "PressStar2PFont";
+  src: url("../assets/fonts/PressStart2P-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
 p {
   margin: 0;
   font-family: "MinecraftFont", sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 2rem;
+  user-select: none;
+}
+
+.marquee-text {
+  font-family: "PressStar2PFont", sans-serif;
+  font-style: normal;
+  font-weight: 300;
+  font-size: 1.5rem;
   user-select: none;
 }
 

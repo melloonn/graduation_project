@@ -61,7 +61,7 @@ export default {
   },
   components: {},
   mounted() {
-    const storedDarkMode = localStorage.getItem("isDarkMode");
+    const storedDarkMode = sessionStorage.getItem("isDarkMode");
     if (storedDarkMode !== null) {
       this.$isDarkMode = JSON.parse(storedDarkMode);
       this.$nextTick(() => {
@@ -119,7 +119,7 @@ export default {
 }
 
 .dark-mode-logo {
-  color: #75fb9f; /* 暗模式顏色 */
+  background-color: #75fb9f; /* 暗模式顏色 */
 }
 
 .main-content {

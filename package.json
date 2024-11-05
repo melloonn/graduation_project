@@ -15,7 +15,7 @@
     "animejs": "^3.2.2",
     "axios": "^1.6.8",
     "bootstrap": "^5.3.3",
-    "chart.js": "^4.4.3",
+    "chart.js": "^4.4.6",
     "core-js": "^3.8.3",
     "element-plus": "^2.7.2",
     "js-cookie": "^3.0.5",
@@ -33,7 +33,8 @@
     "eslint-plugin-vue": "^8.0.3",
     "node-sass": "^9.0.0",
     "sass-loader": "^10.5.2",
-    "vue-cli-plugin-vuetify": "~2.5.8"
+    "vue-cli-plugin-vuetify": "~2.5.8",
+    "vue3-google-login": "^2.0.33"
   },
   "eslintConfig": {
     "root": true,

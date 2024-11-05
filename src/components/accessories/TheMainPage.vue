@@ -763,6 +763,7 @@
         />
       </g>
     </svg>
+    <!-- enterprise-div  -->
     <div
       v-if="showEnterDiv"
       class="enterprise-div enterprise-focus div-hover"
@@ -789,11 +790,11 @@
         <h3>Selection</h3>
         <br />
         <div>
-          <p>// Lorem ipsum dolor sit</p>
-          <p>amet consectetur.</p>
-          <p>Consequat lacus nec eget</p>
-          <p>lectus. Sed augue consequat</p>
-          <p>ut</p>
+          <p>//Select a company to</p>
+          <p>generate an AI summary of</p>
+          <p>its financial performance,</p>
+          <p>highlighting key metrics and</p>
+          <p>risks.</p>
         </div>
       </div>
       <div class="try-div">
@@ -814,6 +815,7 @@
         </button>
       </div>
     </div>
+    <!-- play-div  -->
     <div
       v-if="showPlayDiv"
       class="play-focus play-div div-hover"
@@ -841,14 +843,13 @@
         <h3>Ground</h3>
         <br />
         <div>
-          <p>// Lorem ipsum dolor sit</p>
-          <p>amet consectetur. Viverra</p>
-          <p>ut mauris egestas aliquam</p>
-          <p>ullamcorper viverra.</p>
-          <p>Auctor leo sem laoreet id.</p>
-          <p>Tempor congue adipiscing</p>
-          <p>eget donec diam</p>
-          <p>vestibulum parturient.</p>
+          <p>//Engage in an</p>
+          <p>interactive Q&A game</p>
+          <p>based on financial</p>
+          <p>reports, testing your</p>
+          <p>knowledge and helping you</p>
+          <p>learn key financial</p>
+          <p>concepts in a fun way.</p>
         </div>
       </div>
       <div class="try-div">
@@ -869,6 +870,7 @@
         </button>
       </div>
     </div>
+    <!-- gamepage  -->
     <TheGamePage1
       v-if="showGame1Div"
       @toggle-game-page2="toggleGamePage2"
@@ -878,6 +880,7 @@
       v-if="showGame2Div"
       @toggle-game-page2="toggleGamePage2"
     ></TheGamePage2>
+    <!-- idea-div  -->
     <div
       v-if="showIdeasDiv"
       class="ideas-focus ideas-div div-hover"
@@ -904,17 +907,17 @@
         <h3>ideas</h3>
         <br />
         <div>
-          <p>// Lorem ipsum dolor</p>
-          <p>sit amet consectetur.</p>
-          <p>Quam sagittis eget</p>
-          <p>laous enim semper.</p>
-          <p>erat arou molestie</p>
-          <p>ipsum. Risus amet</p>
-          <p>nibh.</p>
+          <p>//Search by tagging</p>
+          <p>specific financial.</p>
+          <p>metrics to find</p>
+          <p>relevant reports,</p>
+          <p>enabling quick access</p>
+          <p>to targeted financial</p>
+          <p>insights.</p>
         </div>
       </div>
       <div class="try-div">
-        <button class="try-button">
+        <button class="try-button" @click="navigateTo('/ideas')">
           <p>Try</p>
           <svg
             width="20"
@@ -1036,7 +1039,7 @@ export default {
   left: 23px;
 }
 .enterprise-text {
-  padding: 0 1.6rem;
+  padding: 1.5rem 1.6rem;
   letter-spacing: 3px;
 }
 
@@ -1059,7 +1062,7 @@ export default {
   left: 570px;
 }
 .play-text {
-  padding: 0 1.6rem;
+  padding: 1.5rem 1.6rem;
   letter-spacing: 3px;
 }
 
@@ -1085,7 +1088,7 @@ export default {
   left: 750px;
 }
 .ideas-text {
-  padding: 0 1.6rem;
+  padding: 1.5rem 1.6rem;
   letter-spacing: 3px;
 }
 
@@ -1101,16 +1104,22 @@ export default {
   filter: brightness(0.85);
 }
 .close-btn {
+  position: absolute;
   display: flex;
+  right: 0;
+  top: 0;
   padding: 0.75rem;
   justify-content: flex-end;
 }
 /* try-button  */
 .try-div {
+  position: absolute;
+  right: 0;
+  bottom: 0;
   flex: 1;
   display: flex;
   padding-right: 1.5rem;
-  padding-bottom: 0.75rem;
+  padding-bottom: 1rem;
   justify-content: flex-end;
   align-items: flex-end;
 }
@@ -1179,15 +1188,14 @@ h3 {
   font-family: "PressStart2P", sans-serif;
   font-style: normal;
   font-weight: 100;
-  font-size: 20px;
+  font-size: 24px;
   user-select: none;
 }
 p {
   margin: 0;
   font-family: "MinecraftFont", sans-serif;
   font-style: normal;
-  font-weight: 20;
-  font-size: 18px;
+  font-size: 20px;
   user-select: none;
 }
 </style>

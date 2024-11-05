@@ -144,7 +144,7 @@ export default {
       // 觸發自定義事件，將 darkMode 狀態傳遞給父組件
       this.$emit("toggle-dark-mode", this.darkMode);
       this.$isDarkMode = !this.$isDarkMode;
-      localStorage.setItem("isDarkMode", this.$isDarkMode);
+      sessionStorage.setItem("isDarkMode", this.$isDarkMode);
     },
   },
 };

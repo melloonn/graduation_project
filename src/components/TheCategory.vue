@@ -259,17 +259,17 @@ export default {
   },
   components: {},
   mounted() {
-    const storedDarkMode = localStorage.getItem("isDarkMode");
-    if (storedDarkMode !== null) {
-      this.$isDarkMode = JSON.parse(storedDarkMode);
-      this.$nextTick(() => {
-        console.log(this.$isDarkMode);
-      });
-      console.log(this.$isDarkMode);
-    }
-    if (this.$isDarkMode == true) {
-      this.isDarkMode = true;
-    }
+    // const storedDarkMode = sessionStorage.getItem("isDarkMode");
+    // if (storedDarkMode !== null) {
+    //   this.$isDarkMode = JSON.parse(storedDarkMode);
+    //   this.$nextTick(() => {
+    //     console.log(this.$isDarkMode);
+    //   });
+    //   console.log(this.$isDarkMode);
+    // }
+    // if (this.$isDarkMode == true) {
+    //   this.isDarkMode = true;
+    // }
   },
   methods: {
     handleClick(item) {
@@ -356,6 +356,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  margin-right: 1.5rem;
   margin-bottom: 0.75rem;
   flex: 1;
 }

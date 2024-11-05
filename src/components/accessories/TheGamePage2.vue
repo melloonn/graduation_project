@@ -246,7 +246,7 @@
           fill="white"
         />
         <!-- game icon  -->
-        <g class="gameIcon-rec">
+        <g class="gameIcon-rec" @click="navigateTo('/unity')">
           <rect
             x="79.2404"
             y="116.164"
@@ -4062,6 +4062,10 @@ export default {
   methods: {
     closeGamePage2() {
       this.$emit("toggle-game-page2");
+    },
+    navigateTo(path) {
+      // 使用傳遞的路徑導航
+      this.$router.push(path);
     },
   },
 };

@@ -11,16 +11,14 @@
   </div>
   <div class="overlay" v-show="isMenuOpen"></div>
   <!-- SignUp -->
-  <div>
-    <Transition name="fade-slide">
-      <the-sign-up
+  <Transition name="fade-slide">
+    <div v-show="isBeforeOpen" class="LogIn-content">
+      <before-sign-up
         :is-dark-mode="isDarkMode"
-        v-show="isLogInOpen"
-        @close-logIn="toggleLogIn"
-        class="LogIn-content"
-      ></the-sign-up>
-    </Transition>
-  </div>
+        @close-before="toggleBefore"
+      ></before-sign-up>
+    </div>
+  </Transition>
   <!--主頁-->
   <div :class="{ 'dark-mode': isDarkMode }" class="light-mode full">
     <!-- Header 部分 -->
@@ -109,7 +107,7 @@
           />
           <path
             class="start"
-            @click="toggleLogIn"
+            @click="toggleBefore"
             d="M423.477 31.8287H280.823V237.065H168V379.584H394.21V321.115H603.957V421H839.923V321.115H946.625V237.065V185.904V137.592H1000V2H760.46V101.854H423.477V31.8287Z"
             fill="url(#paint0_linear_702_196)"
             stroke="#A7A9AC"
@@ -186,15 +184,15 @@
 import TheMenuBtn from "./accessories/TheMenuBtn.vue";
 import TheSunMoonBtn from "./accessories/TheSunMoonBtn.vue";
 import TheNewEra from "./accessories/TheNewEra.vue";
-import TheSignUp from "./TheSignUp.vue";
-// import Menu from "./accessories/Menu.vue";
+import BeforeSignUp from "./BeforeSignUp.vue";
 import TheMenu from "./TheMenu.vue";
+
 export default {
   data() {
     return {
       isDarkMode: false, // 主頁面中的 darkMode 狀態
       isMenuOpen: false,
-      isLogInOpen: false,
+      isBeforeOpen: false,
     };
   },
   components: {
@@ -202,7 +200,7 @@ export default {
     TheSunMoonBtn,
     TheNewEra,
     TheMenu,
-    TheSignUp,
+    BeforeSignUp,
   },
   watch: {
     isDarkMode(newVal, oldVal) {
@@ -219,8 +217,8 @@ export default {
     toggleMenu() {
       this.isMenuOpen = !this.isMenuOpen;
     },
-    toggleLogIn() {
-      this.isLogInOpen = !this.isLogInOpen;
+    toggleBefore() {
+      this.isBeforeOpen = !this.isBeforeOpen;
     },
   },
   mounted() {
@@ -356,8 +354,8 @@ export default {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 100vh;
   z-index: 5;
 }
 

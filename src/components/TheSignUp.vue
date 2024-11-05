@@ -59,23 +59,28 @@
           <div class="title">
             <h1>Welcome!</h1>
           </div>
-          <el-form class="form" :model="ruleForm" :rules="rules" ref="ruleForm">
+          <el-form
+            class="form"
+            :model="loginForm"
+            :rules="rules"
+            ref="loginForm"
+          >
             <div class="email-div">
-              <label for="email">Email</label>
+              <label for="login-email">Email</label>
               <el-input
                 class="custom-el-input input"
                 type="text"
-                id="email"
-                v-model="ruleForm.uname"
+                id="login-email"
+                v-model="loginForm.email"
               />
             </div>
             <div class="password-div">
-              <label for="password">Password</label>
+              <label for="login-password">Password</label>
               <el-input
                 class="custom-el-input input"
                 type="password"
-                id="password"
-                v-model="ruleForm.password"
+                id="login-password"
+                v-model="loginForm.password"
                 autocomplete="off"
               />
             </div>
@@ -91,7 +96,7 @@
               <el-button
                 class="sign-in"
                 type="primary"
-                @click="submitForm('ruleForm')"
+                @click="submitForm('loginForm')"
                 >Sign in</el-button
               >
             </div>
@@ -168,7 +173,7 @@ export default {
   mounted() {
     const rememberUser = Cookies.get("user");
     if (rememberUser) {
-      this.ruleForm.uname = rememberUser;
+      this.loginForm.email = rememberUser;
     }
   },
   components: {
@@ -177,12 +182,12 @@ export default {
   data() {
     return {
       isSignupOpen: false,
-      ruleForm: {
-        uname: "",
+      loginForm: {
+        email: "",
         password: "",
       },
       rules: {
-        uname: [
+        email: [
           {
             required: true,
             message: "Username can't be empty！",
@@ -208,54 +213,44 @@ export default {
       this.$emit("close-logIn");
     },
     submitForm(formName) {
-      console.log(this.ruleForm.uname);
-
       this.$refs[formName].validate((valid) => {
         if (valid) {
           let _this = this;
 
           // 這裡的請求 URL 要確保正確
           this.$axios({
-            url: "http://127.0.0.1:8000/login/api/login/", // 修改為正確的 URL
+            url: "http://127.0.0.1:8000/login/login/", // 修改為正確的 URL
             method: "post",
             headers: {
               "Content-Type": "application/json",
             },
-            // 將 username 和 password 包裝到請求的 body 中
+            // 將 email 和 password 包裝到請求的 body 中
             data: {
-              username: _this.ruleForm.uname,
-              password: _this.ruleForm.password, // 確保這裡有傳入密碼
+              email: _this.loginForm.email,
+              password: _this.loginForm.password, // 確保這裡有傳入密碼
             },
           })
             .then((res) => {
-              if (res.data.code === "0") {
-                sessionStorage.setItem(
-                  "userInfo",
-                  JSON.stringify(res.data.data)
-                );
-
-                this.$router.push("/main");
-
-                this.$message({
-                  message: res.data.msg,
-                  type: "success",
-                });
-              } else {
-                this.$message({
-                  message: res.data.msg,
-                  type: "warning",
-                });
-              }
-
-              console.log(res);
+              // 登入成功
+              this.$message({
+                message: "登入成功！",
+                type: "success",
+                duration: 3000,
+              });
+              sessionStorage.setItem("access", res.data.access);
+              sessionStorage.setItem("refresh", res.data.refresh);
+              this.$router.push("/main");
             })
             .catch((error) => {
-              // 處理錯誤
-              console.error(error);
+              // 登入失敗
+              const message =
+                error.response?.data?.detail ||
+                "登入失敗，請檢查電子郵件和密碼。";
               this.$message({
-                message: "登錄失敗，請檢查您的用戶名和密碼。",
+                message: message,
                 type: "error",
               });
+              console.error("登入錯誤:", error);
             });
         } else {
           console.log("error submit!!");
@@ -263,13 +258,55 @@ export default {
         }
       });
     },
+    // startTokenCheckInterval() {
+    //   this.tokenCheckInterval = setInterval(
+    //     this.checkTokenValidity.bind(this),
+    //     5 * 60 * 1000
+    //   );
+    // },
+    // checkTokenValidity() {
+    //   const accessToken = sessionStorage.getItem("access");
+    //   const refreshToken = sessionStorage.getItem("refresh");
 
-    login() {
-      if (this.checked) {
-        Cookies.set("user", this.ruleForm.uname, { expires: 100 });
-      }
-    },
+    //   if (
+    //     this.isTokenExpired(accessToken) &&
+    //     this.isTokenExpired(refreshToken)
+    //   ) {
+    //     // 如果兩個 token 都失效，則強制登出
+    //     this.forceLogout();
+    //   }
+    // },
+    // isTokenExpired(token) {
+    //   if (!token) return true;
+    //   const payload = JSON.parse(atob(token.split(".")[1])); // 解碼 JWT 的 payload
+    //   const expiry = payload.exp * 1000; // token 過期時間 (毫秒)
+    //   const now = Date.now(); // 當前時間 (毫秒)
+    //   return now > expiry; // 如果當前時間大於過期時間，表示 token 已失效
+    // },
+    // forceLogout() {
+    //   sessionStorage.removeItem("access");
+    //   sessionStorage.removeItem("refresh");
+    //   this.$router.push("/home");
+    //   clearInterval(this.tokenCheckInterval); // 停止定時器
+    //   this.$message({
+    //     message: "已登出，請重新登入。",
+    //     type: "error",
+    //   });
+    // },
   },
+  // created() {
+  //   // 應用啟動時檢查是否已有 token 並啟動計時器
+  //   const accessToken = sessionStorage.getItem("access");
+  //   if (accessToken) {
+  //     this.startTokenCheckInterval();
+  //   }
+  // },
+  // beforeDestroy() {
+  //   if (this.tokenCheckInterval) {
+  //     clearInterval(this.tokenCheckInterval);
+  //   }
+  // },
+
   props: {
     isDarkMode: {
       type: Boolean,

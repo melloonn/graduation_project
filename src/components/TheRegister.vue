@@ -56,46 +56,98 @@
         <div class="title">
           <h1>Create Account</h1>
         </div>
-        <el-form class="form" :model="ruleForm" :rules="rules" ref="ruleForm">
+        <!-- register form  -->
+        <el-form
+          class="form"
+          :model="registerForm"
+          :rules="rules"
+          ref="registerForm"
+        >
           <div class="name-div">
-            <label for="name">Your Name</label>
+            <label for="register-name">Your Name</label>
             <el-input
               class="custom-el-input input"
               type="text"
-              id="name"
-              v-model="ruleForm.name"
+              id="register-name"
+              v-model="registerForm.name"
             />
           </div>
           <div class="email-div">
-            <label for="email">Email</label>
-            <el-input
-              class="custom-el-input input"
-              type="text"
-              id="email"
-              v-model="ruleForm.email"
-            />
+            <label for="register-email">Email</label>
+            <div class="field-group">
+              <el-input
+                class="custom-el-input input"
+                type="text"
+                id="register-email"
+                v-model="registerForm.email"
+              />
+              <svg
+                class="svg-btn"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M35 6.66667V5H4.99998V6.66667H3.33331V33.3333H4.99998V35H35V33.3333H36.6666V6.66667H35ZM33.3333 11.6667H31.6666V13.3333H28.3333V15H25V16.6667H21.6666V18.3333H18.3333V16.6667H15V15H11.6666V13.3333H8.33331V11.6667H6.66665V10H8.33331V8.33333H31.6666V10H33.3333V11.6667ZM33.3333 30H31.6666V31.6667H8.33331V30H6.66665V16.6667H8.33331V18.3333H11.6666V20H15V21.6667H16.6666V23.3333H23.3333V21.6667H25V20H28.3333V18.3333H31.6666V16.6667H33.3333V30Z"
+                  fill="#A7A9AC"
+                />
+              </svg>
+            </div>
           </div>
+
           <div class="password-div">
-            <label for="password">Password</label>
-            <el-input
-              class="custom-el-input input"
-              type="password"
-              id="password"
-              v-model="ruleForm.password"
-              autocomplete="off"
-            />
+            <label for="register-password">Password</label>
+            <div class="field-group">
+              <el-input
+                class="custom-el-input input"
+                :type="isPasswordVisible ? 'text' : 'password'"
+                id="register-password"
+                v-model="registerForm.password"
+                autocomplete="off"
+              />
+              <svg
+                @click="togglePasswordVisibility"
+                class="svg-btn"
+                width="40"
+                height="40"
+                viewBox="0 0 40 40"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M23.3333 15H16.6667V16.6667H15V23.3333H16.6667V25H23.3333V23.3333H25V16.6667H23.3333V15ZM21.6667 21.6667H18.3333V18.3333H21.6667V21.6667Z"
+                  fill="#A7A9AC"
+                />
+                <path
+                  d="M35 15V11.6667H33.3334V10H31.6667V8.33333H28.3334V5H11.6667V8.33333H8.33335V10H6.66669V11.6667H5.00002V15H1.66669V25H5.00002V28.3333H6.66669V30H8.33335V31.6667H11.6667V35H28.3334V31.6667H31.6667V30H33.3334V28.3333H35V25H38.3334V15H35ZM35 21.6667H31.6667V25H30V26.6667H28.3334V28.3333H25V31.6667H15V28.3333H11.6667V26.6667H10V25H8.33335V21.6667H5.00002V18.3333H8.33335V16.6667V15H10V13.3333H11.6667V11.6667H15V8.33333H25V11.6667H28.3334V13.3333H30V15H31.6667V18.3333H35V21.6667Z"
+                  fill="#A7A9AC"
+                />
+              </svg>
+            </div>
           </div>
           <div class="button-container">
             <el-button
               class="sign-in"
               type="primary"
-              @click="submitForm('ruleForm')"
+              @click="submitForm('registerForm')"
               >Sign up</el-button
             >
           </div>
           <div class="signup-div">
             <label>Already have Account?</label>
-            <a href="#" class="signup-link">Sign in</a>
+            <a
+              href="#"
+              class="signup-link"
+              @click="
+                {
+                  closeSignup();
+                  openLogIn();
+                }
+              "
+              >Sign in</a
+            >
           </div>
         </el-form>
       </div>
@@ -152,18 +204,20 @@ export default {
   mounted() {
     const rememberUser = Cookies.get("user");
     if (rememberUser) {
-      this.ruleForm.uname = rememberUser;
+      this.registerForm.email = rememberUser;
     }
   },
   data() {
     return {
-      ruleForm: {
+      isPasswordVisible: false,
+
+      registerForm: {
         name: "",
         email: "",
         password: "",
       },
       rules: {
-        uname: [
+        name: [
           {
             required: true,
             message: "Username can't be empty！",
@@ -192,8 +246,16 @@ export default {
     closeSignup() {
       this.$emit("close-signup");
     },
+    openLogIn() {
+      this.$emit("open-logIn");
+    },
+    togglePasswordVisibility() {
+      this.isPasswordVisible = !this.isPasswordVisible;
+    },
     submitForm(formName) {
-      console.log(this.ruleForm.email);
+      console.log(this.registerForm.name);
+      console.log(this.registerForm.email);
+      console.log(this.registerForm.password);
 
       this.$refs[formName].validate((valid) => {
         if (valid) {
@@ -201,30 +263,29 @@ export default {
 
           // 這裡的請求 URL 要確保正確
           this.$axios({
-            url: "http://127.0.0.1:8000/login/api/login/", // 修改為正確的 URL
+            url: "http://127.0.0.1:8000/login/register/", // 修改為正確的 URL
             method: "post",
             headers: {
               "Content-Type": "application/json",
             },
             // 將 username 和 password 包裝到請求的 body 中
             data: {
-              username: _this.ruleForm.name,
-              email: _this.ruleForm.email,
-              password: _this.ruleForm.password, // 確保這裡有傳入密碼
+              username: _this.registerForm.name,
+              password: _this.registerForm.password, // 確保這裡有傳入密碼
+              email: _this.registerForm.email,
             },
           })
             .then((res) => {
               if (res.data.code === "0") {
-                sessionStorage.setItem(
-                  "userInfo",
-                  JSON.stringify(res.data.data)
-                );
+                // 根據後端新增的 code 屬性來判斷
+                sessionStorage.setItem("userInfo", JSON.stringify(res.data));
 
                 this.closeSignup();
 
                 this.$message({
-                  message: res.data.msg,
+                  message: res.data.msg, // 顯示 "註冊成功！"
                   type: "success",
+                  duration: 3000,
                 });
               } else {
                 this.$message({
@@ -232,14 +293,14 @@ export default {
                   type: "warning",
                 });
               }
-
-              console.log(res);
             })
             .catch((error) => {
-              // 處理錯誤
               console.error(error);
+              const message =
+                error.response?.data?.msg ||
+                "註冊失敗，請檢查您的用戶名和密碼。";
               this.$message({
-                message: "登錄失敗，請檢查您的用戶名和密碼。",
+                message: message,
                 type: "error",
               });
             });
@@ -248,12 +309,6 @@ export default {
           return false;
         }
       });
-    },
-
-    login() {
-      if (this.checked) {
-        Cookies.set("user", this.ruleForm.uname, { expires: 100 });
-      }
     },
   },
   props: {
@@ -349,7 +404,17 @@ a {
   /* margin-bottom: 8px; */
   margin-left: 1rem;
 }
-
+.field-group {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+.svg-btn {
+  position: absolute;
+  margin-top: 7px;
+  margin-right: 30px;
+}
 .checkbox {
   box-sizing: border-box;
   width: 30px;
