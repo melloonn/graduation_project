@@ -26,6 +26,8 @@ class FinancialIndicator(models.Model):
         db_table = '指標'
         managed = True
         app_label = 'finance_visualizer'
+        unique_together = ('company_id', 'year_month')
+
 
 class IncomeStatement(models.Model):
     company_id = models.BigIntegerField(db_column='代號', default=0)
@@ -48,6 +50,8 @@ class IncomeStatement(models.Model):
         db_table = '損益表'
         managed = True
         app_label = 'finance_visualizer'
+        unique_together = ('company_id', 'year_month')
+  
 
 class CashFlowStatement(models.Model):
     company_id = models.BigIntegerField(db_column='代號', default=0)
@@ -74,6 +78,8 @@ class CashFlowStatement(models.Model):
         db_table = '現金流量表'
         managed = True
         app_label = 'finance_visualizer'
+        unique_together = ('company_id', 'year_month')
+
 
 class BalanceSheet(models.Model):
     company_id = models.BigIntegerField(db_column='代號', default=0)
@@ -112,3 +118,4 @@ class BalanceSheet(models.Model):
         db_table = '資產負債表'
         managed = True
         app_label = 'finance_visualizer'
+        unique_together = ('company_id', 'year_month')
