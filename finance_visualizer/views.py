@@ -12,9 +12,9 @@ import base64
 import re
 from django.db.models import F
 from rest_framework import serializers
-from .utils import get_python_field_name
 
-def get_sorted_data(data, db_field_name):
+
+def get_sorted_data(data, db_ield_name):
     month_order = ['Mar', 'Jun', 'Sep', 'Dec']
 
     def sort_key(item):

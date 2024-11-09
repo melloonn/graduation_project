@@ -76,5 +76,6 @@ urlpatterns = [
     path('swagger/login/', login_schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui-login'),
     # path('swagger/general/', general_schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui-general'),
     path('', include('finance_visualizer.urls')),
+    path('', include('user_profile.urls')),  # 包含 user_profile 的 API 路由
     path('swagger/finance/', finance_schema_view.with_ui('swagger', cache_timeout=0), name='finance-schema-swagger-ui'),
 ]

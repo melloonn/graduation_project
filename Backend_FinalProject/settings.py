@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    'user_profile',
     'login',
     'finance_visualizer',
     'rest_framework',
@@ -180,7 +181,7 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = '<Your-Google-Client-Secret>'
 
 #JWT 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),  # Access Token 過期時間（默認 5 分鐘）
+    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),  # Access Token 過期時間（默認 15 分鐘）
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),    # Refresh Token 過期時間（默認 7 天）
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
