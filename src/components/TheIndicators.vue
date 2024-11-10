@@ -53,7 +53,13 @@
           :stroke="isDarkMode ? '#A7A9AC' : '#1463F3'"
           stroke-width="5"
         />
-        <foreignObject x="0" y="0" width="100%" height="100%">
+        <foreignObject
+          x="0"
+          y="0"
+          width="100%"
+          height="100%"
+          style="position: relative"
+        >
           <div class="enlarge-btn" @click="startAnimation" tabindex="0">
             <svg
               width="25"
@@ -92,19 +98,26 @@
               />
             </svg>
           </div>
-          <div class="chart-div" v-if="isChartVisible">
-            <TheChart
-              :company-id="company_id"
-              :report-type="report_type"
-              :data-field="data_field"
-              :chart-data="chartData"
-            />
-          </div>
-          <div xmlns="http://www.w3.org/1999/xhtml" class="text-div">
-            <div class="text-block">
-              <h3 :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }">
-                {{ summary }}
-              </h3>
+          <div
+            class="main"
+            :class="isAnimating ? 'enlarge-main' : 'normal-main'"
+          >
+            <div class="chart-div" v-if="isChartVisible">
+              <TheChart
+                :company-id="company_id"
+                :report-type="report_type"
+                :data-field="data_field"
+                :chart-data="chartData"
+              />
+            </div>
+            <div xmlns="http://www.w3.org/1999/xhtml" class="text-div">
+              <div class="text-block">
+                <text
+                  class="mark-down-text"
+                  :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }"
+                  v-html="markdownToHtml"
+                ></text>
+              </div>
             </div>
           </div>
           <div
@@ -343,6 +356,9 @@
 <script>
 import TheChart from "./TheChart.vue";
 import anime from "animejs/lib/anime.es.js";
+// import { MarkdownIt } from "vue3-markdown-it";
+import { marked } from "marked";
+
 export default {
   data() {
     return {
@@ -434,10 +450,95 @@ export default {
         ],
       },
       selectedIndicators: [], // 儲存選擇的指標
+      financialData: {
+        data: {
+          1409: {
+            balance_sheet: [
+              [
+                {
+                  year_month: "20-Mar",
+                  現金及約當現金: 11085629.0,
+                },
+                {
+                  year_month: "20-Jun",
+                  現金及約當現金: 9919374.0,
+                },
+                {
+                  year_month: "20-Sep",
+                  現金及約當現金: 10218352.0,
+                },
+                {
+                  year_month: "20-Dec",
+                  現金及約當現金: 11871706.0,
+                },
+                {
+                  year_month: "21-Mar",
+                  現金及約當現金: 10171545.0,
+                },
+                {
+                  year_month: "21-Jun",
+                  現金及約當現金: 10744259.0,
+                },
+                {
+                  year_month: "21-Sep",
+                  現金及約當現金: 9515292.0,
+                },
+                {
+                  year_month: "21-Dec",
+                  現金及約當現金: 10284293.0,
+                },
+              ],
+            ],
+          },
+          1434: {
+            balance_sheet: [
+              [
+                {
+                  year_month: "20-Mar",
+                  現金及約當現金: 1502777.0,
+                },
+                {
+                  year_month: "20-Jun",
+                  現金及約當現金: 2556675.0,
+                },
+                {
+                  year_month: "20-Sep",
+                  現金及約當現金: 2919670.0,
+                },
+                {
+                  year_month: "20-Dec",
+                  現金及約當現金: 3083322.0,
+                },
+                {
+                  year_month: "21-Mar",
+                  現金及約當現金: 2510999.0,
+                },
+                {
+                  year_month: "21-Jun",
+                  現金及約當現金: 3056752.0,
+                },
+                {
+                  year_month: "21-Sep",
+                  現金及約當現金: 3241609.0,
+                },
+                {
+                  year_month: "21-Dec",
+                  現金及約當現金: 3471141.0,
+                },
+              ],
+            ],
+          },
+        },
+      },
     };
   },
   components: {
     TheChart,
+  },
+  computed: {
+    markdownToHtml() {
+      return marked(this.summary);
+    },
   },
   mounted() {
     const storedDarkMode = sessionStorage.getItem("isDarkMode");
@@ -534,8 +635,26 @@ export default {
         this.chartData = response.data[this.company_id][this.report_type][0];
         this.isChartVisible = true;
         //
-        console.log("Response from server:", this.chartData[0]);
-        // Handle response data as needed
+        console.log("Response from server:", response.data);
+        // 假設 response.data 的結構如您所示
+        const resData = response.data;
+
+        // 構造發送給 financial_indicator_summary 的數據
+        const dataToSend = {
+          data: {
+            [this.company_id]: {
+              [this.report_type]: [resData[this.company_id][this.report_type]],
+            },
+          },
+        };
+
+        const analysisResponse = await this.$axios.post(
+          "http://127.0.0.1:8000/api/financial_indicator_summary/",
+          { data: resData }
+        );
+
+        console.log("Analysis result:", analysisResponse.data.analysis);
+        this.summary = analysisResponse.data.analysis;
       } catch (error) {
         console.error("Error during request:", error);
       }
@@ -614,7 +733,7 @@ export default {
   cursor: pointer;
 }
 .chart-div {
-  height: 50%;
+  height: 60%;
   width: 100%;
   margin-top: 2rem;
   display: flex;
@@ -637,19 +756,30 @@ export default {
   margin-bottom: 2.2rem;
   margin-left: 2.2rem;
 }
-
+.main {
+  width: 100%;
+  height: 80%;
+  margin-top: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.main::-webkit-scrollbar {
+  display: none; /* 隱藏滾動條 */
+}
 .text-div {
   display: flex;
   justify-content: center;
   width: 100%;
+  height: 40%;
 }
 
 .text-block {
   display: flex;
-  height: 100%;
   width: 550px;
   color: black;
   border-radius: 10px;
+  user-select: none;
 }
 
 .main-content {
@@ -809,13 +939,14 @@ p {
   user-select: none;
 }
 
+.h3,
 h3 {
-  font-family: "Inter", sans-serif;
-  font-weight: 300;
-  font-style: normal;
-  font-size: 16px;
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-style: bold;
+  font-size: 13px !important;
   user-select: none;
 }
+
 .list-div {
   display: flex;
   justify-content: center;
@@ -913,5 +1044,17 @@ h3 {
 .slideMainDiv-enter-from {
   transform: translateX(100%);
   /* opacity: 0; */
+}
+</style>
+<style>
+.mark-down-text {
+  font-family: Avenir, Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.mark-down-text h3 {
+  font-style: bold;
+  font-size: 20px !important;
+  user-select: none;
 }
 </style>
