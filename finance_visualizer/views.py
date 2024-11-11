@@ -8,7 +8,7 @@ from .models import FinancialIndicator, BalanceSheet, IncomeStatement, CashFlowS
 from .serializers import IndicatorSerializer, BalanceSheetSerializer, IncomeStatementSerializer, CashFlowStatementSerializer
 import io
 import base64
-#from .langchain_utils import analyze_financial_data  
+from .langchain_utils import analyze_financial_data  
 import re
 from django.db.models import F
 from rest_framework import serializers
@@ -101,23 +101,6 @@ class FinancialDataAPIView(APIView):
                 return field.name
         print(f"Could not find matching field for db_column_name '{db_column_name}'")
         return None
-
-
-# class FinancialIndicatorSummaryAPIView(APIView):
-#     def post(self, request, format=None):
-#         data = request.data.get('data')
-#         if not data:
-#             return Response({"error": "缺少必要的數據"}, status=status.HTTP_400_BAD_REQUEST)
-
-#         try:
-#             analysis_result = analyze_financial_data(data)
-#         except Exception as e:
-#             return Response({"error": str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
-#         chart = self.generate_chart(serialized_data, data_field)
-#         return Response({"chart": chart, "data": serialized_data})
-
-
 
 class FinancialIndicatorSummaryAPIView(APIView):
     def post(self, request, format=None):

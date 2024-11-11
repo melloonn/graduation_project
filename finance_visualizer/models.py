@@ -119,3 +119,15 @@ class BalanceSheet(models.Model):
         managed = True
         app_label = 'finance_visualizer'
         unique_together = ('company_id', 'year_month')
+
+class FinancialReportSummary(models.Model):
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+
+    class Meta:
+        db_table = '財務報告摘要'
+        managed = True
+        app_label = 'finance_visualizer'
+
+    def __str__(self):
+        return self.title
