@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'user_profile',
+    'mongo_questions',
     'login',
     'finance_visualizer',
     'rest_framework',
@@ -100,6 +101,13 @@ DATABASES = {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'financial_data_db.sqlite3',  # 用來儲存財報資料的 SQLite 資料庫
     }
+}
+MONGO_DB_SETTINGS = {
+    'HOST': 'mongodb+srv://zhengyonghuang20:uBsBvTIIWqkuNCKz@cluster0.opiyw.mongodb.net/',  # 替換為你的 MongoDB 連線地址
+    'PORT': 27017,  # 預設端口
+    'USERNAME': 'zhengyonghuang20',  # 替換為你的 MongoDB 帳號
+    'PASSWORD': 'uBsBvTIIWqkuNCKz',  # 替換為你的 MongoDB 密碼
+    'DB_NAME': 'game_questions',  # 替換為你的資料庫名稱
 }
 
 # Database Routers 指定資料庫路由器，決定不同應用的資料庫讀寫策略
