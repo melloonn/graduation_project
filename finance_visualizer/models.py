@@ -1,36 +1,38 @@
 from django.db import models
 
 class FinancialIndicator(models.Model):
-    company_id = models.BigIntegerField(db_column='代號', default=0)  # 公司代號
-    name = models.CharField(max_length=50, db_column='名稱', default='')  # 公司名稱
-    year_month = models.CharField(max_length=20, db_column='年－月', default='')  # 年月
-    roa_after_tax_before_interest_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROA(A)稅後息前%', default=0)
-    roa_comprehensive = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROA－綜合損益', default=0)
-    roe_after_tax_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROE(A)－稅後', default=0)
-    roe_continual_profit_b = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROE(B)－常續利益', default=0)
-    roe_comprehensive = models.DecimalField(max_digits=10, decimal_places=5, db_column='ROE－綜合損益', default=0)
-    continual_profit_rate_after_tax_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='常續利益率－稅後(A)', default=0)
-    net_profit_rate_after_tax_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='稅後淨利率(A)', default=0)
-    continual_eps = models.DecimalField(max_digits=10, decimal_places=5, db_column='常續性每股盈餘', default=0)
-    revenue_growth_rate_a = models.DecimalField(max_digits=10, decimal_places=5, db_column='營收成長率(A)', default=0)
-    net_profit_growth_rate = models.DecimalField(max_digits=10, decimal_places=5, db_column='稅後淨利成長率', default=0)
-    operating_net_profit_growth_rate = models.DecimalField(max_digits=10, decimal_places=5, db_column='經常淨利成長率', default=0)
-    continual_net_profit_growth_rate = models.DecimalField(max_digits=10, decimal_places=5, db_column='常續淨利成長率', default=0)
-    total_assets_growth_rate = models.DecimalField(max_digits=10, decimal_places=5, db_column='總資產成長率', default=0)
-    net_worth_growth_rate = models.DecimalField(max_digits=10, decimal_places=5, db_column='淨值成長率', default=0)
-    total_liabilities_to_net_worth = models.DecimalField(max_digits=10, decimal_places=5, db_column='總負債/總淨值', default=0)
-    liabilities_rate = models.DecimalField(max_digits=10, decimal_places=5, db_column='負債比率', default=0)
-    net_worth_to_assets = models.DecimalField(max_digits=10, decimal_places=5, db_column='淨值/資產', default=0)
+    company_id = models.BigIntegerField(primary_key=True, db_column='代號')
+    name = models.CharField(max_length=50, db_column='名稱', default='')
+    year_month = models.CharField(max_length=20, db_column='年－月', default='')
+    roa_after_tax = models.DecimalField(max_digits=15, decimal_places=2, db_column='ROA(A)稅後息前%', default=0)
+    roa_comprehensive = models.DecimalField(max_digits=15, decimal_places=2, db_column='ROA－綜合損益', default=0)
+    roe_after_tax = models.DecimalField(max_digits=15, decimal_places=2, db_column='ROE(A)－稅後', default=0)
+    roe_continued = models.DecimalField(max_digits=15, decimal_places=2, db_column='ROE(B)－常續利益', default=0)
+    roe_comprehensive = models.DecimalField(max_digits=15, decimal_places=2, db_column='ROE－綜合損益', default=0)
+    continued_profit_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='常續利益率－稅後(A)', default=0)
+    net_profit_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='稅後淨利率(A)', default=0)
+    continued_eps = models.DecimalField(max_digits=15, decimal_places=2, db_column='常續性每股盈餘', default=0)
+    revenue_growth_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='營收成長率(A)', default=0)
+    net_profit_growth_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='稅後淨利成長率', default=0)
+    operating_profit_growth_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='經常淨利成長率', default=0)
+    continued_net_profit_growth_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='常續淨利成長率', default=0)
+    total_assets_growth_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='總資產成長率', default=0)
+    net_worth_growth_rate = models.DecimalField(max_digits=15, decimal_places=2, db_column='淨值成長率', default=0)
+    total_liabilities_to_net_worth = models.DecimalField(max_digits=15, decimal_places=2, db_column='總負債/總淨值', default=0)
+    debt_ratio = models.DecimalField(max_digits=15, decimal_places=2, db_column='負債比率', default=0)
+    net_worth_to_assets = models.DecimalField(max_digits=15, decimal_places=2, db_column='淨值/資產', default=0)
 
     class Meta:
         db_table = '指標'
         managed = True
         app_label = 'finance_visualizer'
-        unique_together = ('company_id', 'year_month')
+        unique_together = (('company_id', 'year_month'),)  # 設置唯一組合
 
+    def __str__(self):
+        return f"{self.name} ({self.year_month})"
 
 class IncomeStatement(models.Model):
-    company_id = models.BigIntegerField(db_column='代號', default=0)
+    company_id = models.BigIntegerField(db_column='代號', primary_key=True) 
     name = models.CharField(max_length=50, db_column='名稱', default='')
     year_month = models.CharField(max_length=20, db_column='年－月', default='')
     net_operating_income = models.DecimalField(max_digits=15, decimal_places=2, db_column='營業收入淨額', default=0)
@@ -51,10 +53,10 @@ class IncomeStatement(models.Model):
         managed = True
         app_label = 'finance_visualizer'
         unique_together = ('company_id', 'year_month')
-  
+
 
 class CashFlowStatement(models.Model):
-    company_id = models.BigIntegerField(db_column='代號', default=0)
+    company_id = models.BigIntegerField(db_column='代號', primary_key=True)  # 設定 company_id 為主鍵
     name = models.CharField(max_length=50, db_column='名稱', default='')
     year_month = models.CharField(max_length=20, db_column='年－月', default='')
     pre_tax_net_profit_cfo = models.DecimalField(max_digits=15, decimal_places=2, db_column='稅前淨利－CFO', default=0)
@@ -82,7 +84,7 @@ class CashFlowStatement(models.Model):
 
 
 class BalanceSheet(models.Model):
-    company_id = models.BigIntegerField(db_column='代號', default=0)
+    company_id = models.BigIntegerField(db_column='代號', primary_key=True)  # 設定 company_id 為主鍵
     name = models.CharField(max_length=50, db_column='名稱', default='')
     year_month = models.CharField(max_length=20, db_column='年－月', default='')
     cash_and_equivalents = models.DecimalField(max_digits=15, decimal_places=2, db_column='現金及約當現金', default=0)
@@ -121,13 +123,13 @@ class BalanceSheet(models.Model):
         unique_together = ('company_id', 'year_month')
 
 class FinancialReportSummary(models.Model):
-    title = models.CharField(max_length=255)
+    name = models.CharField(max_length=255, primary_key=True)  # 設置 name 為主鍵
     content = models.TextField()
 
     class Meta:
-        db_table = '財務報告摘要'
+        db_table = '財報摘要總結'
         managed = True
         app_label = 'finance_visualizer'
 
     def __str__(self):
-        return self.title
+        return self.name

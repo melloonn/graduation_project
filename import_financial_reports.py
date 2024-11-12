@@ -5,7 +5,6 @@ import django
 os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Backend_FinalProject.settings')
 django.setup()
 
-
 from finance_visualizer.models import FinancialReportSummary
 
 # 設定txt檔案的目錄
@@ -17,9 +16,9 @@ for filename in os.listdir(txt_directory):
         file_path = os.path.join(txt_directory, filename)
         with open(file_path, 'r', encoding='utf-8') as file:
             content = file.read()
-            title = filename.replace('.txt', '')  # 使用檔名作為標題
+            name = filename.replace('_financial_summary_result.txt', '')  # 使用檔名作為名稱
 
-            # 將資料儲存到資料庫
-            FinancialReportSummary.objects.create(title=title, content=content)
+            # 更新現有記錄或創建新記錄
+            FinancialReportSummary.objects.update_or_create(name=name, defaults={'content': content})
 
 print("資料匯入完成！")
