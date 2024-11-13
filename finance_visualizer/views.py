@@ -113,7 +113,7 @@ class FinancialDataAPIView(APIView):
 
 class FinancialIndicatorSummaryAPIView(APIView):
     def post(self, request, format=None):
-        data = request.data.get('data')
+        data = request.data
         if not data:
             return Response({"error": "缺少必要的數據"}, status=status.HTTP_400_BAD_REQUEST)
 
