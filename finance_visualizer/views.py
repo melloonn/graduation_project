@@ -4,7 +4,7 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import FinancialIndicator, BalanceSheet, IncomeStatement, CashFlowStatement
+from .models import FinancialIndicator, BalanceSheet, IncomeStatement, CashFlowStatement, FinancialReportSummary
 from .serializers import IndicatorSerializer, BalanceSheetSerializer, IncomeStatementSerializer, CashFlowStatementSerializer
 import io
 import base64
@@ -71,7 +71,10 @@ class FinancialDataAPIView(APIView):
                         return Response({"error": f"未知的 data_field: '{data_field}'"}, status=status.HTTP_400_BAD_REQUEST)
 
                     try:
-                        data = model_class.objects.filter(company_id=company_id).order_by('year_month').values('year_month', db_field_name)
+                        # 查詢 company_id 對應的數據，並包含公司名稱
+                        data = model_class.objects.filter(company_id=company_id).order_by('year_month').values(
+                            'year_month', db_field_name, 'name'
+                        )
 
                         # Debug: check if data exists for the query
                         if not data.exists():
@@ -79,6 +82,10 @@ class FinancialDataAPIView(APIView):
                             return Response({"error": f"未找到 {company_id} 的數據"}, status=status.HTTP_404_NOT_FOUND)
 
                         sorted_data = get_sorted_data(data, db_field_name)
+
+                        # 取得公司名稱（假設所有記錄的公司名稱一致）
+                        company_name = data[0]['name'] if data else None
+                        response_data[company_id]['company_name'] = company_name
 
                         if report_type not in response_data[company_id]:
                             response_data[company_id][report_type] = []
@@ -95,12 +102,14 @@ class FinancialDataAPIView(APIView):
                         return Response({"error": f"資料查詢或序列化出錯: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
         return Response(response_data, status=status.HTTP_200_OK)
+
     def get_python_field_name(self, model_class, db_column_name):
         for field in model_class._meta.fields:
             if field.db_column == db_column_name:
                 return field.name
         print(f"Could not find matching field for db_column_name '{db_column_name}'")
         return None
+
 
 class FinancialIndicatorSummaryAPIView(APIView):
     def post(self, request, format=None):
@@ -168,3 +177,29 @@ class TopFieldAPIView(APIView):
 
         print(f"找不到對應的欄位名稱 '{db_column_name}'")
         return None, None
+
+
+class FinancialSummaryAPIView(APIView):
+    def get(self, request, format=None):
+        # 從前端獲取中文公司名稱
+        company_name = request.GET.get('company_name')
+
+        if not company_name:
+            return Response({"error": "缺少必要的參數 'company_name'"}, status=status.HTTP_400_BAD_REQUEST)
+
+        try:
+            # 查詢 FinancialReportSummary 資料表中的摘要
+            summary = FinancialReportSummary.objects.filter(name=company_name).first()
+
+            if not summary:
+                return Response({"error": f"未找到公司名稱為 {company_name} 的摘要"}, status=status.HTTP_404_NOT_FOUND)
+
+            # 返回摘要內容
+            response_data = {
+                "company_name": company_name,
+                "summary": summary.content
+            }
+            return Response(response_data, status=status.HTTP_200_OK)
+
+        except Exception as e:
+            return Response({"error": f"查詢數據時發生錯誤: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

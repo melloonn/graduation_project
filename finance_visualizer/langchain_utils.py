@@ -38,7 +38,7 @@ def analyze_financial_data(data):
 
 # 測試代碼塊
 if __name__ == "__main__":
-    # 測試數據
+    測試數據
     test_data = [
         {"year_month": "2023-03", "revenue_growth": 16.60},
         {"year_month": "2023-06", "revenue_growth": 21.88},
