@@ -276,14 +276,14 @@ export default {
             },
           })
             .then((res) => {
-              if (res.data.code === "0") {
+              if (res.data.id != null) {
                 // 根據後端新增的 code 屬性來判斷
                 sessionStorage.setItem("userInfo", JSON.stringify(res.data));
 
                 this.closeSignup();
 
                 this.$message({
-                  message: res.data.msg, // 顯示 "註冊成功！"
+                  message: "Success!", // 顯示 "註冊成功！"
                   type: "success",
                   duration: 3000,
                 });

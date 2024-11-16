@@ -98,31 +98,41 @@
               />
             </svg>
           </div>
-          <!-- <div class="loading-logo" v-if="isLoading">
-            <svg
-              width="77"
-              height="36"
-              viewBox="0 0 77 36"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <ellipse cx="38.5" cy="18" rx="38.5" ry="18" fill="#1B2023" />
-              <path
-                d="M14.5947 17.6675V27.7259C17.5992 27.8566 21.7193 27.7899 24.7838 26.8115C27.9895 25.7874 31.5766 23.6764 33.4054 21.5863V27.7259C36.8018 27.7259 39.545 27.9872 44.3783 26.5503C47.4403 25.6398 50.3873 23.5458 52.4773 21.5863V27.7259H62.4052V9.0459C59.0088 9.17653 58.4719 9.0054 55.3512 9.56842C47.3828 10.7441 46.744 15.2704 43.5945 15.8386V9.17653C43.5945 9.17653 36.018 8.78464 31.8378 11.0053C26.6114 13.7825 24.0001 18.5819 14.5947 17.6675Z"
-                fill="#75FB9F"
-              />
-              <path
-                d="M22.647 12.5818C19.9629 13.3226 19.3617 13.9239 18.6209 16.608C17.8801 13.9239 17.2788 13.3226 14.5947 12.5818C17.2788 11.841 17.8801 11.2398 18.6209 8.55566C19.3617 11.2398 19.9629 11.841 22.647 12.5818Z"
-                fill="#75FB9F"
-              />
-            </svg>
-          </div> -->
+
           <div
             class="main"
             :class="isAnimating ? 'enlarge-main' : 'normal-main'"
             ref="textBlock"
             @scroll="onScroll"
           >
+            <div class="loading-logo" v-if="isLoading">
+              <svg
+                width="77"
+                height="36"
+                viewBox="0 0 77 36"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <ellipse
+                  cx="38.5"
+                  cy="18"
+                  rx="38.5"
+                  ry="18"
+                  :fill="isDarkMode ? '#75FB9F' : '#1B2023'"
+                />
+                <path
+                  d="M14.5947 17.6675V27.7259C17.5992 27.8566 21.7193 27.7899 24.7838 26.8115C27.9895 25.7874 31.5766 23.6764 33.4054 21.5863V27.7259C36.8018 27.7259 39.545 27.9872 44.3783 26.5503C47.4403 25.6398 50.3873 23.5458 52.4773 21.5863V27.7259H62.4052V9.0459C59.0088 9.17653 58.4719 9.0054 55.3512 9.56842C47.3828 10.7441 46.744 15.2704 43.5945 15.8386V9.17653C43.5945 9.17653 36.018 8.78464 31.8378 11.0053C26.6114 13.7825 24.0001 18.5819 14.5947 17.6675Z"
+                  :fill="isDarkMode ? '#1B2023' : '#75FB9F'"
+                />
+                <path
+                  d="M22.647 12.5818C19.9629 13.3226 19.3617 13.9239 18.6209 16.608C17.8801 13.9239 17.2788 13.3226 14.5947 12.5818C17.2788 11.841 17.8801 11.2398 18.6209 8.55566C19.3617 11.2398 19.9629 11.841 22.647 12.5818Z"
+                  :fill="isDarkMode ? '#1B2023' : '#75FB9F'"
+                />
+              </svg>
+              <div class="loading-container" v-if="showLoadingLogo">
+                <div class="dot" />
+              </div>
+            </div>
             <div class="chart-div" v-if="isChartVisible">
               <TheChart
                 :selected-companies="finalSelectedCompanies"
@@ -135,7 +145,9 @@
               <div class="text-block">
                 <text
                   class="mark-down-text"
-                  :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }"
+                  :style="{
+                    color: isDarkMode ? 'rgb(196, 196, 196)' : 'black',
+                  }"
                   v-html="markdownToHtml"
                 ></text>
               </div>
@@ -237,23 +249,22 @@
 
         <!-- expand  -->
         <Transition name="slide1">
-          <div
-            class="enterprise-button-list main-div-expand"
-            v-if="isEnterprisePressed"
-          >
-            <div class="enterprise-scrollable-list">
-              <div
-                v-for="item in enterpriseItems"
-                :key="item.name"
-                @click="handleClick(item, 'enterprise')"
-                :class="{ selected: isSelected(item) }"
-                class="enterprise-button list-div"
-                tabindex="0"
-              >
-                {{ item.value }}
+          <div v-if="isEnterprisePressed" class="main-div-expand">
+            <div class="enterprise-button-list main-div-expand">
+              <div class="enterprise-scrollable-list">
+                <div
+                  v-for="item in enterpriseItems"
+                  :key="item.name"
+                  @click="handleClick(item, 'enterprise')"
+                  :class="{ selected: isSelected(item) }"
+                  class="enterprise-button list-div"
+                  tabindex="0"
+                >
+                  {{ item.value }}
+                </div>
               </div>
             </div>
-            <button @click="submitEnter" class="submit-enter">enter</button>
+            <button @click="submitEnter" class="submit-enter">submit</button>
           </div>
         </Transition>
       </div>
@@ -405,6 +416,7 @@ export default {
   data() {
     return {
       isLoading: false,
+      showLoadingLogo: false,
       shouldAutoScroll: true,
       isChartVisible: false,
       showMainDiv: true,
@@ -467,33 +479,32 @@ export default {
       indicatorText: "INDICATORS",
       indicatorItems: {
         financialIndicators: [
-          // {value:"", name: "#"},
-          { value: "ROA(A)稅後息前", name: "ROA(A) After Tax" },
-          { value: "ROA－綜合損益", name: "ROA Income" },
-          { value: "ROE(A)－稅後", name: "ROE(A) After Tax" },
-          { value: "ROE(B)－常續利益", name: "ROE(B) Continuing" },
-          { value: "ROE－綜合損益", name: "ROE Income" },
+          { value: "ROA(A)稅後息前", name: "ROA(A) AFTER TAX" },
+          { value: "ROA－綜合損益", name: "ROA INCOME" },
+          { value: "ROE(A)－稅後", name: "ROE(A) AFTER TAX" },
+          { value: "ROE(B)－常續利益", name: "ROE(B) CONTINUING" },
+          { value: "ROE－綜合損益", name: "ROE INCOME" },
         ],
         incomeStatement: [
-          { value: "營業收入淨額", name: "Net Sales" },
-          { value: "營業費用", name: "Op. Expenses" },
-          { value: "利息收入", name: "Interest Inc." },
-          { value: "稅前淨利", name: "Pre-Tax Profit" },
-          { value: "所得稅費用", name: "Tax Expense" },
+          { value: "營業收入淨額", name: "NET SALES" },
+          { value: "營業費用", name: "OP. EXPENSES" },
+          { value: "利息收入", name: "INTEREST INC." },
+          { value: "稅前淨利", name: "PRE-TAX PROFIT" },
+          { value: "所得稅費用", name: "TAX EXPENSE" },
         ],
         cashFlowStatement: [
-          { value: "稅前淨利－CFO", name: "Pre-Tax CFO" },
-          { value: "折舊－CFO", name: "Depreciation" },
-          { value: "攤提－CFO", name: "Amortization" },
-          { value: "來自營運之現金流量", name: "Cash Flow Ops" },
-          { value: "新增投資－CFI", name: "New Inv. CFI" },
+          { value: "稅前淨利－CFO", name: "PRE-TAX CFO" },
+          { value: "折舊－CFO", name: "DEPRECIATION" },
+          { value: "攤提－CFO", name: "AMORTIZATION" },
+          { value: "來自營運之現金流量", name: "CASH FLOW OPS" },
+          { value: "新增投資－CFI", name: "NEW INV. CFI" },
         ],
         balanceSheet: [
-          { value: "現金及約當現金", name: "Cash & Equiv." },
-          { value: "應收帳款及票據", name: "Accounts Rec." },
-          { value: "其他應收款", name: "Other Receiv." },
-          { value: "不動產廠房及設備", name: "Prop. & Equip." },
-          { value: "商譽及無形資產合計", name: "Goodwill & Int." },
+          { value: "現金及約當現金", name: "CASH & EQUIV." },
+          { value: "應收帳款及票據", name: "ACCOUNTS REC." },
+          { value: "其他應收款", name: "OTHER RECEIV." },
+          { value: "不動產廠房及設備", name: "PROP. & EQUIP." },
+          { value: "商譽及無形資產合計", name: "GOODWILL & INT." },
         ],
       },
       selectedIndicators: [], // 儲存選擇的指標
@@ -721,6 +732,7 @@ export default {
       }
     },
     async submitRequest() {
+      this.showLoadingLogo = true;
       this.isLoading = true;
       this.autoAnimation();
       this.summary = "";
@@ -772,6 +784,7 @@ export default {
         );
 
         console.log("Analysis result:", analysisResponse.data.analysis);
+        this.showLoadingLogo = false;
         this.isChartVisible = true;
         this.summary = analysisResponse.data.analysis;
         this.showSummaryByChar(); // 開始逐字呈現
@@ -890,11 +903,63 @@ export default {
   cursor: pointer;
 }
 .loading-logo {
-  position: absolute;
-  top: 0;
-  left: 0;
-  margin-top: 35px;
-  margin-left: 90px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 30px;
+  margin-left: 150px;
+}
+.loading-container {
+  margin-left: 20px;
+  margin-top: 10px;
+  --uib-size: 43px;
+  --uib-color: black;
+  --uib-speed: 1.3s;
+  --uib-dot-size: calc(var(--uib-size) * 0.24);
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: var(--uib-dot-size);
+  width: var(--uib-size);
+}
+
+.dot,
+.loading-container::before,
+.loading-container::after {
+  content: "";
+  display: block;
+  height: var(--uib-dot-size);
+  width: var(--uib-dot-size);
+  border-radius: 50%;
+  background-color: var(--uib-color);
+  transform: scale(0);
+  transition: background-color 0.3s ease;
+}
+
+.loading-container::before {
+  animation: pulse var(--uib-speed) ease-in-out calc(var(--uib-speed) * -0.375)
+    infinite;
+}
+
+.dot {
+  animation: pulse var(--uib-speed) ease-in-out calc(var(--uib-speed) * -0.25)
+    infinite both;
+}
+
+.loading-container::after {
+  animation: pulse var(--uib-speed) ease-in-out calc(var(--uib-speed) * -0.125)
+    infinite;
+}
+@keyframes pulse {
+  0%,
+  100% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1);
+  }
 }
 .chart-div {
   height: 60%;
@@ -1016,10 +1081,29 @@ export default {
 
 .submit-enter {
   position: absolute;
-  margin-right: 200px;
+  margin-right: 90px;
   margin-bottom: 50px;
   right: 0;
   bottom: 0;
+  z-index: 10;
+  color: #1b2023;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 600;
+  font-size: 24px;
+  box-sizing: border-box;
+  background: none;
+  width: 208px;
+  height: 47px;
+  border: 1px solid #1b2023;
+  border-radius: 26px;
+}
+.submit-enter:hover {
+  position: absolute;
+  color: #75fb9f;
+  box-sizing: border-box;
+  background: #1b2023;
+  border: 1px solid #1b2023;
 }
 
 .enterprise-button {
@@ -1141,7 +1225,25 @@ h3 {
 .dark-mode .list-div {
   color: #75fb9f;
 }
+.dark-mode .selected {
+  color: rgb(24, 104, 252);
+  font-weight: bold; /* 可選，讓字體變粗 */
+}
 
+.dark-mode .submit-enter {
+  color: #75fb9f;
+  border: 1px solid #75fb9f;
+}
+.dark-mode .submit-enter:hover {
+  position: absolute;
+  color: #1b2023;
+  box-sizing: border-box;
+  background: #75fb9f;
+  border: 1px solid #75fb9f;
+}
+.dark-mode .loading-container {
+  --uib-color: rgb(196, 196, 196);
+}
 @font-face {
   font-family: "Micro5";
   src: url("../assets/fonts/Micro5-Regular.ttf") format("truetype");
@@ -1223,6 +1325,7 @@ h3 {
   /* opacity: 0; */
 }
 </style>
+
 <style>
 .mark-down-text {
   font-family: Avenir, Helvetica, Arial, sans-serif;

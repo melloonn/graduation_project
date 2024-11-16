@@ -61,8 +61,10 @@
           <text>create account</text>
         </div>
         <div class="annotation">
-          <p>By signing up, you agree to the Terms of Service</p>
-          <p>and Privacy Policy, including Cookie Usage Policy.</p>
+          <p>
+            By signing up, you agree to the Terms of Service<br />and Privacy
+            Policy, including Cookie Usage Policy.
+          </p>
         </div>
         <div class="note">
           <text>Already have Account?</text>
@@ -348,8 +350,9 @@ text {
 }
 
 .annotation {
-  margin-top: 0.75rem;
-  margin-bottom: 1.5rem;
+  margin-left: 20px;
+  margin-top: 1rem;
+  margin-bottom: 1.25rem;
 }
 .note {
   height: 20px;
@@ -375,13 +378,17 @@ text {
   font-weight: normal;
   font-style: normal;
 }
-p {
-  margin: 0;
-  white-space: nowrap;
-  font-family: "PressStar2PFont", sans-serif;
+@font-face {
+  font-family: "SuperStar";
+  src: url("../assets/fonts/superstarReal.ttf") format("truetype");
+  font-weight: normal;
   font-style: normal;
-  font-size: 8px;
-  user-select: none;
+}
+p {
+  font-family: "SuperStar", sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 101%;
   color: #a7a9ac;
 }
 h1 {
@@ -422,5 +429,8 @@ h1 {
 }
 .dark-mode a {
   color: #13c9a8;
+}
+.dark-mode text {
+  color: white;
 }
 </style>

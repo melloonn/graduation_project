@@ -19,6 +19,7 @@ export default {
   data() {
     return {
       chartInstance: null, // Store the chart instance here
+      isDarkMode: false,
     };
   },
   methods: {
@@ -67,6 +68,11 @@ export default {
         });
       });
 
+      const textColor = this.isDarkMode ? "rgb(196, 196, 196)" : "#333";
+      const gridColor = this.isDarkMode
+        ? "rgb(196, 196, 196)"
+        : "rgba(0, 0, 0, 0.1)";
+
       // Create a new chart instance
       this.chartInstance = new Chart(ctx, {
         type: "line",
@@ -83,6 +89,13 @@ export default {
               title: {
                 display: true,
                 text: "年月",
+                color: textColor, // Adjust title color
+              },
+              grid: {
+                color: gridColor, // Adjust grid color
+              },
+              ticks: {
+                color: textColor, // Adjust tick color
               },
             },
             y: {
@@ -90,9 +103,14 @@ export default {
               title: {
                 display: true,
                 text: "數值 (元)",
+                color: textColor, // Adjust title color
               },
               ticks: {
+                color: textColor, // Adjust tick color
                 callback: (value) => value.toLocaleString(),
+              },
+              grid: {
+                color: gridColor, // Adjust grid color
               },
             },
           },
@@ -110,7 +128,7 @@ export default {
               display: true,
               position: "top",
               labels: {
-                color: "#333",
+                color: textColor, // Adjust legend text color
                 font: {
                   size: 14,
                   weight: 700,
@@ -152,6 +170,19 @@ export default {
       },
       immediate: true,
     },
+  },
+  mounted() {
+    const storedDarkMode = sessionStorage.getItem("isDarkMode");
+    if (storedDarkMode !== null) {
+      this.$isDarkMode = JSON.parse(storedDarkMode);
+      this.$nextTick(() => {
+        // console.log(this.$isDarkMode);
+      });
+      // console.log(this.$isDarkMode);
+    }
+    if (this.$isDarkMode == true) {
+      this.isDarkMode = true;
+    }
   },
 };
 </script>

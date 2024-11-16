@@ -934,6 +934,20 @@
         </button>
       </div>
     </div>
+    <div class="pics-div" v-if="showMFJDiv">
+      <div class="pic pic1"></div>
+      <div class="pic pic2"></div>
+      <div class="pic pic3"></div>
+      <div class="pic pic4"></div>
+      <div class="pic pic5"></div>
+      <div class="pic pic6"></div>
+      <div class="pic pic7"></div>
+      <div class="pic pic8"></div>
+      <div class="pic pic9"></div>
+      <div class="pic pic10"></div>
+      <div class="pic pic11"></div>
+      <div class="pic pic12"></div>
+    </div>
   </div>
 </template>
 
@@ -959,24 +973,32 @@ export default {
       showEnterDiv: false,
       showGame1Div: false,
       showGame2Div: false,
+      showMFJDiv: true,
       activeIndex: null,
     };
   },
   methods: {
     toggleIdeasDiv() {
       this.showIdeasDiv = !this.showIdeasDiv;
+      this.showMFJDiv = false;
+
       this.bringToFront(2); // 切換顯示狀態
     },
     togglePlayDiv() {
       this.showPlayDiv = !this.showPlayDiv;
+      this.showMFJDiv = false;
+
       this.bringToFront(1);
       // 切換顯示狀態
     },
     toggleEnterpriseDiv() {
       this.showEnterDiv = !this.showEnterDiv;
+      this.showMFJDiv = false;
+
       // 切換顯示狀態
     },
     toggleMoneyJamDiv() {
+      this.showMFJDiv = true;
       this.showEnterDiv = false;
       this.showIdeasDiv = false;
       this.showPlayDiv = false;
@@ -1002,10 +1024,6 @@ export default {
 .main {
   display: flex;
   position: relative;
-  /* width: 100%;
-  height: 100%; */
-  /* margin: 3rem; */
-  /* padding: 3rem;  */
 }
 /* svg button gruop  */
 .svg-button {
@@ -1024,6 +1042,60 @@ export default {
   outline: none;
 }
 
+.pics-div {
+  position: absolute;
+  margin-top: 90px;
+  width: 100%;
+  height: 90%;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  padding-left: 25px;
+  padding-right: 25px;
+  padding-bottom: 80px;
+}
+.pics-div .pic {
+  width: 232px;
+  height: 127px;
+  background-size: cover;
+  background-position: center;
+}
+.pic1 {
+  background-image: url("../../../public/images/pic1.png");
+}
+.pic2 {
+  background-image: url("../../../public/images/pic2.png");
+}
+.pic3 {
+  background-image: url("../../../public/images/pic3.png");
+}
+.pic4 {
+  background-image: url("../../../public/images/pic4.png");
+}
+.pic5 {
+  background-image: url("../../../public/images/pic5.png");
+}
+.pic6 {
+  background-image: url("../../../public/images/pic6.png");
+}
+.pic7 {
+  background-image: url("../../../public/images/pic7.png");
+}
+.pic8 {
+  background-image: url("../../../public/images/pic8.png");
+}
+.pic9 {
+  background-image: url("../../../public/images/pic9.png");
+}
+.pic10 {
+  background-image: url("../../../public/images/pic10.png");
+}
+.pic11 {
+  background-image: url("../../../public/images/pic11.png");
+}
+.pic12 {
+  background-image: url("../../../public/images/pic12.png");
+}
 /* button div box  */
 .enterprise-div {
   display: flex;

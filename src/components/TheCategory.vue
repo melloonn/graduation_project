@@ -89,8 +89,27 @@
           <Transition name="slide1">
             <div v-if="isExpend" class="animateDiv">
               <div class="select-div"><h2>// SELECT</h2></div>
-              <div class="types-div" tabindex="0">
+              <div
+                class="types-div"
+                tabindex="0"
+                :class="{ 'types-pressed': isTypesPress }"
+                @click="toggleTypes"
+              >
                 <p>Types</p>
+                <div :class="['typesArrow', { 'rotate-arrow': isTypesPress }]">
+                  <svg
+                    width="40"
+                    height="39"
+                    viewBox="0 0 40 39"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M8.33325 11.375H9.99992V13H11.6666V14.625H13.3333V16.25H14.9999V17.875H16.6666V19.5H18.3333V21.125H19.9999V22.75H21.6666V24.375H23.3333V26H24.9999V27.625H14.9999V30.875H31.6666V14.625H28.3333V24.375H26.6666V22.75H24.9999V21.125H23.3333V19.5H21.6666V17.875H19.9999V16.25H18.3333V14.625H16.6666V13H14.9999V11.375H13.3333V9.75H11.6666V8.125H8.33325V11.375Z"
+                      :fill="isTypesPress ? '#75fb9f' : 'white'"
+                    />
+                  </svg>
+                </div>
               </div>
               <div
                 class="names-div"
@@ -132,13 +151,31 @@
             <div v-if="isExpend" class="animateDiv"></div>
           </Transition>
           <!-- enterprise-list  -->
+          <!-- Type  -->
+          <Transition name="slideList">
+            <div class="button-list" v-if="isAnimationComplete && isTypesPress">
+              <div class="scrollable-list">
+                <div
+                  v-for="item in types"
+                  :key="item.name"
+                  @click="handleClick(item, 'type')"
+                  :class="{ selected: isSelected(item) }"
+                  class="financial-button list-div"
+                  tabindex="0"
+                >
+                  {{ item.name }}
+                </div>
+              </div>
+            </div>
+          </Transition>
+          <!-- Name  -->
           <Transition name="slideList">
             <div class="button-list" v-if="isAnimationComplete && isNamesPress">
               <div class="scrollable-list">
                 <div
-                  v-for="item in financialItems"
+                  v-for="item in selectedCompany"
                   :key="item.name"
-                  @click="handleClick(item)"
+                  @click="handleClick(item, 'name')"
                   :class="{ selected: isSelected(item) }"
                   class="financial-button list-div"
                   tabindex="0"
@@ -151,7 +188,7 @@
         </div>
         <!-- box3  -->
         <div class="box3">
-          <Transition name="slideOrigin" @after-enter="checkAnimationComplete">
+          <Transition name="slideOrigin">
             <div v-if="!isExpend" class="originDiv">
               <div class="blackbox3"></div>
               <div class="linearBox"></div>
@@ -184,7 +221,7 @@
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <rect x="438" width="178" height="129" rx="30" fill="#1C1F1C" />
+              <rect x="432" width="178" height="129" rx="30" fill="#1C1F1C" />
               <path
                 d="M0.5 70.1739C0.5 53.8815 13.7076 40.6738 30 40.6738H615.5V675.913C615.5 692.205 602.292 705.413 586 705.413H30C13.7076 705.413 0.5 692.205 0.5 675.913V70.1739Z"
                 fill="#75FB9F"
@@ -202,6 +239,7 @@
                     v-html="markdownToHtml"
                   ></text>
                 </div>
+                <div class="share-btn" tabindex="0"></div>
               </foreignObject>
             </svg>
           </div>
@@ -221,25 +259,38 @@ export default {
       isDarkMode: false,
       isExpend: false,
       isNamesPress: false,
+      isTypesPress: false,
       isAnimationComplete: false,
+      intervalId: null, // 用來存儲計時器的 ID
       company_name: "",
-      financialItems: [
-        { value: "華南金HNFHC", name: "華南金", id: "2880" },
-        { value: "富邦金FUBFH", name: "富邦金", id: "2881" },
-        { value: "國泰金CFH", name: "國泰金", id: "2882" },
-        { value: "開發金KGI", name: "開發金", id: "2883" },
-        { value: "玉山金ESFHC", name: "玉山金", id: "2884" },
-        { value: "元大金YFH", name: "元大金", id: "2885" },
-        { value: "兆豐金MFG", name: "兆豐金", id: "2886" },
-        { value: "台新金TSFHC", name: "台新金", id: "2887" },
-        { value: "新光金SKFH", name: "新光金", id: "2888" },
-        { value: "國票金CBFHC", name: "國票金", id: "2889" },
-        { value: "永豐金SPH", name: "永豐金", id: "2890" },
-        { value: "中信金CTBC", name: "中信金", id: "2891" },
-        { value: "第一金FFHC", name: "第一金", id: "2892" },
-        { value: "日盛金JSFHC", name: "日盛金", id: "5820" },
-        { value: "合庫金TCFHC", name: "合庫金", id: "5880" },
+      selectedCompany: [],
+      types: [
+        {
+          name: "Technology",
+          id: "technology",
+        },
+        { name: "Political", id: "political" },
+        { name: "Finance", id: "financial" },
       ],
+      Companys: {
+        financial: [
+          { value: "華南金HNFHC", name: "華南金", id: "2880" },
+          { value: "富邦金FUBFH", name: "富邦金", id: "2881" },
+          { value: "國泰金CFH", name: "國泰金", id: "2882" },
+          { value: "開發金KGI", name: "開發金", id: "2883" },
+          { value: "玉山金ESFHC", name: "玉山金", id: "2884" },
+          { value: "元大金YFH", name: "元大金", id: "2885" },
+          { value: "兆豐金MFG", name: "兆豐金", id: "2886" },
+          { value: "台新金TSFHC", name: "台新金", id: "2887" },
+          { value: "新光金SKFH", name: "新光金", id: "2888" },
+          { value: "國票金CBFHC", name: "國票金", id: "2889" },
+          { value: "永豐金SPH", name: "永豐金", id: "2890" },
+          { value: "中信金CTBC", name: "中信金", id: "2891" },
+          { value: "第一金FFHC", name: "第一金", id: "2892" },
+          { value: "日盛金JSFHC", name: "日盛金", id: "5820" },
+          { value: "合庫金TCFHC", name: "合庫金", id: "5880" },
+        ],
+      },
     };
   },
   components: {},
@@ -263,33 +314,43 @@ export default {
   },
   methods: {
     checkAnimationComplete() {
-      this.isAnimationComplete = false;
-      // 當所有動畫結束後才設定 isAnimationComplete 為 true
-      if (this.isExpend && this.isNamesPress) {
-        this.isAnimationComplete = true;
-      }
+      this.isAnimationComplete = true;
+      console.log(this.isAnimationComplete);
     },
     toggleExpand() {
       this.isExpend = !this.isExpend; // 切換 expand 狀態
+      this.isAnimationComplete = false;
+      this.isTypesPress = false;
       this.isNamesPress = false;
     },
     toggleNames() {
       // this.isAnimationComplete = false;
       this.isNamesPress = !this.isNamesPress;
+      this.isTypesPress = false;
+    },
+    toggleTypes() {
+      // this.isAnimationComplete = false;
+      this.isTypesPress = !this.isTypesPress;
+      this.isNamesPress = false;
     },
     navigateTo(path) {
       // 使用傳遞的路徑導航
       this.$router.push(path);
     },
-    handleClick(item) {
-      this.company_name = item.name;
-      console.log(this.company_name);
-      this.submitRequest();
+    handleClick(item, type) {
+      if (type === "type") {
+        this.selectedCompany = this.Companys[item.id] || []; // 根據所選的財務表更新指標
+        this.toggleNames();
+      } else if (type === "name") {
+        this.company_name = item.name;
+        this.submitRequest();
+      }
     },
     toggleExpandBack() {
       if (this.isExpend) {
         this.isExpend = false;
         this.isNamesPress = false;
+        this.isTypesPress = false;
       } else {
         this.navigateTo("/enterprise_selection");
       }
@@ -300,7 +361,11 @@ export default {
     },
     async submitRequest() {
       this.summary = "";
-      this.displayedSummary = "";
+      // 如果已有正在執行的文字生成，先清除它
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.displayedSummary = ""; // 清空已顯示的內容
+      }
 
       try {
         const analysisResponse = await this.$axios.get(
@@ -321,12 +386,13 @@ export default {
       let index = 0;
 
       // 使用 setInterval 逐字顯示
-      const interval = setInterval(() => {
+      this.intervalId = setInterval(() => {
         if (index < fullText.length) {
           this.displayedSummary += fullText[index]; // 每次添加一個字
           index++;
         } else {
-          clearInterval(interval); // 顯示完成後清除計時器
+          clearInterval(this.intervalId); // 顯示完成後清除計時器
+          this.intervalId = null; // 重置計時器 ID
         }
       }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
     },
@@ -412,7 +478,7 @@ export default {
   padding-left: 30px;
   padding-right: 40px;
   margin-top: 4.5rem;
-  height: 85%;
+  height: 73%;
   color: black;
   align-content: center;
   justify-content: flex-start;
@@ -430,6 +496,16 @@ export default {
   font-size: 14px;
   line-height: 200%;
   text-align: left;
+}
+
+.share-btn {
+  width: 134px;
+  height: 55px;
+  border-radius: 30px;
+  background-image: url("../../public/images/Share.png");
+  margin-top: 30px;
+  margin-left: 50px;
+  cursor: pointer;
 }
 
 h3 {
@@ -482,6 +558,8 @@ h3 {
   display: flex;
 }
 .types-div {
+  cursor: pointer;
+
   flex: 1;
   border-top: 1px solid white;
   border-bottom: 1px solid white;
@@ -490,7 +568,18 @@ h3 {
   padding-left: 2.25rem;
   color: white;
 }
+.types-pressed {
+  color: #75fb9f;
+}
+.typesArrow {
+  position: absolute;
+  right: 20px;
+  margin-bottom: 2.5px;
+  transition: transform 0.5s ease;
+}
 .names-div {
+  cursor: pointer;
+
   position: relative;
   flex: 1;
   border-bottom: 1px solid white;
@@ -636,12 +725,7 @@ h3 {
   font-weight: normal;
   font-style: normal;
 }
-@font-face {
-  font-family: "Superstar";
-  src: url("../assets/fonts/Superstar.ttf") format("truetype");
-  font-weight: normal;
-  font-style: normal;
-}
+
 @font-face {
   font-family: "MinecraftFont";
   src: url("../assets/fonts/Minecraft.ttf") format("truetype");

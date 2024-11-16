@@ -1,8 +1,24 @@
 <template>
   <div class="menu-container">
     <div class="main-content">
-      <div class="logo-container">
-        <div class="logo">LOGO</div>
+      <div class="logo">
+        <svg
+          width="207"
+          height="165"
+          viewBox="0 0 207 165"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect x="-8" width="215" height="164.932" fill="white" />
+          <path
+            d="M27.3424 81.1473V110.579C36.1338 110.961 48.1894 110.767 57.1566 107.904C66.5366 104.907 77.0327 98.73 82.384 92.6143V110.579C92.322 110.579 100.349 111.344 114.492 107.139C123.451 104.475 132.074 98.3478 138.19 92.6143V110.579H167.24V55.9199C157.302 56.3022 155.731 55.8014 146.599 57.4489C123.283 60.8889 121.414 74.1333 112.198 75.796V56.3022C112.198 56.3022 90.0286 55.1555 77.7972 61.6534C62.504 69.7797 54.8632 83.8229 27.3424 81.1473Z"
+            fill="#13C9A8"
+          />
+          <path
+            d="M50.9041 66.2671C43.0502 68.4348 41.2909 70.1941 39.1232 78.048C36.9556 70.1941 35.1963 68.4348 27.3424 66.2671C35.1963 64.0995 36.9556 62.3402 39.1232 54.4863C41.2909 62.3402 43.0502 64.0995 50.9041 66.2671Z"
+            fill="#13C9A8"
+          />
+        </svg>
       </div>
       <div class="list-container">
         <div class="close" @click="closeMenu">Close</div>
@@ -75,18 +91,16 @@ h1 {
   background-color: #17b8a6;
 }
 
-.logo-container {
-  padding: 5rem 3.5rem;
-  display: flex;
-  flex: 3;
-  /* align-items: center; */
-}
 .logo {
-  color: var(--white, #fff);
-  font-size: 36px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: normal;
+  width: 18.5rem;
+  height: 100%;
+  /* background-color: #75fb9f; */
+  /* align-items: center; */
+  display: flex;
+  flex-direction: column;
+  flex: 3;
+
+  /* justify-content: center; */
 }
 
 .close {

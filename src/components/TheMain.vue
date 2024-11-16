@@ -217,41 +217,19 @@ pre {
 }
 
 .main-content {
+  position: relative;
   width: 100%;
   /* height: 82vh; */
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 /* Dark-Mode */
 .dark-mode {
   background-color: #1b2023;
   transition: ease-out 0.35s;
 }
-
-/* 當視窗寬度大於1600px */
-/* @media (min-width: 1600px) {
-    .svg-container {
-      background-image: radial-gradient(circle, black 3.6px, transparent 3.6px);
-      background-size: 36px 36px;
-    }
-  } */
-
-/* 當視窗寬度在1400px到1600px之間 */
-/* @media (min-width: 1400px) and (max-width: 1599px) {
-    .svg-container {
-      background-image: radial-gradient(circle, black 3.3px, transparent 3.3px);
-      background-size: 34px 34px;
-    }
-  } */
-
-/* 當視窗寬度在1000px到1300px之間 */
-/* @media (min-width: 1000px) and (max-width: 1299px) {
-    .svg-container {
-      background-image: radial-gradient(circle, black 3px, transparent 3px);
-      background-size: 30px 30px;
-    }
-  } */
 </style>
 <style>
 pre {
