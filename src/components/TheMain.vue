@@ -22,7 +22,9 @@
       <div class="stock" :class="{ 'stock-dark-mode': isDarkMode }">
         <div class="marquee-container">
           <div class="marquee-text">
-            AAPL: 275.33 META: 500.12 GOOG: 754.56 TSLA: 1548.21 MFJ: null
+            <pre>
+                AAPL:275.33  META:500.12  GOOG:<span>754.56</span>  TSLA:1548.21  MFJ:<span>983.74</span>
+            </pre>
           </div>
         </div>
       </div>
@@ -128,9 +130,12 @@ export default {
 }
 
 .marquee-text {
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding-left: 100%;
-  animation: marquee 60s linear infinite;
+  animation: marquee 40s linear infinite;
 }
 
 @keyframes marquee {
@@ -183,7 +188,9 @@ export default {
   font-weight: normal;
   font-style: normal;
 }
-
+span {
+  color: rgb(255, 37, 37);
+}
 p {
   margin: 0;
   font-family: "MinecraftFont", sans-serif;
@@ -193,7 +200,8 @@ p {
   user-select: none;
 }
 
-.marquee-text {
+pre {
+  display: flex;
   font-family: "PressStar2PFont", sans-serif;
   font-style: normal;
   font-weight: 300;
@@ -244,4 +252,9 @@ p {
       background-size: 30px 30px;
     }
   } */
+</style>
+<style>
+pre {
+  margin: 0 !important;
+}
 </style>

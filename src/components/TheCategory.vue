@@ -133,16 +133,17 @@
           </Transition>
           <!-- enterprise-list  -->
           <Transition name="slideList">
-            <div class="button-list" v-if="isNamesPress">
+            <div class="button-list" v-if="isAnimationComplete && isNamesPress">
               <div class="scrollable-list">
                 <div
                   v-for="item in financialItems"
                   :key="item.name"
                   @click="handleClick(item)"
+                  :class="{ selected: isSelected(item) }"
                   class="financial-button list-div"
                   tabindex="0"
                 >
-                  {{ item.name }}
+                  {{ item.value }}
                 </div>
               </div>
             </div>
@@ -150,7 +151,7 @@
         </div>
         <!-- box3  -->
         <div class="box3">
-          <Transition name="slideOrigin">
+          <Transition name="slideOrigin" @after-enter="checkAnimationComplete">
             <div v-if="!isExpend" class="originDiv">
               <div class="blackbox3"></div>
               <div class="linearBox"></div>
@@ -159,7 +160,7 @@
             </div>
           </Transition>
 
-          <Transition name="slide3">
+          <Transition name="slide3" @after-enter="checkAnimationComplete">
             <div v-if="isExpend" class="animateDiv"></div>
           </Transition>
         </div>
@@ -195,32 +196,11 @@
               />
               <foreignObject x="0" y="0" width="100%" height="100%">
                 <div xmlns="http://www.w3.org/1999/xhtml" class="text-block">
-                  <p :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }">
-                    Lorem ipsum dolor sit amet consectetur. Sagittis non
-                    habitasse amet egestas semper. Viverra euismod risus sapien
-                    morbi. Etiam amet vitae maecenas vitae purus. Neque ultrices
-                    amet elit lobortis turpis ultricies viverra. Id auctor ac
-                    semper leo malesuada aliquam arcu. Eget velit maecenas
-                    euismod mi tellus. Nisl congue risus nibh magna facilisis.
-                    Dui mauris phasellus aliquam nulla eget quam potenti
-                    fermentum malesuada. Tristique viverra lobortis enim
-                    consequat placerat tempor dui. Nunc commodo habitasse mollis
-                    aliquet feugiat tincidunt urna dictum eu. Odio aliquam
-                    sagittis pharetra ipsum massa. Bibendum pharetra turpis
-                    laoreet erat adipiscing blandit faucibus vestibulum.
-                    Tincidunt dignissim sagittis sapien accumsan convallis.
-                    Adipiscing mattis faucibus enim quis sed erat at odio
-                    tortor. Venenatis eu quis a donec est mattis. A nibh nulla
-                    orci habitasse semper et massa. Erat pellentesque in leo
-                    consequat. Proin viverra sit velit sodales viverra pharetra.
-                    Habitant iaculis quisque non ac eget. Arcu amet eget quam
-                    sit consectetur vel sit amet risus. Massa vel augue
-                    scelerisque non eu nulla. Vel gravida tincidunt ut nec. Ut
-                    fusce libero elit ornare viverra diam a ornare sollicitudin.
-                    Risus id euismod justo elementum lacus at sed purus. Sed
-                    vulputate diam aliquam adipiscing ipsum pulvinar. Porttitor
-                    curs
-                  </p>
+                  <text
+                    class="mark-down-text"
+                    :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }"
+                    v-html="markdownToHtml"
+                  ></text>
                 </div>
               </foreignObject>
             </svg>
@@ -232,32 +212,42 @@
 </template>
 
 <script>
+import { marked } from "marked";
 export default {
   data() {
     return {
+      summary: "",
+      displayedSummary: "",
       isDarkMode: false,
       isExpend: false,
       isNamesPress: false,
+      isAnimationComplete: false,
+      company_name: "",
       financialItems: [
-        { name: "華南金HNFHC" },
-        { name: "富邦金FUBFH" },
-        { name: "國泰金CFH" },
-        { name: "開發金KGI" },
-        { name: "玉山金ESFHC" },
-        { name: "元大金YFH" },
-        { name: "兆豐金MFG" },
-        { name: "台新金TSFHC" },
-        { name: "新光金SKFH" },
-        { name: "國票金CBFHC" },
-        { name: "永豐金SPH" },
-        { name: "中信金CTBC" },
-        { name: "第一金FFHC" },
-        { name: "日盛金JSFHC" },
-        { name: "合庫金TCFHC" },
+        { value: "華南金HNFHC", name: "華南金", id: "2880" },
+        { value: "富邦金FUBFH", name: "富邦金", id: "2881" },
+        { value: "國泰金CFH", name: "國泰金", id: "2882" },
+        { value: "開發金KGI", name: "開發金", id: "2883" },
+        { value: "玉山金ESFHC", name: "玉山金", id: "2884" },
+        { value: "元大金YFH", name: "元大金", id: "2885" },
+        { value: "兆豐金MFG", name: "兆豐金", id: "2886" },
+        { value: "台新金TSFHC", name: "台新金", id: "2887" },
+        { value: "新光金SKFH", name: "新光金", id: "2888" },
+        { value: "國票金CBFHC", name: "國票金", id: "2889" },
+        { value: "永豐金SPH", name: "永豐金", id: "2890" },
+        { value: "中信金CTBC", name: "中信金", id: "2891" },
+        { value: "第一金FFHC", name: "第一金", id: "2892" },
+        { value: "日盛金JSFHC", name: "日盛金", id: "5820" },
+        { value: "合庫金TCFHC", name: "合庫金", id: "5880" },
       ],
     };
   },
   components: {},
+  computed: {
+    markdownToHtml() {
+      return marked(this.displayedSummary);
+    },
+  },
   mounted() {
     // const storedDarkMode = sessionStorage.getItem("isDarkMode");
     // if (storedDarkMode !== null) {
@@ -272,20 +262,29 @@ export default {
     // }
   },
   methods: {
-    handleClick(item) {
-      console.log(`Clicked on: ${item.name}`);
-      // Your custom function can be triggered here
+    checkAnimationComplete() {
+      this.isAnimationComplete = false;
+      // 當所有動畫結束後才設定 isAnimationComplete 為 true
+      if (this.isExpend && this.isNamesPress) {
+        this.isAnimationComplete = true;
+      }
     },
     toggleExpand() {
       this.isExpend = !this.isExpend; // 切換 expand 狀態
       this.isNamesPress = false;
     },
     toggleNames() {
+      // this.isAnimationComplete = false;
       this.isNamesPress = !this.isNamesPress;
     },
     navigateTo(path) {
       // 使用傳遞的路徑導航
       this.$router.push(path);
+    },
+    handleClick(item) {
+      this.company_name = item.name;
+      console.log(this.company_name);
+      this.submitRequest();
     },
     toggleExpandBack() {
       if (this.isExpend) {
@@ -294,6 +293,42 @@ export default {
       } else {
         this.navigateTo("/enterprise_selection");
       }
+    },
+    isSelected(item) {
+      // 檢查公司是否已選擇
+      return this.company_name === item.name;
+    },
+    async submitRequest() {
+      this.summary = "";
+      this.displayedSummary = "";
+
+      try {
+        const analysisResponse = await this.$axios.get(
+          `http://127.0.0.1:8000/api/summary/?company_name=${encodeURIComponent(
+            this.company_name
+          )}`
+        );
+
+        console.log("Analysis result:", analysisResponse.data.analysis);
+        this.summary = analysisResponse.data.summary;
+        this.showSummaryByChar(); // 開始逐字呈現
+      } catch (error) {
+        console.error("Error during request:", error);
+      }
+    },
+    showSummaryByChar() {
+      const fullText = this.summary;
+      let index = 0;
+
+      // 使用 setInterval 逐字顯示
+      const interval = setInterval(() => {
+        if (index < fullText.length) {
+          this.displayedSummary += fullText[index]; // 每次添加一個字
+          index++;
+        } else {
+          clearInterval(interval); // 顯示完成後清除計時器
+        }
+      }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
     },
   },
 };
@@ -350,6 +385,17 @@ export default {
   width: 45vw;
 }
 /* generator-div  */
+.main {
+  width: 100%;
+  height: 80%;
+  margin-top: 20px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+}
+.main::-webkit-scrollbar {
+  display: none; /* 隱藏滾動條 */
+}
 .generator-div {
   position: relative;
   display: flex;
@@ -361,22 +407,39 @@ export default {
   flex: 1;
 }
 .text-block {
+  overflow-y: auto;
   display: flex;
-  padding: 5.75rem 1.75rem 6rem 2.75rem;
-  height: 100%;
-  width: 100%;
+  padding-left: 30px;
+  padding-right: 40px;
+  margin-top: 4.5rem;
+  height: 85%;
   color: black;
   align-content: center;
-  justify-content: center;
+  justify-content: flex-start;
   align-items: flex-start;
 }
-.text-block p {
+
+.text-block::-webkit-scrollbar {
+  display: none; /* 隱藏滾動條 */
+}
+.text-block text {
+  /* font-family: "MinecraftFont", sans-serif; */
+  user-select: none;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 200%;
+  text-align: left;
+}
+
+h3 {
   font-family: "MinecraftFont", sans-serif;
   user-select: none;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
   line-height: 200%;
+  text-align: center !important;
 }
 
 .box1 {
@@ -543,6 +606,12 @@ export default {
 .button-list::-webkit-scrollbar {
   display: none;
 }
+
+.selected {
+  color: rgb(24, 104, 252);
+  font-weight: bold; /* 可選，讓字體變粗 */
+}
+
 .scrollable-list {
   display: flex;
   flex-direction: column;
@@ -554,6 +623,9 @@ export default {
 }
 
 .financial-button:hover {
+  color: #75fb9f;
+}
+.financial-button:focus {
   color: #75fb9f;
 }
 
@@ -608,7 +680,7 @@ p {
   /* color: white; */
 }
 svg text {
-  font-family: "Micro5";
+  /* font-family: "Micro5"; */
   font-style: normal;
   font-weight: 400;
   font-size: 24px;

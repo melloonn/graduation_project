@@ -98,13 +98,34 @@
               />
             </svg>
           </div>
+          <!-- <div class="loading-logo" v-if="isLoading">
+            <svg
+              width="77"
+              height="36"
+              viewBox="0 0 77 36"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <ellipse cx="38.5" cy="18" rx="38.5" ry="18" fill="#1B2023" />
+              <path
+                d="M14.5947 17.6675V27.7259C17.5992 27.8566 21.7193 27.7899 24.7838 26.8115C27.9895 25.7874 31.5766 23.6764 33.4054 21.5863V27.7259C36.8018 27.7259 39.545 27.9872 44.3783 26.5503C47.4403 25.6398 50.3873 23.5458 52.4773 21.5863V27.7259H62.4052V9.0459C59.0088 9.17653 58.4719 9.0054 55.3512 9.56842C47.3828 10.7441 46.744 15.2704 43.5945 15.8386V9.17653C43.5945 9.17653 36.018 8.78464 31.8378 11.0053C26.6114 13.7825 24.0001 18.5819 14.5947 17.6675Z"
+                fill="#75FB9F"
+              />
+              <path
+                d="M22.647 12.5818C19.9629 13.3226 19.3617 13.9239 18.6209 16.608C17.8801 13.9239 17.2788 13.3226 14.5947 12.5818C17.2788 11.841 17.8801 11.2398 18.6209 8.55566C19.3617 11.2398 19.9629 11.841 22.647 12.5818Z"
+                fill="#75FB9F"
+              />
+            </svg>
+          </div> -->
           <div
             class="main"
             :class="isAnimating ? 'enlarge-main' : 'normal-main'"
+            ref="textBlock"
+            @scroll="onScroll"
           >
             <div class="chart-div" v-if="isChartVisible">
               <TheChart
-                :company-id="company_id"
+                :selected-companies="finalSelectedCompanies"
                 :report-type="report_type"
                 :data-field="data_field"
                 :chart-data="chartData"
@@ -142,6 +163,25 @@
                 d="M14.0119 90.088L0 3.45703L121.967 86.9638L14.0119 90.088Z"
                 fill="#75FB9F"
               />
+              <g v-if="!isLoading">
+                <path
+                  d="M35.6665 69.3337L52.3332 52.667"
+                  stroke="black"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+                <path
+                  d="M35.6665 52.667H52.3332V69.3337"
+                  stroke="black"
+                  stroke-width="4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                />
+              </g>
+              <g v-if="isLoading">
+                <rect x="26" y="48" width="25" height="25" fill="black" />
+              </g>
             </svg>
           </div>
         </foreignObject>
@@ -206,12 +246,14 @@
                 v-for="item in enterpriseItems"
                 :key="item.name"
                 @click="handleClick(item, 'enterprise')"
+                :class="{ selected: isSelected(item) }"
                 class="enterprise-button list-div"
                 tabindex="0"
               >
                 {{ item.value }}
               </div>
             </div>
+            <button @click="submitEnter" class="submit-enter">enter</button>
           </div>
         </Transition>
       </div>
@@ -332,15 +374,15 @@
         <!-- expand  -->
         <Transition name="slide1">
           <div
-            class="indicator-button-list indicator-main-div-expand"
+            class="financial-button-list financial-main-div-expand"
             v-if="isIndicatorPressed"
           >
-            <div class="indicator-scrollable-list">
+            <div class="financial-scrollable-list">
               <div
                 v-for="item in selectedIndicators"
                 :key="item.name"
                 @click="handleClick(item, 'indicators')"
-                class="indicator-button list-div"
+                class="financial-button list-div"
                 tabindex="0"
               >
                 {{ item.name }}
@@ -362,6 +404,8 @@ import { marked } from "marked";
 export default {
   data() {
     return {
+      isLoading: false,
+      shouldAutoScroll: true,
       isChartVisible: false,
       showMainDiv: true,
       isEnterprisePressed: false,
@@ -376,10 +420,13 @@ export default {
         "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z",
 
       company_id: "",
+      selectedCompanies: [],
+      finalSelectedCompanies: [],
       report_type: "",
       data_field: "",
-      chartData: [],
+      chartData: {},
       summary: "",
+      displayedSummary: "",
       enterpriseText: "ENTERPRISE",
       enterpriseItems: [
         { value: "華南金HNFHC", name: "HNFHC", id: "2880" },
@@ -537,7 +584,7 @@ export default {
   },
   computed: {
     markdownToHtml() {
-      return marked(this.summary);
+      return marked(this.displayedSummary);
     },
   },
   mounted() {
@@ -586,6 +633,38 @@ export default {
         this.svgHeight = "346";
       }
     },
+    autoAnimation() {
+      this.isAnimating = true;
+      if (this.isAnimating) {
+        anime({
+          targets: this,
+          // svgWidth: 1231,
+          svgHeight: 727,
+          viewBox: [
+            { value: "0 0 1231 346" }, // 開始 viewBox
+            { value: "0 0 1231 727" }, // 結束 viewBox
+          ],
+          pathData: [
+            {
+              value:
+                "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z",
+            }, // 開始 path
+            {
+              value:
+                "M3 103.92L77.4696 3H1196.01L1227 564.964H1101.05L1156.53 719L1061.57 640.389L35.9865 679.694L3 103.92Z",
+            }, // 結束 path
+          ],
+          easing: "easeInOutQuad",
+          duration: 750,
+        });
+      }
+      if (!this.isAnimating) {
+        this.pathData =
+          "M3 50.5L77.5 3H1196.5L1227.5 267.5H1101.5L1157 340L1062 303L36 321.5L3 50.5Z";
+        this.viewBox = "0 0 1231 346";
+        this.svgHeight = "346";
+      }
+    },
     navigateTo(path) {
       // 使用傳遞的路徑導航
       this.$router.push(path);
@@ -602,62 +681,140 @@ export default {
       this.isIndicatorPressed = !this.isIndicatorPressed;
       this.showMainDiv = false;
     },
+    submitEnter() {
+      this.isEnterprisePressed = !this.isEnterprisePressed;
+      this.showMainDiv = true;
+    },
+    isSelected(item) {
+      // 檢查公司是否已選擇
+      return this.selectedCompanies.some(
+        (company) => company.name === item.name
+      );
+    },
     handleClick(item, type) {
       if (type === "enterprise") {
-        this.enterpriseText = item.name;
-        this.company_id = item.id;
-        this.isEnterprisePressed = !this.isEnterprisePressed;
+        if (this.isSelected(item)) {
+          // 如果已經選中，則移除
+          this.selectedCompanies = this.selectedCompanies.filter(
+            (company) => company.name !== item.name
+          );
+        } else if (this.selectedCompanies.length < 2) {
+          // 如果未選中且選擇數小於 2，則添加
+          this.selectedCompanies.push(item);
+        }
+        this.enterpriseText = this.selectedCompanies
+          .map((company) => company.name)
+          .join(", ");
+        // this.company_id = item.id;
+        console.log(this.selectedCompanies);
       } else if (type === "financial") {
         this.financialText = item.name;
         this.report_type = item.value;
         this.selectedIndicators = this.indicatorItems[item.id] || []; // 根據所選的財務表更新指標
         this.isFinacialPressed = !this.isFinacialPressed;
+        this.showMainDiv = true;
       } else if (type === "indicators") {
         this.indicatorText = item.name;
         this.data_field = item.value;
         this.isIndicatorPressed = !this.isIndicatorPressed;
+        this.showMainDiv = true;
       }
-      this.showMainDiv = true;
     },
     async submitRequest() {
+      this.isLoading = true;
+      this.autoAnimation();
+      this.summary = "";
+      this.displayedSummary = "";
+      this.isChartVisible = false;
+      this.finalSelectedCompanies = this.selectedCompanies;
+
       try {
-        const params = {
-          company_id: this.company_id,
-          report_type: this.report_type,
-          data_field: this.data_field,
-        };
+        const params = new URLSearchParams();
+        this.finalSelectedCompanies.forEach((company) =>
+          params.append("company_id", company.id)
+        );
+        params.append("report_type", this.report_type);
+        params.append("data_field", this.data_field);
 
         console.log("Submitting request with parameters:", params);
         const response = await this.$axios.get(
           "http://127.0.0.1:8000/api/financial_data/",
           { params }
         );
-        this.chartData = response.data[this.company_id][this.report_type][0];
-        this.isChartVisible = true;
-        //
-        console.log("Response from server:", response.data);
-        // 假設 response.data 的結構如您所示
+
+        this.finalSelectedCompanies.forEach((company) => {
+          const companyId = company.id;
+
+          // 檢查 response 中是否有對應的公司資料
+          if (
+            response.data &&
+            response.data[companyId] &&
+            response.data[companyId][this.report_type] &&
+            Array.isArray(response.data[companyId][this.report_type]) &&
+            response.data[companyId][this.report_type].length > 0
+          ) {
+            const companyData = response.data[companyId][this.report_type][0]; // 獲取該公司對應的報告資料
+            this.chartData[companyId] = companyData; // 將資料存入 chartData
+            console.log(this.chartData);
+          } else {
+            console.warn(
+              `No data found for company ID ${companyId} with report type ${this.report_type}`
+            );
+            // 若無資料，可以選擇設定為空數組或處理錯誤
+            this.chartData[companyId] = [];
+          }
+        });
+
         const resData = response.data;
-
-        // 構造發送給 financial_indicator_summary 的數據
-        const dataToSend = {
-          data: {
-            [this.company_id]: {
-              [this.report_type]: [resData[this.company_id][this.report_type]],
-            },
-          },
-        };
-
         const analysisResponse = await this.$axios.post(
           "http://127.0.0.1:8000/api/financial_indicator_summary/",
           { data: resData }
         );
 
         console.log("Analysis result:", analysisResponse.data.analysis);
+        this.isChartVisible = true;
         this.summary = analysisResponse.data.analysis;
+        this.showSummaryByChar(); // 開始逐字呈現
       } catch (error) {
         console.error("Error during request:", error);
       }
+    },
+    showSummaryByChar() {
+      const fullText = this.summary;
+      let index = 0;
+
+      // 使用 setInterval 逐字顯示
+      const interval = setInterval(() => {
+        if (index < fullText.length) {
+          this.displayedSummary += fullText[index]; // 每次添加一個字
+          if (this.shouldAutoScroll) {
+            this.scrollToBottom(); // 只有在允許自動滾動時滾動到底部
+          }
+          index++;
+        } else {
+          this.isLoading = false;
+          clearInterval(interval); // 顯示完成後清除計時器
+        }
+      }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
+    },
+    scrollToBottom() {
+      return new Promise((resolve) => {
+        this.$nextTick(() => {
+          const textBlock = this.$refs.textBlock;
+          textBlock.scrollTop = textBlock.scrollHeight; // 設定滾動條到底部
+          resolve();
+        });
+      });
+    },
+    onScroll() {
+      const textBlock = this.$refs.textBlock;
+      // 檢查滾動條是否已在最底部
+      const isAtBottom =
+        textBlock.scrollTop + textBlock.clientHeight >=
+        textBlock.scrollHeight - 5;
+
+      // 如果滾動條不在底部，關閉自動滾動
+      this.shouldAutoScroll = isAtBottom;
     },
   },
 };
@@ -732,6 +889,13 @@ export default {
   margin-right: 3rem;
   cursor: pointer;
 }
+.loading-logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  margin-top: 35px;
+  margin-left: 90px;
+}
 .chart-div {
   height: 60%;
   width: 100%;
@@ -768,6 +932,7 @@ export default {
   display: none; /* 隱藏滾動條 */
 }
 .text-div {
+  /* overflow-y: auto; */
   display: flex;
   justify-content: center;
   width: 100%;
@@ -826,6 +991,10 @@ export default {
   position: absolute;
   right: 80px;
 }
+.selected {
+  color: rgb(24, 104, 252);
+  font-weight: bold; /* 可選，讓字體變粗 */
+}
 
 /* enterprise-list  */
 .enterprise-button-list {
@@ -843,6 +1012,14 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 5px;
+}
+
+.submit-enter {
+  position: absolute;
+  margin-right: 200px;
+  margin-bottom: 50px;
+  right: 0;
+  bottom: 0;
 }
 
 .enterprise-button {
