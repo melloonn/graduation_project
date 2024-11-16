@@ -232,7 +232,11 @@
                 fill="#75FB9F"
               />
               <foreignObject x="0" y="0" width="100%" height="100%">
-                <div xmlns="http://www.w3.org/1999/xhtml" class="text-block">
+                <div
+                  xmlns="http://www.w3.org/1999/xhtml"
+                  class="text-block"
+                  ref="textBlock"
+                >
                   <text
                     class="mark-down-text"
                     :style="{ color: isDarkMode ? '#A7A9AC' : 'black' }"
@@ -384,17 +388,49 @@ export default {
     showSummaryByChar() {
       const fullText = this.summary;
       let index = 0;
-
+      if (!this.$refs.textBlock) {
+        // 檢查 DOM 是否存在
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+        return;
+      }
       // 使用 setInterval 逐字顯示
       this.intervalId = setInterval(() => {
         if (index < fullText.length) {
           this.displayedSummary += fullText[index]; // 每次添加一個字
+          this.scrollToBottom();
           index++;
         } else {
           clearInterval(this.intervalId); // 顯示完成後清除計時器
           this.intervalId = null; // 重置計時器 ID
         }
       }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
+    },
+    scrollToBottom() {
+      return new Promise((resolve) => {
+        this.$nextTick(() => {
+          const textBlock = this.$refs.textBlock;
+          textBlock.scrollTop = textBlock.scrollHeight; // 設定滾動條到底部
+          resolve();
+        });
+      });
+    },
+    onScroll() {
+      const textBlock = this.$refs.textBlock;
+      // 檢查滾動條是否已在最底部
+      const isAtBottom =
+        textBlock.scrollTop + textBlock.clientHeight >=
+        textBlock.scrollHeight - 5;
+
+      // 如果滾動條不在底部，關閉自動滾動
+      this.shouldAutoScroll = isAtBottom;
+    },
+    beforeDestroy() {
+      // 清除計時器避免錯誤
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
     },
   },
 };

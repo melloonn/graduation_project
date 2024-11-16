@@ -286,6 +286,7 @@ export default {
           // 清除存儲的 token
           sessionStorage.removeItem("access");
           sessionStorage.removeItem("refresh");
+          sessionStorage.removeItem("isDarkMode");
           // 導向登錄頁面或主頁
           this.$router.push("/home"); // 重定向到首頁
         })
