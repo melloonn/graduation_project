@@ -260,6 +260,7 @@ export default {
     return {
       summary: "",
       displayedSummary: "",
+      shouldAutoScroll: true,
       isDarkMode: false,
       isExpend: false,
       isNamesPress: false,
@@ -339,6 +340,7 @@ export default {
     },
     navigateTo(path) {
       // 使用傳遞的路徑導航
+      this.shouldAutoScroll = false;
       this.$router.push(path);
     },
     handleClick(item, type) {
@@ -388,21 +390,18 @@ export default {
     showSummaryByChar() {
       const fullText = this.summary;
       let index = 0;
-      if (!this.$refs.textBlock) {
-        // 檢查 DOM 是否存在
-        clearInterval(this.intervalId);
-        this.intervalId = null;
-        return;
-      }
+
       // 使用 setInterval 逐字顯示
-      this.intervalId = setInterval(() => {
+      const interval = setInterval(() => {
         if (index < fullText.length) {
           this.displayedSummary += fullText[index]; // 每次添加一個字
-          this.scrollToBottom();
+          if (this.shouldAutoScroll) {
+            this.scrollToBottom(); // 只有在允許自動滾動時滾動到底部
+          }
           index++;
         } else {
-          clearInterval(this.intervalId); // 顯示完成後清除計時器
-          this.intervalId = null; // 重置計時器 ID
+          // this.isLoading = false;
+          clearInterval(interval); // 顯示完成後清除計時器
         }
       }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
     },

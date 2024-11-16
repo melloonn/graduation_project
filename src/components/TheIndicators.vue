@@ -678,6 +678,7 @@ export default {
     },
     navigateTo(path) {
       // 使用傳遞的路徑導航
+      this.shouldAutoScroll = false;
       this.$router.push(path);
     },
     toggleEnterprise() {
