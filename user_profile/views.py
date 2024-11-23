@@ -23,12 +23,16 @@ class UserProfileAPIView(APIView):
             # 獲取用戶的所有怪獸，如果沒有則返回空清單
             user_monsters = UserMonster.objects.filter(user_profile=profile)
             monsters = [
-                {"monster_id": monster.monster.monster_id, "monster_name": monster.monster.monster_name}
+                {
+                "monster_id": monster.monster.monster_id, 
+                "monster_name": monster.monster.monster_name,
+                }
                 for monster in user_monsters
             ]
 
             response_data = {
                 "userID": user.username,
+                "photo": profile.photo,
                 "nickname": profile.nickname,
                 "coins": profile.coins,
                 "gems": profile.gems,
@@ -51,12 +55,29 @@ class UserProfileAPIView(APIView):
             profile.coins = data.get("coins", profile.coins)
             profile.gems = data.get("gems", profile.gems)
             profile.score = data.get("score", profile.score)
-
-            # 更新 nickname
             profile.nickname = data.get("nickname", profile.nickname)
+
+            # 更新 photo
+            new_photo_id = data.get("photo")  # 前端傳來的新 photo 的怪獸 ID
+            if new_photo_id is not None:
+                # 確認該怪獸屬於用戶
+                if UserMonster.objects.filter(user_profile=profile, monster__monster_id=new_photo_id).exists():
+                    profile.photo = new_photo_id
+                else:
+                    return Response(
+                        {"error": "選擇的怪獸 ID 無效或不屬於該用戶"},
+                        status=status.HTTP_400_BAD_REQUEST,
+                    )
 
             # 保存更改
             profile.save()
+
+            # 更新怪獸
+            monster_id = data.get("monster_id")
+            if monster_id:
+                monster_name = data.get("monster_name")
+                monster, _ = Monster.objects.get_or_create(monster_id=monster_id, defaults={"monster_name": monster_name})
+                UserMonster.objects.get_or_create(user_profile=profile, monster=monster)
 
             # 返回成功消息
             return Response({"message": "用戶資料更新成功"}, status=status.HTTP_200_OK)
