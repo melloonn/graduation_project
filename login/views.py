@@ -21,6 +21,8 @@ from drf_yasg import openapi
 from social_django.utils import psa
 from rest_framework.decorators import api_view
 
+from user_profile.models import UserProfile  # 新增：引入 UserProfile 模型
+
 class LoginView(TokenObtainPairView):
     @swagger_auto_schema(
         operation_description="使用者登入，提供電子郵件和密碼以獲取 JWT access 和 refresh token。",
@@ -143,7 +145,11 @@ class RegisterView(generics.CreateAPIView):
         #序列化器負責對資料進行驗證儲存
         serializer = self.serializer_class(data=data)
         if serializer.is_valid():
-            serializer.save()
+            user = serializer.save()
+
+            # 新增：在註冊用戶的同時，創建對應的 UserProfile
+            UserProfile.objects.create(user=user)
+
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
