@@ -430,7 +430,12 @@ h1 {
 .dark-mode a {
   color: #13c9a8;
 }
-.dark-mode text {
+.dark-mode text,
+.separator span {
   color: white;
+}
+.dark-mode .google-div text,
+.dark-mode .apple-div text {
+  color: black;
 }
 </style>

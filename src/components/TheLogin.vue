@@ -283,7 +283,7 @@ export default {
             .then((res) => {
               // 登入成功
               this.$message({
-                message: "登入成功！",
+                message: "Login Successful！",
                 type: "success",
                 duration: 3000,
               });

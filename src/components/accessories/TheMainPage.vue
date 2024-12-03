@@ -904,7 +904,7 @@
         </svg>
       </div>
       <div class="ideas-text">
-        <h3>ideas</h3>
+        <h3>Ideas</h3>
         <br />
         <div>
           <p>//Search by tagging</p>

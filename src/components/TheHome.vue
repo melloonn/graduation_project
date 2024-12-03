@@ -183,7 +183,6 @@
 <script>
 import TheMenuBtn from "./accessories/TheMenuBtn.vue";
 import TheSunMoonBtn from "./accessories/TheSunMoonBtn.vue";
-import TheNewEra from "./accessories/TheNewEra.vue";
 import BeforeSignUp from "./BeforeSignUp.vue";
 import TheMenu from "./TheMenu.vue";
 
@@ -198,7 +197,6 @@ export default {
   components: {
     TheMenuBtn,
     TheSunMoonBtn,
-    TheNewEra,
     TheMenu,
     BeforeSignUp,
   },

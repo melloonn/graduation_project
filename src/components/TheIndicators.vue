@@ -418,6 +418,8 @@ export default {
       isLoading: false,
       showLoadingLogo: false,
       shouldAutoScroll: true,
+      intervalId: null, // 用來存儲計時器的 ID
+
       isChartVisible: false,
       showMainDiv: true,
       isEnterprisePressed: false,
@@ -686,6 +688,8 @@ export default {
       this.showMainDiv = false;
     },
     toggleFinancial() {
+      this.report_type = "";
+      this.data_field = "";
       this.isFinacialPressed = !this.isFinacialPressed;
       this.showMainDiv = false;
     },
@@ -733,11 +737,27 @@ export default {
       }
     },
     async submitRequest() {
+      if (
+        this.selectedCompanies === "" ||
+        this.report_type === "" ||
+        this.data_field === ""
+      ) {
+        this.$message({
+          message: "有數值為空",
+          type: "error",
+          duration: 3000,
+        });
+        return; // 停止後續代碼執行
+      }
+
       this.showLoadingLogo = true;
       this.isLoading = true;
       this.autoAnimation();
       this.summary = "";
-      this.displayedSummary = "";
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.displayedSummary = ""; // 清空已顯示的內容
+      }
       this.isChartVisible = false;
       this.finalSelectedCompanies = this.selectedCompanies;
 
@@ -798,7 +818,7 @@ export default {
       let index = 0;
 
       // 使用 setInterval 逐字顯示
-      const interval = setInterval(() => {
+      this.intervalId = setInterval(() => {
         if (index < fullText.length) {
           this.displayedSummary += fullText[index]; // 每次添加一個字
           if (this.shouldAutoScroll) {
@@ -807,7 +827,7 @@ export default {
           index++;
         } else {
           this.isLoading = false;
-          clearInterval(interval); // 顯示完成後清除計時器
+          clearInterval(this.intervalId); // 顯示完成後清除計時器
         }
       }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
     },
@@ -829,6 +849,13 @@ export default {
 
       // 如果滾動條不在底部，關閉自動滾動
       this.shouldAutoScroll = isAtBottom;
+    },
+    beforeDestroy() {
+      // 清除計時器避免錯誤
+      if (this.intervalId) {
+        clearInterval(this.intervalId);
+        this.intervalId = null;
+      }
     },
   },
 };

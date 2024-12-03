@@ -29,6 +29,7 @@
         </div>
       </div>
       <div class="time" @click="navigateTo('/profile')" tabindex="0">
+        <h1>{{ profile.nickname }}</h1>
         <svg
           class="user-div"
           width="46"
@@ -60,12 +61,27 @@ export default {
   data() {
     return {
       isDarkMode: false,
+      userData: {
+        userID: "",
+        userName: "",
+        coins: 0,
+        gems: 0,
+      },
+      profile: {
+        userID: "",
+        nickname: "",
+        coins: 0,
+        gems: 0,
+        score: 0,
+        monsters: [],
+      },
     };
   },
   components: {
     TheMainPage,
   },
-  mounted() {
+  async mounted() {
+    await this.fetchProfileData();
     const storedDarkMode = sessionStorage.getItem("isDarkMode");
     if (storedDarkMode !== null) {
       this.$isDarkMode = JSON.parse(storedDarkMode);
@@ -78,7 +94,48 @@ export default {
       this.isDarkMode = true;
     }
   },
+
   methods: {
+    async fetchProfileData() {
+      this.isLoading = true;
+      try {
+        const token = sessionStorage.getItem("access"); // 替換成實際存取的 token
+        const response = await this.$axios.get(
+          "http://127.0.0.1:8000/profile/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // 更新 Profile 實例的內容
+        const returnedData = response.data;
+
+        this.updateUserData(returnedData);
+
+        console.log("Profile updated:", this.profile);
+      } catch (error) {
+        console.error("Error updating profile:", error.response || error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    updateUserData(data) {
+      // 遍歷更新 Profile 實例的每個字段
+      Object.keys(this.userData).forEach((key) => {
+        if (data[key] !== undefined) {
+          this.userData[key] = data[key];
+        }
+      });
+      Object.keys(this.profile).forEach((key) => {
+        if (data[key] !== undefined) {
+          this.profile[key] = data[key];
+        }
+      });
+      sessionStorage.setItem("userData", JSON.stringify(this.userData));
+    },
     navigateTo(path) {
       // 使用傳遞的路徑導航
       this.$router.push(path);
@@ -148,6 +205,7 @@ export default {
 }
 
 .time {
+  cursor: pointer;
   border-radius: 100px;
   background-color: #75fb9f;
   width: 18vw;
@@ -156,6 +214,13 @@ export default {
   align-items: center;
   justify-content: flex-end;
   padding-right: 1.5rem;
+}
+.time h1 {
+  margin: 0;
+  font-family: "Micro5", sans-serif;
+  font-style: normal;
+  font-size: 50px;
+  user-select: none;
 }
 .user-div {
   display: flex;
@@ -174,6 +239,13 @@ export default {
 .footer-text {
   grid-column: 1 / -1; /* 佔滿所有列 */
   text-align: center; /* 文字置中 */
+}
+
+@font-face {
+  font-family: "Micro5";
+  src: url("../assets/fonts/Micro5-Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
 }
 @font-face {
   font-family: "MinecraftFont";

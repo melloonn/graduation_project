@@ -17,21 +17,6 @@ import { path } from "animejs";
 
 const routes = [
   {
-    // path: "/", // 路径
-    // name: "Home",
-    // redirect: "/login", // 重定向
-  },
-  {
-    // path: "/login", // 路径
-    // name: "Login",
-    // component: TheLogin, // 跳转到的组件
-  },
-  {
-    // path: "/register", // 路径
-    // name: "Register",
-    // component: TheRegister, // 跳转到的组件
-  },
-  {
     path: "/home",
     name: "Home",
     component: TheHome,
@@ -70,15 +55,8 @@ const routes = [
     path: "/test",
     component: BeforeSignUp,
   },
-  // {
-  //   path: "/unity",
-  //   beforeEnter() {
-  //     // 讓伺服器處理這個路徑，而不是 Vue Router
-  //     window.location.href = "/unity/index.html";
-  //   },
-  // },
   {
-    path: "/unity",
+    path: "/unity/",
     name: "Game",
     component: TheGame,
   },
@@ -88,16 +66,16 @@ const router = createRouter({
   routes,
 });
 
-// router.beforeEach((to, from, next) => {
-//   const isAuthenticated = sessionStorage.getItem("access");
-//   // let isAuthenticated = !!sessionStorage.getItem("userInfo");
-//   if (to.path !== "/home" && !isAuthenticated) {
-//     next({ path: "/home" });
-//     Message({
-//       message: "Please login first！",
-//       type: "warning",
-//     });
-//   } else next();
-// });
+router.beforeEach((to, from, next) => {
+  const isAuthenticated = sessionStorage.getItem("access");
+  // let isAuthenticated = !!sessionStorage.getItem("userInfo");
+  if (to.path !== "/home" && !isAuthenticated) {
+    next({ path: "/home" });
+    Message({
+      message: "Please login first！",
+      type: "warning",
+    });
+  } else next();
+});
 
 export default router;

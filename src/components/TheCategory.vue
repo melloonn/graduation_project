@@ -271,11 +271,11 @@ export default {
       selectedCompany: [],
       types: [
         {
-          name: "Technology",
+          name: "TECHONOLOGY",
           id: "technology",
         },
-        { name: "Political", id: "political" },
-        { name: "Finance", id: "financial" },
+        { name: "POLITICAL", id: "political" },
+        { name: "FINANCE", id: "financial" },
       ],
       Companys: {
         financial: [
@@ -392,7 +392,7 @@ export default {
       let index = 0;
 
       // 使用 setInterval 逐字顯示
-      const interval = setInterval(() => {
+      this.intervalId = setInterval(() => {
         if (index < fullText.length) {
           this.displayedSummary += fullText[index]; // 每次添加一個字
           if (this.shouldAutoScroll) {
@@ -401,7 +401,7 @@ export default {
           index++;
         } else {
           // this.isLoading = false;
-          clearInterval(interval); // 顯示完成後清除計時器
+          clearInterval(this.intervalId); // 顯示完成後清除計時器
         }
       }, 25); // 每個字元顯示的時間間隔（單位：毫秒，可調整）
     },

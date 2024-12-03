@@ -47,7 +47,7 @@
             <div class="monster-photo">
               <img class="monster-img" :src="currentMonsterUrl" />
             </div>
-            <div class="edit-div"></div>
+            <div class="edit-div">edit</div>
             <div class="level-div">
               <svg
                 width="45"
@@ -78,14 +78,25 @@
           </div>
           <div class="user-Info-div">
             <div class="user-name-field">
-              <h1>JAMES</h1>
-
+              <div class="editFieldDiv" v-if="isEditing">
+                <input
+                  class="editNickField"
+                  type="text"
+                  v-model="newNickname"
+                  placeholder="Enter new nickname"
+                />
+              </div>
+              <div v-else>
+                <h1>{{ profile.nickname }}</h1>
+              </div>
               <svg
                 width="20"
                 height="20"
                 viewBox="0 0 20 20"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
+                @click="changeUserNickName"
+                cursor="pointer"
               >
                 <path
                   d="M10 16.667H17.5"
@@ -105,7 +116,7 @@
             </div>
             <div class="share-div">
               <div class="share-btn">
-                <text>91_1223</text>
+                <text>{{ profile.userID }}</text>
                 <svg
                   width="20"
                   height="20"
@@ -154,14 +165,14 @@
           <div class="gem-div">
             <img :src="require('/src/images/gem.png')" />
             <div class="middle">
-              <h2>X6</h2>
+              <h2>X{{ profile.gems }}</h2>
               <h3>Gems</h3>
             </div>
           </div>
           <div class="monster-div">
             <img :src="require('/src/images/bottle.png')" />
             <div class="middle">
-              <h2>4</h2>
+              <h2>{{ profile.monsters.length }}</h2>
               <h3>Monsters</h3>
             </div>
           </div>
@@ -227,12 +238,25 @@ export default {
           url: "/images/monster4.png",
         },
       ],
-      currentMonster: "1",
+      currentMonsterUrl: "",
+      // 定義符合 API 返回格式的 Profile 實例
+      profile: {
+        userID: "",
+        nickname: "",
+        coins: 0,
+        gems: 0,
+        score: 0,
+        photo: 0,
+        monsters: [],
+      },
       isDarkMode: false,
+      isEditing: false, // 控制是否進入編輯模式
+      newNickname: "", // 暫存新填寫的 nickname
     };
   },
   components: {},
-  mounted() {
+  async mounted() {
+    await this.fetchProfileData();
     const storedDarkMode = sessionStorage.getItem("isDarkMode");
     if (storedDarkMode !== null) {
       this.$isDarkMode = JSON.parse(storedDarkMode);
@@ -245,23 +269,90 @@ export default {
       this.isDarkMode = true;
     }
   },
-  computed: {
-    currentMonsterUrl() {
-      // 隨機生成 1 到 4 之間的數字
-      const randomNum = Math.floor(Math.random() * 4) + 1;
-      // 使用 find 方法根據 ID 查找對應怪物
-      const selectedMonster = this.monsters.find(
-        (monster) => monster.id === randomNum.toString()
-      );
-      console.log(
-        selectedMonster ? selectedMonster.url : "未找到對應的怪物圖片"
-      );
-      // 回傳對應 URL，若無匹配則回傳空字串或預設圖片 URL
-      return selectedMonster ? selectedMonster.url : "";
-    },
-  },
-
   methods: {
+    changeUserNickName() {
+      if (!this.isEditing) {
+        this.newNickname = this.profile.nickname; // 初始化暫存值
+        this.isEditing = true;
+      } else if (this.isEditing) {
+        this.saveNickname();
+      }
+    },
+    // 保存新的 nickname 並更新到後端
+    async saveNickname() {
+      if (this.newNickname.trim() === "") {
+        alert("Nickname cannot be empty.");
+        return;
+      }
+
+      try {
+        const token = sessionStorage.getItem("access"); // 替換為實際的 Token
+        const response = await this.$axios.post(
+          "http://127.0.0.1:8000/profile/",
+          { nickname: this.newNickname },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // 更新資料並退出編輯模式
+        // this.profile.nickname = this.newNickname;
+        this.fetchProfileData();
+        this.isEditing = false;
+      } catch (error) {
+        console.error("Error updating nickname:", error.response || error);
+        alert("Failed to update nickname. Please try again.");
+      }
+    },
+    setCurrentMonsterUrl() {
+      const matchedMonster = this.monsters.find(
+        (monster) => monster.id === this.profile.photo.toString()
+      );
+
+      if (matchedMonster) {
+        this.currentMonsterUrl = matchedMonster.url;
+        console.log("Current Monster URL:", this.currentMonsterUrl);
+      } else {
+        console.warn("No matching monster found for profile photo.");
+      }
+    },
+    async fetchProfileData() {
+      this.isLoading = true;
+      try {
+        const token = sessionStorage.getItem("access"); // 替換成實際存取的 token
+        const response = await this.$axios.get(
+          "http://127.0.0.1:8000/profile/",
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        // 更新 Profile 實例的內容
+        const returnedData = response.data;
+        console.log(returnedData);
+        this.updateProfile(returnedData);
+        this.setCurrentMonsterUrl();
+        console.log("Profile updated:", this.profile);
+      } catch (error) {
+        console.error("Error updating profile:", error.response || error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    updateProfile(data) {
+      // 遍歷更新 Profile 實例的每個字段
+      Object.keys(this.profile).forEach((key) => {
+        if (data[key] !== undefined) {
+          this.profile[key] = data[key];
+        }
+      });
+    },
     navigateTo(path) {
       // 使用傳遞的路徑導航
       this.$router.push(path);
@@ -279,7 +370,7 @@ export default {
         .then((response) => {
           // 登出成功，處理成功回應
           this.$message({
-            message: "登出成功！",
+            message: "Logout Successful！",
             type: "success",
             duration: 3000,
           });
@@ -292,12 +383,12 @@ export default {
         })
         .catch((error) => {
           // 登出失敗，處理錯誤回應
-          const message =
-            error.response?.data?.detail || "登出失敗，請稍後再試。";
-          this.$message({
-            message: message,
-            type: "error",
-          });
+          // const message =
+          //   error.response?.data?.detail || "登出失敗，請稍後再試。";
+          // this.$message({
+          //   message: message,
+          //   type: "error",
+          // });
         })
         .finally(() => {
           // 無論成功或失敗，都應確保 token 被清除，並重定向到登錄頁面
@@ -417,6 +508,11 @@ export default {
   margin-top: 20px;
 }
 .edit-div {
+  cursor: pointer;
+  font-family: "PressStar2PFont", sans-serif;
+  font-style: normal;
+  font-size: 12px;
+  user-select: none;
   position: absolute;
   margin-left: 12px;
   bottom: 0;
@@ -460,6 +556,24 @@ export default {
   font-size: 96px;
   user-select: none;
 }
+.editFieldDiv {
+  width: 250px;
+}
+.editNickField {
+  width: 100%;
+  height: 60px;
+  padding: 10px 15px;
+  font-size: 70px;
+  font-family: "Micro5", sans-serif;
+  border: 2px solid #ccc;
+  border-radius: 5px;
+  outline: none;
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+.editNickField:focus {
+  border-color: #4caf50; /* 聚焦时的边框颜色 */
+  box-shadow: 0 0 8px rgba(76, 175, 80, 0.5); /* 聚焦时的阴影效果 */
+}
 
 .share-div {
   flex: 0.4;
@@ -472,7 +586,8 @@ export default {
   border-radius: 10px;
   background-color: #d9d9d9;
   display: flex;
-  /* justify-content: center; */
+  justify-content: space-around;
+
   align-items: center;
 }
 .share-btn text {
@@ -599,6 +714,16 @@ export default {
   border-radius: 60px;
   margin-right: 1.2rem;
   margin-bottom: 1.5rem;
+}
+
+/* Dark-Mode */
+.dark-mode {
+  background-color: #1b2023;
+  transition: ease-out 0.35s;
+  color: #75fb9f;
+}
+.dark-mode border {
+  border: 2px solid #75fb9f;
 }
 
 @font-face {

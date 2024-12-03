@@ -246,7 +246,7 @@
           fill="white"
         />
         <!-- game icon  -->
-        <g class="gameIcon-rec" @click="navigateTo('/unity')">
+        <g class="gameIcon-rec" @click="navigateTo('/unity/')">
           <rect
             x="79.2404"
             y="116.164"
