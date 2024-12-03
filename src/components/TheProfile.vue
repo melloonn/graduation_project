@@ -47,7 +47,7 @@
             <div class="monster-photo">
               <img class="monster-img" :src="currentMonsterUrl" />
             </div>
-            <div class="edit-div">edit</div>
+            <div class="edit-div" @click="toggleSelectMonster">edit</div>
             <div class="level-div">
               <svg
                 width="45"
@@ -58,11 +58,15 @@
               >
                 <path
                   d="M0 15.7588L22.5 0L45 15.7588V41.2412L22.5 57L0 41.2412V15.7588Z"
-                  fill="url(#paint0_linear_909_315)"
+                  fill="url(#paint0_linear_1873_380)"
+                />
+                <path
+                  d="M13 38V35H19V23H16V20H19V17H25V35H31V38H13Z"
+                  fill="black"
                 />
                 <defs>
                   <linearGradient
-                    id="paint0_linear_909_315"
+                    id="paint0_linear_1873_380"
                     x1="22.5"
                     y1="0"
                     x2="22.5"
@@ -208,6 +212,16 @@
         <div class="bottom"></div>
       </div>
     </div>
+    <div v-if="isSelectMonster" class="select-photo-monster-div">
+      <button
+        v-for="monster in profile.monsters"
+        :key="monster.monster_id"
+        @click="selectMonster(monster.monster_id)"
+        class="monster-button"
+      >
+        {{ monster.monster_name }}
+      </button>
+    </div>
   </div>
 </template>
 
@@ -216,6 +230,7 @@
 export default {
   data() {
     return {
+      isSelectMonster: false,
       monsters: [
         {
           id: "1",
@@ -236,6 +251,21 @@ export default {
           id: "4",
           name: "monster4",
           url: "/images/monster4.png",
+        },
+        {
+          id: "5",
+          name: "monster5",
+          url: "/images/monster5.png",
+        },
+        {
+          id: "6",
+          name: "monster6",
+          url: "/images/monster6.png",
+        },
+        {
+          id: "7",
+          name: "monster7",
+          url: "/images/monster7.png",
         },
       ],
       currentMonsterUrl: "",
@@ -270,12 +300,57 @@ export default {
     }
   },
   methods: {
+    toggleSelectMonster() {
+      this.isSelectMonster = !this.isSelectMonster;
+    },
     changeUserNickName() {
       if (!this.isEditing) {
         this.newNickname = this.profile.nickname; // 初始化暫存值
         this.isEditing = true;
       } else if (this.isEditing) {
         this.saveNickname();
+      }
+    },
+    async selectMonster(monsterId) {
+      try {
+        const token = sessionStorage.getItem("access");
+        const response = await this.$axios.post(
+          "http://127.0.0.1:8000/profile/",
+          {
+            photo: monsterId, // 更新 photo 為怪獸的 ID
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        this.$message({
+          message: "怪獸照片更新成功！",
+          type: "success",
+          duration: 3000,
+        });
+
+        this.isSelectMonster = false;
+        const matchedMonster = this.monsters.find(
+          (monster) => monster.id === monsterId.toString()
+        );
+
+        if (matchedMonster) {
+          this.currentMonsterUrl = matchedMonster.url;
+          console.log("Current Monster URL:", this.currentMonsterUrl);
+        } else {
+          console.warn("No matching monster found for profile photo.");
+        }
+        console.log("Response:", response.data);
+      } catch (error) {
+        this.$message({
+          message: "怪獸照片更新失敗！",
+          type: "error",
+          duration: 3000,
+        });
+        console.error("Error updating monster photo:", error.response || error);
       }
     },
     // 保存新的 nickname 並更新到後端
@@ -505,7 +580,8 @@ export default {
 }
 .monster-img {
   position: absolute;
-  margin-top: 20px;
+  margin-top: -100px;
+  margin-left: -20px;
 }
 .edit-div {
   cursor: pointer;
@@ -714,6 +790,18 @@ export default {
   border-radius: 60px;
   margin-right: 1.2rem;
   margin-bottom: 1.5rem;
+}
+
+.select-photo-monster-div {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 20px;
+  border: 8px solid #ffffff;
+  width: 65vw;
+  height: 60vh;
+  background-color: #1b2023;
 }
 
 /* Dark-Mode */
